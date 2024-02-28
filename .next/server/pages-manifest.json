@@ -1,0 +1,11 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/me": "pages/me.js",
+  "/": "pages/index.js",
+  "/api/signIn": "pages/api/signIn.js",
+  "/Dashboard": "pages/Dashboard.js",
+  "/api/whoAmI": "pages/api/whoAmI.js",
+  "/cmuOAuthCallback": "pages/cmuOAuthCallback.js"
+}

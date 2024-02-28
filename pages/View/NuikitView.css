@@ -1,0 +1,167 @@
+* {
+    margin: 0px;
+    padding: 0px;
+ }
+
+.main {
+    justify-content: center;
+}
+
+.contain{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+} 
+
+h3 {
+    color: #F1485B;
+    text-align: center;
+}
+
+h5 {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+
+.node-subject {
+    width: 90px;
+    height: 40px;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+}
+
+.frame {
+    width: 50%;
+    
+}
+
+.type-con {
+    margin-left: 3%;
+    margin-right: 3%;
+    position: relative;
+}
+
+.btw {
+    justify-content: space-between;
+}
+
+.node-frame {
+    width: 50%;
+    border: 3px solid #F3F3F3;
+}
+
+.node-frame2 {
+    width: 100%;
+    height: 90%;
+    border: 3px solid #F3F3F3;
+}
+
+.h{
+    height: 50%;
+    /* background-color: #F1485B; */
+    /* position: relative; */
+}
+
+.full-height {
+    /* background-color:aquamarine; */
+    height: 100vh;
+}
+
+.h2{
+    height:76%;
+}
+
+.w2{
+    width: 100%;
+}
+
+.button{
+    background-color: #F1485B;
+    width: 30%;
+    height: 30px;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+}
+
+.button::before{
+    position: absolute;
+    content: '';
+    background-color: white;
+    width: 50%;
+    height: 24px;
+    border-radius: 40px;
+    margin: 3px;
+    transition: 0.19s;
+}
+
+.con-toggle{
+    /* background-color: black; */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+input{
+    margin: 0px;
+    display: none;
+}
+
+input:checked + .normal-plan{
+    color: white;
+}
+
+input:checked + .button{
+    background-color: #F1485B;
+}
+
+input:checked + label p.normal-plan{
+    color: white;
+}
+
+input:checked + label p.coop-plan{
+    color: #F1485B;
+}
+
+input:checked + .button::before{
+    transform: translateX(96%);
+}
+
+.txt-toggle{
+    /* position: absolute; */
+    /* width: 50%; */
+    z-index: 100;
+    margin: auto;
+}
+
+.normal-plan{
+    color: #F1485B;
+}
+
+.coop-plan{
+    color: white;
+}
+
+.op-contain{
+    margin-bottom: 1%;
+    margin-top: 1%;
+    justify-content: flex-end;
+}
+
+.flow-contain {
+    height: 100%;
+    width: 100%;
+    margin-left: 250px;
+    /* background-color: #F1485B; */
+}
+
+.mt{
+    margin-top: 3%;
+}

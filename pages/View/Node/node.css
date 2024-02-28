@@ -1,0 +1,85 @@
+.node {
+    border: 1.5px solid;
+    width: 88px;
+    height: 40px;
+    border-radius: 6px;
+    align-items: center;
+}
+
+.gen-node {
+    border-color: #8850EA;
+}
+
+.sp-node {
+    border-color: #FF7D0F;
+}
+
+.free-node {
+    border-color: #1976D2;
+}
+
+.subNo-font {
+    font-size: small;
+}
+
+.subName-font {
+    font-size: xx-small;
+}
+
+.circle-gen {
+    border: 1px solid #8850EA;
+    border-radius: 100%;
+    width: 13px;
+
+    /* width: 1.125rem;
+    height: 1.10594rem;
+    flex-shrink: 0;
+
+    fill: var(--done, #34C759);
+    stroke-width: 1px;
+    stroke: var(--done, #34C759); */
+}
+
+.circle-spec {
+    border: 1px solid #FF7D0F;
+    border-radius: 100%;
+    width: 13px;
+}
+
+.circle-free {
+    border: 1px solid #1976D2;
+    border-radius: 100%;
+    width: 13px;
+}
+
+.center {
+    justify-self: center;
+    align-content: center;
+}
+
+.node-contain {
+    margin: 0 8% 0 8%
+}
+
+.freeNode-contain {
+    margin-left: 20px;
+    margin-top: 10px;
+    /* position: fixed; */
+    /* background-color: blue; */
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+    height: 200px;
+}
+
+.ov {
+    overflow-x: scroll;
+    flex-wrap: wrap;
+}
+
+.name-ov {
+    overflow-x: hidden;
+    /* Hide horizontal scrollbar */
+    overflow-y: hidden;
+    /* Add vertical scrollbar */
+}

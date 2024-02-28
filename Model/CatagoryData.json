@@ -1,0 +1,418 @@
+{
+    "summaryCredit": 142,
+    "requiredCredits": 139,
+    "coreCategory": [
+      {
+        "groupName": "Core",
+        "requiredCreditsNeed": 33,
+        "requiredCreditsGet": 33,
+        "electiveCreditsNeed": 0,
+        "electiveCreditsGet": 0,
+        "requiredCourseList": [
+          {
+            "courseNo": "206161",
+            "courseName": "Calculus for Engineering 1",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "206162",
+            "courseName": "Calculus for Engineering 2",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "206261",
+            "courseName": "Calculus for Engineering 3",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "207105",
+            "courseName": "Physics for Engineering and Agro-Industry Students 1",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "207106",
+            "courseName": "Physics for Engineering and Agro-Industry Students 2",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "207115",
+            "courseName": "Physics Laboratory for Engineering and Agro-Industry Students 1",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "207116",
+            "courseName": "Physics Laboratory for Engineering and Agro-Industry Students 2",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "252281",
+            "courseName": "Fundamentals of Electronic Circuits for Information Systems and Network Engineering",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "259104",
+            "courseName": "Engineering Drawing",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "259106",
+            "courseName": "Workshop Technology",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "261208",
+            "courseName": "Numerical Computation for Engineers",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "261216",
+            "courseName": "Discrete Mathematics for Computer Engineers",
+            "groupName": "Core",
+            "isPass": true
+          },
+          {
+            "courseNo": "261306",
+            "courseName": "Computer Engineering Probability and Statistics",
+            "groupName": "Core",
+            "isPass": true
+          }
+        ],
+        "electiveCourseList": []
+      }
+    ],
+    "majorCategory": [
+      {
+        "groupName": "Major Required",
+        "requiredCreditsNeed": 52,
+        "requiredCreditsGet": 53,
+        "electiveCreditsNeed": 0,
+        "electiveCreditsGet": 0,
+        "requiredCourseList": [
+          {
+            "courseNo": "261102",
+            "courseName": "Computer Programming",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261103",
+            "courseName": "Basic Computer Engineering",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261200",
+            "courseName": "Object-Oriented Programming",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261207",
+            "courseName": "Basic Computer Engineering Laboratory",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261210",
+            "courseName": "Logic and Digital Circuits",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261212",
+            "courseName": "Logic and Digital Circuits Laboratory",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261214",
+            "courseName": "Microprocessor and Interfacing",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261215",
+            "courseName": "Embedded System Laboratory",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261217",
+            "courseName": "Data Structures for Computer Engineers",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261218",
+            "courseName": "Algorithms for Computer Engineers",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261304",
+            "courseName": "Computer Architecture",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261305",
+            "courseName": "Operating Systems",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261332",
+            "courseName": "Data and Computer Communications",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261335",
+            "courseName": "Computer Networks",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261336",
+            "courseName": "Computer Networks Laboratory",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261342",
+            "courseName": "Fundamentals of Database Systems",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261343",
+            "courseName": "Database System Laboratory",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261361",
+            "courseName": "Software Engineering",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261405",
+            "courseName": "Advanced Computer Engineering Technology",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261491",
+            "courseName": "Project Survey",
+            "groupName": "Major Required",
+            "isPass": true
+          },
+          {
+            "courseNo": "261492",
+            "courseName": "Project",
+            "groupName": "Major Required",
+            "isPass": true
+          }
+        ],
+        "electiveCourseList": []
+      },
+      {
+        "groupName": "Major Elective",
+        "requiredCreditsNeed": 0,
+        "requiredCreditsGet": 0,
+        "electiveCreditsNeed": 18,
+        "electiveCreditsGet": 18,
+        "requiredCourseList": [],
+        "electiveCourseList": [
+          {
+            "courseNo": "261406",
+            "courseName": "Basic Compiler Design",
+            "groupName": "Major Elective",
+            "isPass": true
+          },
+          {
+            "courseNo": "269432",
+            "courseName": "Peer-to-peer Systems",
+            "groupName": "Major Elective",
+            "isPass": true
+          },
+          {
+            "courseNo": "261446",
+            "courseName": "Information Systems",
+            "groupName": "Major Elective",
+            "isPass": true
+          },
+          {
+            "courseNo": "261448",
+            "courseName": "Data Mining for Computer Engineering",
+            "groupName": "Major Elective",
+            "isPass": true
+          },
+          {
+            "courseNo": "261453",
+            "courseName": "Digital Image Processing",
+            "groupName": "Major Elective",
+            "isPass": true
+          },
+          {
+            "courseNo": "261458",
+            "courseName": "Machine Vision",
+            "groupName": "Major Elective",
+            "isPass": true
+          }
+        ]
+      }
+    ],
+    "geCategory": [
+      {
+        "groupName": "Learner Person",
+        "requiredCreditsNeed": 12,
+        "requiredCreditsGet": 12,
+        "electiveCreditsNeed": 3,
+        "electiveCreditsGet": 3,
+        "requiredCourseList": [
+          {
+            "courseNo": "001101",
+            "courseName": "Fundamental English 1",
+            "groupName": "Learner Person",
+            "isPass": true
+          },
+          {
+            "courseNo": "001102",
+            "courseName": "Fundamental English 2",
+            "groupName": "Learner Person",
+            "isPass": true
+          },
+          {
+            "courseNo": "001201",
+            "courseName": "Critical Reading and Effective Writing",
+            "groupName": "Learner Person",
+            "isPass": true
+          },
+          {
+            "courseNo": "001225",
+            "courseName": "English in Science and Technology Context",
+            "groupName": "Learner Person",
+            "isPass": true
+          }
+        ],
+        "electiveCourseList": [
+          {
+            "courseNo": "261111",
+            "courseName": "Internet and Online Community",
+            "groupName": "Learner Person",
+            "isPass": true
+          }
+        ]
+      },
+      {
+        "groupName": "Co-Creator",
+        "requiredCreditsNeed": 1,
+        "requiredCreditsGet": 1,
+        "electiveCreditsNeed": 3,
+        "electiveCreditsGet": 3,
+        "requiredCourseList": [
+          {
+            "courseNo": "259192",
+            "courseName": "Skills for Professionalism and Entrepreneurship",
+            "groupName": "Co-Creator",
+            "isPass": true
+          }
+        ],
+        "electiveCourseList": [
+          {
+            "courseNo": "050106",
+            "courseName": "Humanistic Arts",
+            "groupName": "Co-Creator",
+            "isPass": true
+          }
+        ]
+      },
+      {
+        "groupName": "Active Citizen",
+        "requiredCreditsNeed": 4,
+        "requiredCreditsGet": 4,
+        "electiveCreditsNeed": 0,
+        "electiveCreditsGet": 0,
+        "requiredCourseList": [
+          {
+            "courseNo": "140104",
+            "courseName": "Citizenship",
+            "groupName": "Active Citizen",
+            "isPass": true
+          },
+          {
+            "courseNo": "259191",
+            "courseName": "Principle of Being Professional",
+            "groupName": "Active Citizen",
+            "isPass": true
+          }
+        ],
+        "electiveCourseList": []
+      },
+      {
+        "groupName": "Elective",
+        "requiredCreditsNeed": 0,
+        "requiredCreditsGet": 0,
+        "electiveCreditsNeed": 7,
+        "electiveCreditsGet": 9,
+        "requiredCourseList": [],
+        "electiveCourseList": [
+          {
+            "courseNo": "203100",
+            "courseName": "Chenmistry in Everyday life",
+            "groupName": "Elective",
+            "isPass": true
+          },
+          {
+            "courseNo": "011100",
+            "courseName": "Man and Philosophy",
+            "groupName": "Elective",
+            "isPass": true
+          },
+          {
+            "courseNo": "702101",
+            "courseName": "Finance for Daily Life",
+            "groupName": "Elective",
+            "isPass": true
+          }
+        ]
+      }
+    ],
+    "freeCategory": [
+      {
+        "groupName": "Free Elective",
+        "requiredCreditsNeed": 0,
+        "requiredCreditsGet": 0,
+        "electiveCreditsNeed": 6,
+        "electiveCreditsGet": 6,
+        "requiredCourseList": [],
+        "electiveCourseList": [
+          {
+            "courseNo": "023912",
+            "courseName": "Free",
+            "groupName": "Free",
+            "isPass": true
+          },
+          {
+            "courseNo": "097537",
+            "courseName": "Free",
+            "groupName": "Free",
+            "isPass": true
+          }
+        ]
+      }
+    ]
+  }

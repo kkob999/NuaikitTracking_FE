@@ -1,0 +1,434 @@
+{
+  "summaryCredit": 81,
+  "requiredCredits": 139,
+  "coreCategory": [
+      {
+          "groupName": "Core",
+          "requiredCreditsNeed": 33,
+          "requiredCreditsGet": 30,
+          "electiveCreditsNeed": 0,
+          "electiveCreditsGet": 0,
+          "requiredCourseList": [
+              {
+                  "courseNo": "206161",
+                  "credits": 3,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "206162",
+                  "credits": 3,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "206261",
+                  "credits": 3,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "207105",
+                  "credits": 3,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "207106",
+                  "credits": 3,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "207115",
+                  "credits": 1,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "207116",
+                  "credits": 1,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "252281",
+                  "credits": 3,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "259104",
+                  "credits": 3,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "259106",
+                  "credits": 1,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261208",
+                  "credits": 3,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261216",
+                  "credits": 3,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261306",
+                  "credits": 3,
+                  "groupName": "Core",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              }
+          ],
+          "electiveCourseList": []
+      }
+  ],
+  "majorCategory": [
+      {
+          "groupName": "Major Required",
+          "requiredCreditsNeed": 52,
+          "requiredCreditsGet": 29,
+          "electiveCreditsNeed": 0,
+          "electiveCreditsGet": 0,
+          "requiredCourseList": [
+              {
+                  "courseNo": "261102",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261103",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261200",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261207",
+                  "credits": 2,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261210",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261212",
+                  "credits": 1,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261214",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261215",
+                  "credits": 1,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261217",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261218",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261304",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              },
+              {
+                  "courseNo": "261305",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              },
+              {
+                  "courseNo": "261332",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "261335",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              },
+              {
+                  "courseNo": "261336",
+                  "credits": 1,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              },
+              {
+                  "courseNo": "261342",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              },
+              {
+                  "courseNo": "261343",
+                  "credits": 1,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              },
+              {
+                  "courseNo": "261361",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              },
+              {
+                  "courseNo": "261405",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              },
+              {
+                  "courseNo": "261491",
+                  "credits": 1,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              },
+              {
+                  "courseNo": "261492",
+                  "credits": 3,
+                  "groupName": "Major Required",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              }
+          ],
+          "electiveCourseList": []
+      },
+      {
+          "groupName": "Major Elective",
+          "requiredCreditsNeed": 0,
+          "requiredCreditsGet": 0,
+          "electiveCreditsNeed": 18,
+          "electiveCreditsGet": 0,
+          "requiredCourseList": [],
+          "electiveCourseList": []
+      }
+  ],
+  "geCategory": [
+      {
+          "groupName": "Learner Person",
+          "requiredCreditsNeed": 12,
+          "requiredCreditsGet": 12,
+          "electiveCreditsNeed": 3,
+          "electiveCreditsGet": 0,
+          "requiredCourseList": [
+              {
+                  "courseNo": "001101",
+                  "credits": 3,
+                  "groupName": "Learner Person",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "001102",
+                  "credits": 3,
+                  "groupName": "Learner Person",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "001201",
+                  "credits": 3,
+                  "groupName": "Learner Person",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "001225",
+                  "credits": 3,
+                  "groupName": "Learner Person",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              }
+          ],
+          "electiveCourseList": []
+      },
+      {
+          "groupName": "Co-Creator",
+          "requiredCreditsNeed": 1,
+          "requiredCreditsGet": 0,
+          "electiveCreditsNeed": 3,
+          "electiveCreditsGet": 0,
+          "requiredCourseList": [
+              {
+                  "courseNo": "259192",
+                  "credits": 1,
+                  "groupName": "Co-Creator",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": false
+              }
+          ],
+          "electiveCourseList": []
+      },
+      {
+          "groupName": "Active Citizen",
+          "requiredCreditsNeed": 4,
+          "requiredCreditsGet": 4,
+          "electiveCreditsNeed": 0,
+          "electiveCreditsGet": 0,
+          "requiredCourseList": [
+              {
+                  "courseNo": "140104",
+                  "credits": 3,
+                  "groupName": "Active Citizen",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "259191",
+                  "credits": 1,
+                  "groupName": "Active Citizen",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              }
+          ],
+          "electiveCourseList": []
+      },
+      {
+          "groupName": "Elective",
+          "requiredCreditsNeed": 0,
+          "requiredCreditsGet": 0,
+          "electiveCreditsNeed": 7,
+          "electiveCreditsGet": 6,
+          "requiredCourseList": [],
+          "electiveCourseList": [
+              {
+                  "courseNo": "203100",
+                  "credits": 3,
+                  "groupName": "Elective",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              },
+              {
+                  "courseNo": "011100",
+                  "credits": 3,
+                  "groupName": "Elective",
+                  "prerequisites": null,
+                  "corequisite": "",
+                  "isPass": true
+              }
+          ]
+      }
+  ],
+  "freeCategory": [
+      {
+          "groupName": "Free Elective",
+          "requiredCreditsNeed": 0,
+          "requiredCreditsGet": 0,
+          "electiveCreditsNeed": 6,
+          "electiveCreditsGet": 0,
+          "requiredCourseList": [],
+          "electiveCourseList": []
+      }
+  ]
+}
