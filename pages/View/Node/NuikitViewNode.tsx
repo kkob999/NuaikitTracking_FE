@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { nodes } from "../../Model/InitialNode";
-import "./node.css";
+// import { nodes } from "../../Model/InitialNode";
+// import {nodes}
+// import "./node.css";
 
 interface node {
   sub_no: string;

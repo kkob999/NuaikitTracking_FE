@@ -9,16 +9,14 @@ import {
 } from "@mui/material";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
-import "../View/NuikitView.css";
-import "../View/Navbar.css";
 import axios from "axios";
 
 import React, { useState, useEffect } from "react";
 
 import jsonData from "../Model/NodeDB.json";
-import NuikitViewNode from "../View/Node/NuikitViewNode";
+import NuikitViewNode from "./View/Node/NuikitViewNode";
 
-import Navbar from "../View/Navbar";
+import Navbar from "./View/Navbar";
 
 const urlNuikit =
   "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&mockData=mockData5";

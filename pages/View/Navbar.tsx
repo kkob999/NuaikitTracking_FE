@@ -275,7 +275,7 @@ function Navbar() {
             disablePadding
             sx={{ display: "block" }}
             onClick={() => {
-              router.push("/NuikitView");
+              router.push("/Dashboard");
             }}
           >
             <ListItemButton
@@ -307,33 +307,39 @@ function Navbar() {
         <List>
           {open == true ? (
             // <ListItem disablePadding sx={{ display: "block" }}>
-              <ListItem
+            <ListItem
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+                display: "flex",
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  display: "flex",
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <AssignmentIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"View Board"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItem>
-            // </ListItem>
-          ) : null}
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary={"View Board"}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItem>
+          ) : // </ListItem>
+          null}
 
           {/* Category View */}
-          <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItem
+            disablePadding
+            sx={{ display: "block" }}
+            onClick={() => {
+              router.push("/NuikitView");
+            }}
+          >
             <ListItemButton
               sx={{
                 minHeight: 48,

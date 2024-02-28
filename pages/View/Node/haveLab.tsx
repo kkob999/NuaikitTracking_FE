@@ -1,7 +1,7 @@
 import { Box, Stack, Typography, Theme, Breakpoint } from "@mui/material";
 import React, { memo } from "react";
 import { Handle, Position, Node, NodeProps } from "reactflow";
-import { theme } from "../../constants/theme";
+import { theme } from "../../../constants/theme";
 
 type NodeData = {
   sub_no: string;
@@ -124,7 +124,7 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
       <Stack
         sx={{
           width: "6.146vw",
-          height: "3.3704vh",
+          height: "5.3704vh",
           border: "1.5px solid" + color,
           padding: "1vh 0",
           borderRadius: "0.5rem",

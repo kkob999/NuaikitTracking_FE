@@ -1,7 +1,7 @@
 import { Box, Stack, Typography, Breakpoint } from "@mui/material";
 import React, { memo } from "react";
 import { Handle, Position, Node, NodeProps } from "reactflow";
-import { theme } from "../../constants/theme";
+import { theme } from "../../../constants/theme";
 
 type NodeData = {
   sub_no: string;
@@ -168,7 +168,7 @@ export default function TermNode({
       <Stack
         sx={{
           width: "6.146vw",
-          height: "3.3704vh",
+          height: "5.3704vh",
           padding: "1vh 0",
           border: "1.5px solid" + color,
           borderRadius: "0.5rem",

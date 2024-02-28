@@ -1,5 +1,5 @@
 import { Stack, Typography } from "@mui/material";
-import { theme } from "../constants/theme";
+import { theme } from "../../constants/theme";
 
 let halfline = "184.77vh";
 
@@ -32,6 +32,7 @@ export const NormalTerm = (
 
   return (
     <Stack
+    direction={'column'}
       sx={{
         height: height, //dynamic 136.77vh 190.77vh
         width: "18.438vw",
@@ -44,47 +45,54 @@ export const NormalTerm = (
         [theme.breakpoints.only("md")]: {
           width: "19.938vw",
         },
-        pb: 2,
+        pb: 4,
+        
       }}
     >
-      <Typography sx={{ textAlign: "center", color: "#EE6457" }}>
-        {year} year
-      </Typography>
-      <Stack sx={{ display: "flex", flexDirection: "row" }}>
-        {/* 1st sem */}
-        <Stack
-          sx={{
-            width: "50%",
-            height: halfline, //dynamic 132.77
-            borderRight: "0.5px solid black",
-            alignItems: "center",
-          }}
-        >
-          <Typography>1st sem</Typography>
-        </Stack>
+      <Stack >
+        <Typography sx={{ textAlign: "center", color: "#EE6457" }}>
+          {year} year
+        </Typography>
+        <Stack sx={{ display: "flex", flexDirection: "row" }}>
+          {/* 1st sem */}
+          <Stack
+            sx={{
+              width: "50%",
+              height: halfline, //dynamic 132.77
+              borderRight: "0.5px solid black",
+              alignItems: "center",
+            }}
+          >
+            <Typography>1st sem</Typography>
+          </Stack>
 
-        {/* 2nd sem */}
-        <Stack
-          sx={{
-            width: "50%",
-            height: halfline, //dynamic
-            borderLeft: "0.5px solid black",
-            alignItems: "center",
-          }}
-        >
-          <Typography>2nd sem</Typography>
+          {/* 2nd sem */}
+          <Stack
+            sx={{
+              width: "50%",
+              height: halfline, //dynamic
+              borderLeft: "0.5px solid black",
+              alignItems: "center",
+            }}
+          >
+            <Typography>2nd sem</Typography>
+          </Stack>
+          {/* End 2nd sem */}
         </Stack>
-        {/* End 2nd sem */}
       </Stack>
-      <Stack direction={"row"} sx={{ width: "100%" }}>
-        <Stack direction={"row"} spacing={1} sx={{ width: "50%", justifyContent: 'center' }}>
+
+      <Stack
+        direction={"row"}
+        sx={{ width: "100%",  position: "relative", mt: 0.5, pb: 2 }}
+      >
+         <Stack direction={"row"} spacing={1} sx={{ width: "50%", justifyContent: 'center' }}>
           <Typography sx={{}}>{credit1}</Typography>
           <Typography sx={{}}>credits</Typography>
         </Stack>
         <Stack direction={"row"} spacing={1} sx={{ width: "50%", justifyContent: 'center' }}>
           <Typography sx={{}}>{credit2}</Typography>
           <Typography sx={{}}>credits</Typography>
-        </Stack>
+        </Stack> 
       </Stack>
     </Stack>
   );
@@ -118,7 +126,7 @@ export const summerTerm = (
           width: "29.61vw",
         },
         // bgcolor: "beige",
-        pb: 2
+        pb: 4,
       }}
     >
       <Typography sx={{ textAlign: "center", color: "#EE6457" }}>
@@ -207,16 +215,19 @@ export const summerTerm = (
         {/* End summer sem */}
       </Stack>
       {/* credit */}
-      <Stack direction={"row"} sx={{ width: "100%", justifyContent: 'space-around' }}>
-        <Stack direction={"row"} spacing={1} sx={{ }}>
+      <Stack
+        direction={"row"}
+        sx={{ width: "100%", justifyContent: "space-around",position: "relative", mt: 0.5, pb: 2  }}
+      >
+        <Stack direction={"row"} spacing={1} sx={{}}>
           <Typography sx={{}}>{credit1}</Typography>
           <Typography sx={{}}>credits</Typography>
         </Stack>
-        <Stack direction={"row"} spacing={1} sx={{ }}>
+        <Stack direction={"row"} spacing={1} sx={{}}>
           <Typography sx={{}}>{credit2}</Typography>
           <Typography sx={{}}>credits</Typography>
         </Stack>
-        <Stack direction={"row"} spacing={1} sx={{ }}>
+        <Stack direction={"row"} spacing={1} sx={{}}>
           <Typography sx={{}}>{creditSummer}</Typography>
           <Typography sx={{}}>credits</Typography>
         </Stack>

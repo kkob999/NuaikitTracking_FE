@@ -8,8 +8,9 @@ import {
 } from "@mui/material";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
-import { fetchMajorElective } from "../Controller/Fetch";
-import { theme } from "../constants/theme";
+// import { fetchMajorElective } from "../Controller/Fetch";
+
+import { theme } from "../../constants/theme";
 
 export function DisplayNodeModal(
   isClicked: boolean,
