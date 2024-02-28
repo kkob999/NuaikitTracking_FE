@@ -306,7 +306,7 @@ function Navbar() {
 
         <List>
           {open == true ? (
-            <ListItem disablePadding sx={{ display: "block" }}>
+            // <ListItem disablePadding sx={{ display: "block" }}>
               <ListItem
                 sx={{
                   minHeight: 48,
@@ -329,7 +329,7 @@ function Navbar() {
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItem>
-            </ListItem>
+            // </ListItem>
           ) : null}
 
           {/* Category View */}
