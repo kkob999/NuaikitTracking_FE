@@ -158,12 +158,31 @@ function DashBoard() {
   const [studentId, setStudentId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  function signOut() {
-    //Call sign out api without caring what is the result
-    //It will fail only in case of client cannot connect to server
-    //This is left as an exercise for you. Good luck.
-    axios.post("/api/signOut").finally(() => {
-      router.push("/");
+  const url =
+    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610727";
+
+  function FetchDashBoard() {
+    return new Promise(function (resolve, reject) {
+      axios
+        .get(url, {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+            mode: "no-cors",
+          },
+        })
+        .then((response) => {
+          console.log("fetch dashboard data");
+          resolve(response.data);
+          return response.data;
+        })
+        .catch((error) => {
+          // handle errors
+          console.log(error);
+          reject(error);
+          // return testfail1
+        });
     });
   }
 
@@ -205,36 +224,25 @@ function DashBoard() {
   var tmp_gen_elecCredit = 0;
   var tmp_gen_elecCreditNeed = 0;
 
-  const url =
-    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610727";
-
-  function FetchDashBoard() {
-    return new Promise(function (resolve, reject) {
-      axios
-        .get(url, {
-          method: "GET",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
-            mode: "no-cors",
-          },
-        })
-        .then((response) => {
-          console.log("fetch dashboard data");
-          resolve(response.data);
-          return response.data;
-        })
-        .catch((error) => {
-          // handle errors
-          console.log(error);
-          reject(error);
-          // return testfail1
-        });
-    });
-  }
-
   async function DatchBoardData() {
-    const resp: any = await FetchDashBoard();
+    const resp: any = await axios
+      .get(url, {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          mode: "no-cors",
+        },
+      })
+      .then(function (response) {
+        console.log("fetch dashboard dataaaaaa");
+        return response.data;
+      })
+      .catch((error) => {
+        // handle errors
+        console.log(error);
+        // return testfail1
+      });
     // console.log(resp["coreCategory"]);
     console.log(resp);
 
@@ -307,10 +315,6 @@ function DashBoard() {
     }
   }
 
-  React.useEffect(() => {
-    DatchBoardData();
-  }, []);
-
   useEffect(() => {
     //All cookies that belong to the current url will be sent with the request automatically
     //so we don't have to attach token to the request
@@ -339,6 +343,19 @@ function DashBoard() {
       });
   }, []);
 
+  React.useEffect(() => {
+    DatchBoardData();
+  }, []);
+
+  function signOut() {
+    //Call sign out api without caring what is the result
+    //It will fail only in case of client cannot connect to server
+    //This is left as an exercise for you. Good luck.
+    axios.post("/api/signOut").finally(() => {
+      router.push("/");
+    });
+  }
+
   return (
     <Stack
       sx={{
@@ -348,9 +365,7 @@ function DashBoard() {
       }}
     >
       {/* Navbar */}
-      {/* <Box sx={{ width: "20vw" }}> */}
       <Navbar />
-      {/* </Box> */}
       {/* Dashboard */}
       <Stack
         sx={{

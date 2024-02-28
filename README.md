@@ -13,3 +13,8 @@ This repo include .env file to kickstart required variables for you. But in prac
 
 
 
+# Install this before run npm dev
+
+```
+npm install
+```
