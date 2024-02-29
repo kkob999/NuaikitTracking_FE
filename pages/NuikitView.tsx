@@ -15,6 +15,7 @@ import isSelected, {
   displayCoopPlan,
   displayDone,
   displayFree,
+  displayGE,
   displayNormalPlan,
   displayPre,
   // displayPre,
@@ -36,11 +37,6 @@ import Navbar from "./View/Navbar";
 import { theme } from "../constants/theme";
 import { IOSSwitch } from "./View/SwitchMUI";
 
-
-
-const urlNuikit =
-  "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&mockData=mockData5";
-
 function fetchNuikitData(url: string) {
   return new Promise(function (resolve, reject) {
     axios
@@ -54,6 +50,7 @@ function fetchNuikitData(url: string) {
       })
       .then((response) => {
         console.log("fetch nuikit data");
+        console.log(response.data);
         resolve(response.data);
         return response.data;
       })
@@ -133,8 +130,10 @@ function NuikitView() {
 
   // filter
   const [filter, setFilter] = useState(false);
+  const [isCoop, setisCoop] = useState(false);
 
   const [filterGE, setFilterGE] = useState(false);
+
   const [filterSp, setFilterSp] = useState(false);
   const [filterFree, setFilterFree] = useState(false);
   const [checkedPreFilter, setCheckedPreFilter] = useState(true);
@@ -143,6 +142,8 @@ function NuikitView() {
   const [formats, setFormats] = useState("normal");
   const [prevFormat, setPrevFormat] = useState<any>();
   const [disButton, setDisButton] = useState(false);
+
+  const [saveBtn, setSaveBtn] = useState(false);
 
   var tmp_major_reqCredit = 0;
   var tmp_major_reqCreditNeed = 0;
@@ -173,6 +174,7 @@ function NuikitView() {
   const handleChangePre = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckedPreFilter(event.target.checked);
   };
+
 
   const handleFormat = (
     event: React.MouseEvent<HTMLElement>,
@@ -225,6 +227,18 @@ function NuikitView() {
 
   async function NuikitData(url: string) {
     const resp: any = await fetchNuikitData(url);
+    console.log("test is Coop Coop");
+    if (resp["isCoop"] === "true") {
+      setisCoop(true);
+      setFormats("coop");
+      setDisButton(true);
+
+      console.log(isCoop);
+    } else {
+      setisCoop(false);
+      setFormats("normal");
+      console.log(isCoop);
+    }
 
     //Gen Category
     for (let i = 0; i < resp["geCategory"].length; i++) {
@@ -372,7 +386,12 @@ function NuikitView() {
   }
 
   useEffect(() => {
+    const urlNuikit =
+      "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610727";
+    // &studentId=630610727
+    // &mockData=mockData5
     NuikitData(urlNuikit);
+    
   }, []);
 
   function modalFreeElecNode() {
@@ -511,10 +530,12 @@ function NuikitView() {
     );
   }
 
-  function GeneralReq() {
+  function GeneralReq(checkedDone: boolean) {
+    var displayNode = genReqNode;
     if (genReqNode == null) return null;
     else {
       var idx = 0;
+
       genReqNode.map((node: any) => {
         if (!node["isPass"]) {
           //delete
@@ -526,17 +547,35 @@ function NuikitView() {
         return node;
       });
 
-      return genReqNode.map((node: any) => {
-        return (
-          <NuikitViewNode
-            sub_no={node.courseNo}
-            sub_name={node.courseNo}
-            type="gen"
-            isPass={node["isPass"]}
-            credit={node.credits}
-          />
-        );
-      });
+      if (checkedDone && saveBtn) {
+        return displayNode.map((node: any) => {
+          if (node.isPass) {
+            return (
+              <NuikitViewNode
+                sub_no={node.courseNo}
+                sub_name={node.courseNo}
+                type="gen"
+                isPass={node["isPass"]}
+                credit={node.credits}
+              />
+            );
+          }
+        });
+      }else{
+        return displayNode.map((node: any) => {
+          return (
+            <NuikitViewNode
+              sub_no={node.courseNo}
+              sub_name={node.courseNo}
+              type="gen"
+              isPass={node["isPass"]}
+              credit={node.credits}
+            />
+          );
+        });
+      }
+
+      
     }
   }
 
@@ -546,7 +585,6 @@ function NuikitView() {
     if (genElecNode == null) return null;
     else {
       if (notLearnGEArr.length > 0) {
-        
         for (let i = 0; i < notLearnGEArr.length; i++) {
           for (
             let j = 0;
@@ -584,7 +622,7 @@ function NuikitView() {
             // {/* </Stack> */}
           );
         });
-        
+
         return freeGENodeArr;
       } else {
         return genElecNode.map((node: any) => {
@@ -661,15 +699,31 @@ function NuikitView() {
           idx++;
           return node;
         });
-        return (
-          <NuikitViewNode
-            sub_no={node.courseNo}
-            sub_name={node.courseNo}
-            type="spec"
-            isPass={node["isPass"]}
-            credit={node.credits}
-          />
-        );
+
+        if (checkedDone && saveBtn) {
+          if (node.isPass) {
+            return (
+              <NuikitViewNode
+                sub_no={node.courseNo}
+                sub_name={node.courseNo}
+                type="spec"
+                isPass={node["isPass"]}
+                credit={node.credits}
+              />
+            );
+          }
+        }else{
+          return (
+            <NuikitViewNode
+              sub_no={node.courseNo}
+              sub_name={node.courseNo}
+              type="spec"
+              isPass={node["isPass"]}
+              credit={node.credits}
+            />
+          );
+        }
+        
       });
     }
   }
@@ -689,17 +743,35 @@ function NuikitView() {
         idx++;
         return node;
       });
-      return mjreqNode.map((node: any) => {
-        return (
-          <NuikitViewNode
-            sub_no={node.courseNo}
-            sub_name={node.courseNo}
-            type="spec"
-            isPass={node.isPass}
-            credit={node.credits}
-          />
-        );
-      });
+
+      if (checkedDone && saveBtn) {
+        return mjreqNode.map((node: any) => {
+          if (node.isPass) {
+            return (
+              <NuikitViewNode
+                sub_no={node.courseNo}
+                sub_name={node.courseNo}
+                type="spec"
+                isPass={node["isPass"]}
+                credit={node.credits}
+              />
+            );
+          }
+        });
+      }else{
+        return mjreqNode.map((node: any) => {
+          return (
+            <NuikitViewNode
+              sub_no={node.courseNo}
+              sub_name={node.courseNo}
+              type="spec"
+              isPass={node["isPass"]}
+              credit={node.credits}
+            />
+          );
+        });
+      }
+      
     }
   }
 
@@ -743,7 +815,7 @@ function NuikitView() {
           />
         );
       });
-      
+
       return majorEArr;
     }
   }
@@ -772,11 +844,12 @@ function NuikitView() {
         }}
       >
         <Stack
-          direction={'row'}
+          direction={"row"}
           sx={{
             width: "94%",
             marginTop: "3.4074vh",
-            justifyContent: 'space-between'
+            justifyContent: "space-between",
+            mb: 1,
           }}
         >
           {/* Topic section */}
@@ -784,342 +857,347 @@ function NuikitView() {
             Category View
           </Typography>
 
-          <Stack>
+          <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
+            <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
+              {isCoop && saveBtn ? displayCoopPlan() : displayNormalPlan()}
+              {checkedDone && saveBtn && displayDone()}
+              {checkedPreFilter && displayPre()}
+              {filterGE && saveBtn && displayGE()}
+              {filterSp && saveBtn && displaySp()}
+              {filterFree && saveBtn && displayFree()}
+            </Stack>
             {/* Filter */}
             <Button
-                variant="outlined"
-                endIcon={<FilterListIcon />}
-                onClick={() => {
-                  setFilter(!filter);
-                }}
-                sx={{
-                  width: "8vw",
-                  position: "relative",
-                  // mr: "1.9vw",
-                  textTransform: "none",
-                  borderRadius: 5,
-                  color: filter ? "#EE6457" : "#9B9B9B",
-                  borderColor: filter ? "#EE6457" : "#9B9B9B",
-                  pt: 0.25,
-                  pb: 0,
-                  pr: 1.4,
-                  pl: 1.4,
-                  "&:hover": {
-                    color: "#EE6457",
-                    borderColor: "#EE6457",
-                    bgcolor: "white",
-                  },
-                  [theme.breakpoints.between("sm", "md")]: {
-                    width: "10vw",
-                  },
-                }}
-              >
-                Filter
-              </Button>
+              variant="outlined"
+              endIcon={<FilterListIcon />}
+              onClick={() => {
+                setFilter(!filter);
+                setSaveBtn(false);
+              }}
+              sx={{
+                width: "8vw",
+                position: "relative",
+                // mr: "1.9vw",
+                textTransform: "none",
+                borderRadius: 5,
+                color: filter ? "#EE6457" : "#9B9B9B",
+                borderColor: filter ? "#EE6457" : "#9B9B9B",
+                pt: 0.25,
+                pb: 0,
+                pr: 1.4,
+                pl: 1.4,
+                "&:hover": {
+                  color: "#EE6457",
+                  borderColor: "#EE6457",
+                  bgcolor: "white",
+                },
+                [theme.breakpoints.between("sm", "md")]: {
+                  width: "10vw",
+                },
+              }}
+            >
+              Filter
+            </Button>
           </Stack>
-
-
         </Stack>
 
         {/* Modal Part */}
         {modal && DisplayModal(modalTopic)}
 
         {filter && (
+          <Stack
+            sx={{
+              bgcolor: "rgba(0, 0, 0, 0.50)",
+              position: "fixed",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            }}
+          >
             <Stack
               sx={{
-                bgcolor: "rgba(0, 0, 0, 0.50)",
+                p: 2,
                 position: "fixed",
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                zIndex: 1,
+                top: 60,
+                right: 26,
+                bgcolor: "white",
+                borderRadius: 2.6,
+                [theme.breakpoints.between("sm", "md")]: {
+                  width: "48vw",
+                },
+                [theme.breakpoints.only("md")]: {
+                  width: "50vw",
+                },
               }}
             >
-              <Stack
-                sx={{
-                  p: 2,
-                  position: "fixed",
-                  top: 60,
-                  right: 26,
-                  bgcolor: "white",
-                  borderRadius: 2.6,
-                  [theme.breakpoints.between("sm", "md")]: {
-                    width: "48vw",
-                  },
-                  [theme.breakpoints.only("md")]: {
-                    width: "50vw",
-                  },
-                }}
-              >
-                <Stack sx={{ ml: "1.2vw", mr: "1.2vw" }}>
-                  {/* Head Section */}
+              <Stack sx={{ ml: "1.2vw", mr: "1.2vw" }}>
+                {/* Head Section */}
+                <Stack
+                  direction={"row"}
+                  sx={{ justifyContent: "space-between" }}
+                >
+                  <Typography sx={{ alignSelf: "center" }}>Filter</Typography>
+                  <IconButton
+                    onClick={() => {
+                      setFilter(!filter);
+                    }}
+                    sx={{
+                      width: "2vw",
+                      height: "2vw",
+                      marginLeft: "auto",
+                      color: "black",
+                    }}
+                  >
+                    <CloseRoundedIcon />
+                  </IconButton>
+                </Stack>
+                {/* Choose Study Plan */}
+                <ToggleButtonGroup
+                  value={formats}
+                  exclusive
+                  onChange={handleFormat}
+                  aria-label="text alignment"
+                  sx={{ mt: "1vh", mb: "1vh", height: 36 }}
+                >
+                  {ToggleButt(disButton)}
+                  <ToggleButton
+                    value="coop"
+                    sx={{
+                      width: "50%",
+                      textTransform: "none",
+                      "&.Mui-selected , &.Mui-selected:hover": {
+                        bgcolor: "#EE6457",
+                        color: "white",
+                      },
+                    }}
+                  >
+                    Cooperative Plan
+                  </ToggleButton>
+                </ToggleButtonGroup>
+
+                {/* Category Section */}
+                <Stack>
+                  <Typography>Category</Typography>
                   <Stack
                     direction={"row"}
-                    sx={{ justifyContent: "space-between" }}
-                  >
-                    <Typography sx={{ alignSelf: "center" }}>Filter</Typography>
-                    <IconButton
-                      onClick={() => {
-                        setFilter(!filter);
-                      }}
-                      sx={{
-                        width: "2vw",
-                        height: "2vw",
-                        marginLeft: "auto",
-                        color: "black",
-                      }}
-                    >
-                      <CloseRoundedIcon />
-                    </IconButton>
-                  </Stack>
-                  {/* Choose Study Plan */}
-                  <ToggleButtonGroup
-                    value={formats}
-                    exclusive
-                    onChange={handleFormat}
-                    aria-label="text alignment"
-                    sx={{ mt: "1vh", mb: "1vh", height: 36 }}
-                  >
-                    {ToggleButt(disButton)}
-                    <ToggleButton
-                      value="coop"
-                      sx={{
-                        width: "50%",
-                        textTransform: "none",
-                        "&.Mui-selected , &.Mui-selected:hover": {
-                          bgcolor: "#EE6457",
-                          color: "white",
-                        },
-                      }}
-                    >
-                      Cooperative Plan
-                    </ToggleButton>
-                  </ToggleButtonGroup>
-
-                  {/* Category Section */}
-                  <Stack>
-                    <Typography>Category</Typography>
-                    <Stack
-                      direction={"row"}
-                      spacing={1}
-                      sx={{ mt: "1vh", mb: "1vh" }}
-                    >
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          borderColor: isSelected(filterGE),
-                          display: "flex",
-                          padding: 0.8,
-                          borderRadius: 5,
-                          textTransform: "none",
-                          width: "10vw",
-                          [theme.breakpoints.between("sm", "md")]: {
-                            width: "18vw",
-                          },
-                          [theme.breakpoints.only("md")]: {
-                            width: "18vw",
-                          },
-                        }}
-                        onClick={() => {
-                          setFilterGE(!filterGE);
-                        }}
-                      >
-                        <Stack
-                          sx={{
-                            height: "0.74em",
-                            width: "0.74em",
-                            bgcolor: "#7C4DFF",
-                            borderRadius: "100%",
-                            mr: "0.3em",
-                          }}
-                        ></Stack>
-                        <Typography
-                          sx={{
-                            fontSize: "0.8em",
-                            color: isSelected(filterGE),
-                            [theme.breakpoints.between("sm", "md")]: {
-                              fontSize: "0.71em",
-                            },
-                          }}
-                        >
-                          General Education
-                        </Typography>
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          borderColor: isSelected(filterSp),
-                          display: "flex",
-                          padding: 0.8,
-                          borderRadius: 5,
-                          textTransform: "none",
-                          width: "10vw",
-                          [theme.breakpoints.between("sm", "md")]: {
-                            width: "15vw",
-                          },
-                          [theme.breakpoints.only("md")]: {
-                            width: "16vw",
-                          },
-                        }}
-                        onClick={() => {
-                          setFilterSp(!filterSp);
-                        }}
-                      >
-                        <Stack
-                          sx={{
-                            height: "0.74em",
-                            width: "0.74em",
-                            bgcolor: "#FF7D0F",
-                            borderRadius: "100%",
-                            mr: "0.3em",
-                          }}
-                        ></Stack>
-                        <Typography
-                          variant="button"
-                          sx={{
-                            fontSize: "0.8em",
-                            textTransform: "none",
-                            color: isSelected(filterSp),
-                          }}
-                        >
-                          Specification
-                        </Typography>
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          borderColor: isSelected(filterFree),
-                          display: "flex",
-                          padding: 0.8,
-                          borderRadius: 5,
-                          textTransform: "none",
-                          width: "10vw",
-                          [theme.breakpoints.between("sm", "md")]: {
-                            width: "15vw",
-                          },
-                          [theme.breakpoints.only("md")]: {
-                            width: "16vw",
-                          },
-                        }}
-                        onClick={() => {
-                          setFilterFree(!filterFree);
-                        }}
-                      >
-                        <Stack
-                          sx={{
-                            height: "0.74em",
-                            width: "0.74em",
-                            bgcolor: "#1976D2",
-                            borderRadius: "100%",
-                            mr: "0.3em",
-                          }}
-                        ></Stack>
-                        <Typography
-                          variant="button"
-                          sx={{
-                            fontSize: "0.8em",
-                            textTransform: "none",
-                            // color: isSelected(filterFree),
-                          }}
-                        >
-                          Free Elective
-                        </Typography>
-                      </Button>
-                    </Stack>
-                  </Stack>
-
-                  {/* Option */}
-                  <Stack>
-                    <Typography>Option</Typography>
-                    {/* Prerequisite */}
-                    <Stack
-                      direction={"row"}
-                      sx={{
-                        justifyContent: "space-between",
-                        alignItems: "end",
-                      }}
-                    >
-                      <Stack>
-                        <Typography>Prerequisite</Typography>
-                        <Typography>Show prerequisite of all course</Typography>
-                      </Stack>
-                      <FormControlLabel
-                        control={
-                          <IOSSwitch
-                            sx={{}}
-                            // onChange={handleChangePre}
-                            checked={checkedPreFilter}
-                          />
-                        }
-                        label=""
-                      />
-                      {/* <SwitchMUI/> */}
-                    </Stack>
-                    {/* Done Course */}
-                    <Stack
-                      direction={"row"}
-                      sx={{
-                        justifyContent: "space-between",
-                        alignItems: "end",
-                      }}
-                    >
-                      <Stack>
-                        <Typography>Done Course</Typography>
-                        <Typography>Show all course that done</Typography>
-                      </Stack>
-                      <FormControlLabel
-                        control={
-                          <IOSSwitch
-                            sx={{}}
-                            // onChange={handleChange}
-                            checked={checkedDone}
-                          />
-                        }
-                        label=""
-                      />
-                    </Stack>
-                  </Stack>
-
-                  {/* Bottom Section */}
-                  <Stack
-                    direction={"row"}
-                    sx={{ justifyContent: "space-between", mt: 1.4 }}
+                    spacing={1}
+                    sx={{ mt: "1vh", mb: "1vh" }}
                   >
                     <Button
                       variant="outlined"
-                      sx={{ color: "#000000", borderColor: "#000000" }}
+                      sx={{
+                        borderColor: isSelected(filterGE),
+                        display: "flex",
+                        padding: 0.8,
+                        borderRadius: 5,
+                        textTransform: "none",
+                        width: "10vw",
+                        [theme.breakpoints.between("sm", "md")]: {
+                          width: "18vw",
+                        },
+                        [theme.breakpoints.only("md")]: {
+                          width: "18vw",
+                        },
+                      }}
                       onClick={() => {
-                        setFilterGE(false);
-                        setFilterSp(false);
-                        setFilterFree(false);
-                        setCheckedDone(false);
-                        setFormats("normal");
-                        // setisCoop(false);
+                        setFilterGE(!filterGE);
                       }}
                     >
-                      <Typography sx={{ textTransform: "none" }}>
-                        Clear all
+                      <Stack
+                        sx={{
+                          height: "0.74em",
+                          width: "0.74em",
+                          bgcolor: "#7C4DFF",
+                          borderRadius: "100%",
+                          mr: "0.3em",
+                        }}
+                      ></Stack>
+                      <Typography
+                        sx={{
+                          fontSize: "0.8em",
+                          color: isSelected(filterGE),
+                          [theme.breakpoints.between("sm", "md")]: {
+                            fontSize: "0.71em",
+                          },
+                        }}
+                      >
+                        General Education
                       </Typography>
                     </Button>
                     <Button
-                      variant="contained"
-                      sx={{ bgcolor: "#EE6457" }}
+                      variant="outlined"
+                      sx={{
+                        borderColor: isSelected(filterSp),
+                        display: "flex",
+                        padding: 0.8,
+                        borderRadius: 5,
+                        textTransform: "none",
+                        width: "10vw",
+                        [theme.breakpoints.between("sm", "md")]: {
+                          width: "15vw",
+                        },
+                        [theme.breakpoints.only("md")]: {
+                          width: "16vw",
+                        },
+                      }}
                       onClick={() => {
-
-                        
+                        setFilterSp(!filterSp);
                       }}
                     >
-                      <Typography sx={{ textTransform: "none" }}>
-                        Save
+                      <Stack
+                        sx={{
+                          height: "0.74em",
+                          width: "0.74em",
+                          bgcolor: "#FF7D0F",
+                          borderRadius: "100%",
+                          mr: "0.3em",
+                        }}
+                      ></Stack>
+                      <Typography
+                        variant="button"
+                        sx={{
+                          fontSize: "0.8em",
+                          textTransform: "none",
+                          color: isSelected(filterSp),
+                        }}
+                      >
+                        Specification
+                      </Typography>
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        borderColor: isSelected(filterFree),
+                        display: "flex",
+                        padding: 0.8,
+                        borderRadius: 5,
+                        textTransform: "none",
+                        width: "10vw",
+                        [theme.breakpoints.between("sm", "md")]: {
+                          width: "15vw",
+                        },
+                        [theme.breakpoints.only("md")]: {
+                          width: "16vw",
+                        },
+                      }}
+                      onClick={() => {
+                        setFilterFree(!filterFree);
+                      }}
+                    >
+                      <Stack
+                        sx={{
+                          height: "0.74em",
+                          width: "0.74em",
+                          bgcolor: "#1976D2",
+                          borderRadius: "100%",
+                          mr: "0.3em",
+                        }}
+                      ></Stack>
+                      <Typography
+                        variant="button"
+                        sx={{
+                          fontSize: "0.8em",
+                          textTransform: "none",
+                          color: isSelected(filterFree),
+                        }}
+                      >
+                        Free Elective
                       </Typography>
                     </Button>
                   </Stack>
-                  {/*  */}
                 </Stack>
+
+                {/* Option */}
+                <Stack>
+                  <Typography>Option</Typography>
+                  {/* Prerequisite */}
+                  <Stack
+                    direction={"row"}
+                    sx={{
+                      justifyContent: "space-between",
+                      alignItems: "end",
+                    }}
+                  >
+                    <Stack>
+                      <Typography>Prerequisite</Typography>
+                      <Typography>Show prerequisite of all course</Typography>
+                    </Stack>
+                    <FormControlLabel
+                      control={
+                        <IOSSwitch
+                          sx={{}}
+                          onChange={handleChangePre}
+                          checked={checkedPreFilter}
+                        />
+                      }
+                      label=""
+                    />
+                    {/* <SwitchMUI/> */}
+                  </Stack>
+                  {/* Done Course */}
+                  <Stack
+                    direction={"row"}
+                    sx={{
+                      justifyContent: "space-between",
+                      alignItems: "end",
+                    }}
+                  >
+                    <Stack>
+                      <Typography>Done Course</Typography>
+                      <Typography>Show all course that done</Typography>
+                    </Stack>
+                    <FormControlLabel
+                      control={
+                        <IOSSwitch
+                          sx={{}}
+                          onChange={handleChange}
+                          checked={checkedDone}
+                        />
+                      }
+                      label=""
+                    />
+                  </Stack>
+                </Stack>
+
+                {/* Bottom Section */}
+                <Stack
+                  direction={"row"}
+                  sx={{ justifyContent: "space-between", mt: 1.4 }}
+                >
+                  <Button
+                    variant="outlined"
+                    sx={{ color: "#000000", borderColor: "#000000" }}
+                    onClick={() => {
+                      setFilterGE(false);
+                      setFilterSp(false);
+                      setFilterFree(false);
+                      setCheckedDone(false);
+                      setFormats("normal");
+                      setisCoop(false);
+                    }}
+                  >
+                    <Typography sx={{ textTransform: "none" }}>
+                      Clear all
+                    </Typography>
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{ bgcolor: "#EE6457" }}
+                    onClick={() => {
+                      setSaveBtn(true);
+                      setFilter(!filter);
+                    }}
+                  >
+                    <Typography sx={{ textTransform: "none" }}>Save</Typography>
+                  </Button>
+                </Stack>
+                {/*  */}
               </Stack>
             </Stack>
-          )}
+          </Stack>
+        )}
 
         {/* Top Section  */}
         <Stack
@@ -1225,7 +1303,7 @@ function NuikitView() {
                 width: "56%",
                 height: "28vh",
                 borderRadius: "0.625rem",
-                justifyContent: "center",
+                // justifyContent: "center",
                 overflowY: "scroll",
               }}
             >
@@ -1243,7 +1321,7 @@ function NuikitView() {
                     justifyContent: "space-between",
                     display: "flex",
                     flexDirection: "row",
-                    marginTop: "4vh",
+                    mt: 1,
                   }}
                 >
                   <Typography variant="body2" sx={{ marginBottom: "0.6vh" }}>
@@ -1285,6 +1363,12 @@ function NuikitView() {
                     flexDirection: "row",
                     columnGap: "1.7vw",
                     rowGap: "1.2vh",
+                    [theme.breakpoints.down("lg")]: {
+                      columnGap: "2vw",
+                    },
+                    [theme.breakpoints.between("sm", "md")]: {
+                      columnGap: "5.4vw",
+                    },
                     // overflowY: "scroll",
                     // marginBottom: '1vh'
                   }}
@@ -1292,7 +1376,11 @@ function NuikitView() {
                   {/* {majorReqNode} */}
                   {/* {actNode} */}
                   {/* {CoReqNode} */}
-                  {GeneralReq()}
+                  {filterGE && saveBtn ? (
+                    <Stack sx={{ height: "5.3704vh", width: "100%" }}></Stack>
+                  ) : (
+                    GeneralReq(checkedDone)
+                  )}
                 </Stack>
               </Stack>
 
@@ -1348,12 +1436,18 @@ function NuikitView() {
                     columnGap: "1.7vw",
                     paddingBottom: "2vh",
                     flexWrap: "wrap",
+                    [theme.breakpoints.down("lg")]: {
+                      columnGap: "2vw",
+                    },
+                    [theme.breakpoints.between("sm", "md")]: {
+                      columnGap: "5.4vw",
+                    },
                   }}
                 >
                   {/* {freeNode}
                   {GEfreeNode}
                   {CoFreeNode} */}
-                  {GenElec()}
+                  {filterGE && saveBtn ? null : GenElec()}
                 </Stack>
               </Stack>
             </Stack>
@@ -1379,10 +1473,20 @@ function NuikitView() {
                   paddingBottom: "2vh",
                   flexWrap: "wrap",
                   alignSelf: "center",
-                  marginTop: "6vh",
+                  marginTop: 4.2,
+                  [theme.breakpoints.down("lg")]: {
+                    columnGap: "2vw",
+                  },
+                  [theme.breakpoints.between("sm", "md")]: {
+                    columnGap: "5.4vw",
+                  },
                 }}
               >
-                {FreeNode()}
+                {filterFree && saveBtn ? (
+                  <Stack sx={{ height: "5.3704vh", width: "100%" }}></Stack>
+                ) : (
+                  FreeNode()
+                )}
               </Stack>
             </Stack>
             {/*  */}
@@ -1449,7 +1553,7 @@ function NuikitView() {
                 // height: "14vh",
                 alignSelf: "center",
                 marginBottom: "1.2vh",
-                marginTop: "2vh",
+                marginTop: 1,
                 // alignItems: 'start'
                 // overflowY: 'scroll'
               }}
@@ -1499,9 +1603,19 @@ function NuikitView() {
                   columnGap: "1.7vw",
                   rowGap: "1.2vh",
                   // overflowY: "scroll",
+                  [theme.breakpoints.down("lg")]: {
+                    columnGap: "2vw",
+                  },
+                  [theme.breakpoints.between("sm", "md")]: {
+                    columnGap: "3.84vw",
+                  },
                 }}
               >
-                {CoreNode()}
+                {filterSp && saveBtn ? (
+                  <Stack sx={{ height: "5.3704vh", width: "100%" }}></Stack>
+                ) : (
+                  CoreNode()
+                )}
               </Stack>
             </Stack>
 
@@ -1590,9 +1704,19 @@ function NuikitView() {
                   columnGap: "1.7vw",
                   rowGap: "1.2vh",
                   // overflowY: "scroll",
+                  [theme.breakpoints.down("lg")]: {
+                    columnGap: "2vw",
+                  },
+                  [theme.breakpoints.between("sm", "md")]: {
+                    columnGap: "3.84vw",
+                  },
                 }}
               >
-                {majorNode()}
+                {filterSp && saveBtn ? (
+                  <Stack sx={{ height: "5.3704vh", width: "100%" }}></Stack>
+                ) : (
+                  majorNode()
+                )}
               </Stack>
             </Stack>
 
@@ -1650,10 +1774,20 @@ function NuikitView() {
                   flexWrap: "wrap",
                   columnGap: "1.7vw",
                   rowGap: "1.2vh",
+                  [theme.breakpoints.down("lg")]: {
+                    columnGap: "2vw",
+                  },
+                  [theme.breakpoints.between("sm", "md")]: {
+                    columnGap: "3.84vw",
+                  },
                   //   overflowX: 'scroll'
                 }}
               >
-                {majorENode()}
+                {filterSp && saveBtn ? (
+                  <Stack sx={{ height: "5.3704vh", width: "100%" }}></Stack>
+                ) : (
+                  majorENode()
+                )}
               </Stack>
             </Stack>
           </Stack>

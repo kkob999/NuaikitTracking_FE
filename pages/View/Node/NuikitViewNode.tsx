@@ -1,4 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material";
+import { theme } from "../../../constants/theme";
 // import { nodes } from "../../Model/InitialNode";
 // import {nodes}
 // import "./node.css";
@@ -58,6 +59,14 @@ function NuikitViewNode(props: node) {
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "#34C759",
+            [theme.breakpoints.down("lg")]: {
+              width: "0.78rem",
+              height: "0.78rem",
+            },
+            [theme.breakpoints.between("sm", "md")]: {
+              width: "0.8rem",
+              height: "0.8rem",
+            },
           }}
 
           // sx={{
@@ -97,6 +106,14 @@ function NuikitViewNode(props: node) {
             height: "1.666vh",
             justifyContent: "center",
             alignItems: "center",
+            [theme.breakpoints.down("lg")]: {
+              width: "0.78rem",
+              height: "0.78rem",
+            },
+            [theme.breakpoints.between("sm", "md")]: {
+              width: "0.8rem",
+              height: "0.8rem",
+            },
           }}
         ></Stack>
       );
@@ -147,6 +164,16 @@ function NuikitViewNode(props: node) {
           height: "5.3704vh",
           border: style,
           borderRadius: "0.5rem",
+          [theme.breakpoints.down("lg")]: {
+            width: "7.146vw",
+            height: "46px",
+            // bgcolor: "paleturquoise"
+          },
+          [theme.breakpoints.between("sm", "md")]: {
+            width: "10.146vw",
+            height: "4.3704vh",
+            // bgcolor: "mistyrose"
+          },
         }}
       >
         <Stack sx={{ height: "100%", justifyContent: "center" }}>
@@ -163,11 +190,10 @@ function NuikitViewNode(props: node) {
               // textJustify: 'auto'
             }}
           >
-            <Stack sx={{ width: "100%"}}>
+            <Stack sx={{ width: "100%" }}>
               <Typography
                 variant="caption"
                 sx={{
-                  
                   color: color,
                   // fontSize: checkElective(node.sub_no),
                   textAlign: "center",
@@ -176,7 +202,12 @@ function NuikitViewNode(props: node) {
                   maxHeight: "2em",
                   textOverflow: "ellipsis",
                   wordWrap: "break-word",
-                  
+                  [theme.breakpoints.down("lg")]: {
+                    fontSize: "0.78rem",
+                  },
+                  [theme.breakpoints.between("sm", "md")]: {
+                    fontSize: "0.8rem",
+                  },
                 }}
               >
                 {node.sub_no}
