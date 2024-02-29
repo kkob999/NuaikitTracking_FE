@@ -15,20 +15,10 @@
   ],
   "rootMainFiles": [],
   "pages": {
-    "/Dashboard": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/Dashboard.js"
-    ],
     "/NuikitView": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/NuikitView.js"
-    ],
-    "/TermView": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/TermView.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",
