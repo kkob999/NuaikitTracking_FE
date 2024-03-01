@@ -2,5 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/TermView": "pages/TermView.js"
+  "/NuikitView": "pages/NuikitView.js",
+  "/Dashboard": "pages/Dashboard.js",
+  "/api/whoAmI": "pages/api/whoAmI.js"
 }

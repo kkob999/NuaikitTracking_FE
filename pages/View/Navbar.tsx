@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Stack,
@@ -155,6 +155,14 @@ function Navbar() {
       "& .MuiDrawer-paper": closedMixin(theme),
     }),
   }));
+
+  
+  
+  useEffect(() => {
+    if (typeof window !== "undefined"){
+      if (window.innerWidth <= 1300) setOpen(false);
+    }
+  }, []);
 
   return (
     <Stack>
