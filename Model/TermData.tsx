@@ -632,7 +632,7 @@ let showPre = new Set<string>();
 
 var totalSubColumn = 0;
 
-var isCoop_api: boolean = false;
+var isCoop_api: string = "false";
 
 var arrTogglePrereq: any[] = [];
 
@@ -659,13 +659,16 @@ async function processData(year: string, isCoop: string) {
     year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop +
-    "&studentId=630610727";
+    "&mockData=mockData5";
   var nuikitURL =
     "http://localhost:8080/categoryView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop +
-    "&studentId=630610727";
+    "&mockData=mockData5";
+
+  // &mockData=mockData5
+  // &studentId=630610727
 
   console.log(termURL);
 
@@ -720,7 +723,7 @@ async function processData(year: string, isCoop: string) {
       summerArr.push(0);
     }
   }
-  // console.log("sum arr1 " + summerArr);
+
   var countTwo = 0;
   for (let i = summerArr.length; i < fetchData["template"].length; i++) {
     if (countTwo == 2) {
@@ -730,7 +733,7 @@ async function processData(year: string, isCoop: string) {
     countTwo++;
   }
 
-  console.log("term arr " + summerArr);
+  // console.log("term arr " + summerArr);
 
   //gen
   for (let i = 0; i < categoryData["geCategory"].length; i++) {
@@ -925,7 +928,7 @@ async function processData(year: string, isCoop: string) {
         xpos += (window.innerWidth * x_sum) / 1440;
       } else if (i % 2 === 0 && summerArr[i] === 0 && summerArr[i - 1] === 2) {
         xpos += (window.innerWidth * xx) / 1440;
-        // console.log(i)
+        
       } else if (
         i % 2 !== 0 &&
         summerArr[i] === 0 &&
@@ -937,12 +940,12 @@ async function processData(year: string, isCoop: string) {
         }else{
           xpos += (window.innerWidth * (xx+2)) / 1440
         }
-        console.log("nine " + i)
+        
       }
     }
     //normal term
     if (!summerArr.includes(2)) {
-      // console.log("no summer");
+      
       if (i != 0 && i % 2 == 0) xpos += (window.innerWidth * xx) / 1440;
     }
 

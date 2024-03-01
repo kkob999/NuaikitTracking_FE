@@ -2,10 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/api/signOut": "pages/api/signOut.js",
-  "/api/signIn": "pages/api/signIn.js",
-  "/": "pages/index.js",
-  "/cmuOAuthCallback": "pages/cmuOAuthCallback.js",
-  "/api/whoAmI": "pages/api/whoAmI.js",
-  "/Dashboard": "pages/Dashboard.js"
+  "/TermView": "pages/TermView.js"
 }

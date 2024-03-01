@@ -231,7 +231,7 @@ function TermView() {
   const [filterSp, setFilterSp] = useState(false);
   const [filterFree, setFilterFree] = useState(false);
   const [checkedPre, setCheckedPre] = useState(true);
-  const [checkedPreFilter, setCheckedPreFilter] = useState(true);
+  const [checkedPreFilter, setCheckedPreFilter] = useState(false);
   const [checkedDone, setCheckedDone] = useState(false);
 
   const [formats, setFormats] = useState("normal");
@@ -400,11 +400,11 @@ function TermView() {
     var compTerm: any[] = [];
     let j = 0;
 
-    console.log("term log");
-    console.log(term);
+    // console.log("term log");
+    // console.log(term);
 
     term.forEach((i, index) => {
-      console.log(i + " " + j);
+      // console.log(i + " " + j);
       if (i === "normal") {
         compTerm.push(
           NormalTerm(
@@ -424,7 +424,7 @@ function TermView() {
           summerTerm(
             index + 1,
             "" + h + "vh",
-            "" + (h - 5) + "vh",
+            "" + (h - 7) + "vh",
             credits[j],
             credits[j + 1],
             credits[j + 2]
@@ -558,10 +558,14 @@ function TermView() {
     startProgram();
 
     let c = isCoop;
-    if (c) {
+    console.log("in useeffect")
+    console.log(c)
+    if (c === "true") {
       setDisButton(true);
       setFormats("coop");
-    } else {
+    } 
+    if (c === "false") {
+      setDisButton(false);
       setFormats("normal");
     }
 
@@ -891,7 +895,7 @@ function TermView() {
               <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
                 {/* {isCoop === false && displayNormalPlan()}
                 {isCoop === true && displayCoopPlan()} */}
-                {isCoop ? displayCoopPlan() : displayNormalPlan()}
+                {isCoop === "true" ? displayCoopPlan() : displayNormalPlan()}
                 {checkedDone && displayDone()}
                 {checkedPreFilter && displayPre()}
                 {filterGE && displayGE()}
@@ -1072,8 +1076,8 @@ function TermView() {
                       >
                         <Stack
                           sx={{
-                            height: "0.74em",
-                            width: "0.74em",
+                            height: "1em",
+                            width: "1em",
                             bgcolor: "#7C4DFF",
                             borderRadius: "100%",
                             mr: "0.3em",
@@ -1113,8 +1117,8 @@ function TermView() {
                       >
                         <Stack
                           sx={{
-                            height: "0.74em",
-                            width: "0.74em",
+                            height: "1em",
+                            width: "1em",
                             bgcolor: "#FF7D0F",
                             borderRadius: "100%",
                             mr: "0.3em",
@@ -1153,8 +1157,8 @@ function TermView() {
                       >
                         <Stack
                           sx={{
-                            height: "0.74em",
-                            width: "0.74em",
+                            height: "1em",
+                            width: "1em",
                             bgcolor: "#1976D2",
                             borderRadius: "100%",
                             mr: "0.3em",
@@ -1240,7 +1244,7 @@ function TermView() {
                         setFilterFree(false);
                         setCheckedDone(false);
                         setFormats("normal");
-                        setisCoop(false);
+                        setisCoop("false");
                       }}
                     >
                       <Typography sx={{ textTransform: "none" }}>
@@ -1329,7 +1333,7 @@ function TermView() {
                             formats === "normal"
                           ) {
                             console.log("reload back to narmal plan page");
-                            setisCoop(false);
+                            setisCoop("false");
                             // window.location.reload();
                           } else if (
                             prevFormat !== undefined &&
@@ -1337,7 +1341,7 @@ function TermView() {
                           ) {
                             console.log("reload to coop plan page");
                             // setNodes([])
-                            setisCoop(true);
+                            setisCoop("true");
                             // window.location.reload();
                             // check if other filter are checked save that setting
                           }

@@ -38,7 +38,8 @@ export default function TermNode({
       sub_no == "Elective" ||
       data.sub_no == "Co-Creator" ||
       data.sub_no == "Major Elective" ||
-      data.sub_no == "Learner Person"
+      data.sub_no == "Learner Person" ||
+      data.sub_no == "Free" 
     ) {
       return (
         <Typography
