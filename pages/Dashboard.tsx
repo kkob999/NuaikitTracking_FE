@@ -6,6 +6,7 @@ import {
   CircularProgress,
   CircularProgressProps,
   circularProgressClasses,
+  useMediaQuery,
 } from "@mui/material";
 import * as React from "react";
 import jsonData from "../Model/NodeDB.json";
@@ -15,6 +16,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { WhoAmIResponse } from "./api/whoAmI";
+import { theme } from "../constants/theme";
 
 function CircularProgressWithLabel(
   props: CircularProgressProps & { value: number }
@@ -67,9 +69,6 @@ function CircularWithValueLabel(allgetCredit: number, allneedCredit: number) {
   return progress;
 }
 
-const totalCredit = jsonData.summaryCredit;
-const reqCredit = jsonData.requiredCredits;
-// General Credit
 let totalReqGenCredit = 0;
 let totalReqGenCreditNeed = 0;
 let totalElectiveGenCredit = 0;
@@ -158,8 +157,55 @@ function DashBoard() {
   const [studentId, setStudentId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  var [allgetCredit, setAllGetCredit] = React.useState<number>(0);
+  var [allgetCreditCal, setAllGetCreditCal] = React.useState<number>(0);
+  var [allneedCredit, setAllNeedCredit] = React.useState<number>(0);
+
+  var [major_reqCredit, setmajorReqCredit] = React.useState<number>(0);
+  var [major_reqCreditNeed, setmajorReqCreditNeed] = React.useState<number>(0);
+  var [major_elecCredit, setmajorElecCredit] = React.useState<number>(0);
+  var [major_elecCreditCal, setmajorElecCreditCal] = React.useState<number>(0);
+  var [major_elecCreditNeed, setmajorElecCreditNeed] =
+    React.useState<number>(0);
+  var [majorPercent, setMajorPercent] = React.useState<number>(0);
+
+  var [core_Credit, setcoreCredit] = React.useState<number>(0);
+  var [core_CreditNeed, setcoreCreditNeed] = React.useState<number>(0);
+  var [corePercent, setCorePercent] = React.useState<number>(0);
+
+  var [free_Credit, setfreeCredit] = React.useState<number>(0);
+  var [free_CreditCal, setfreeCreditCal] = React.useState<number>(0);
+  var [free_CreditNeed, setfreeCreditNeed] = React.useState<number>(0);
+  var [freePercent, setFreePercent] = React.useState<number>(0);
+
+  var [gen_reqCredit, setgenReqCredit] = React.useState<number>(0);
+  var [gen_reqCreditNeed, setgenReqCreditNeed] = React.useState<number>(0);
+  var [gen_elecCredit, setgenElecCredit] = React.useState<number>(0);
+  var [gen_elecCreditCal, setgenElecCreditCal] = React.useState<number>(0);
+  var [gen_elecCreditNeed, setgenElecCreditNeed] = React.useState<number>(0);
+  var [gePercent, setGEPercent] = React.useState<number>(0);
+
+  var [clock, setClock] = React.useState<number>(0);
+
+  var tmp_major_reqCredit = 0;
+  var tmp_major_reqCreditNeed = 0;
+  var tmp_major_elecCredit = 0;
+  var tmp_major_elecCreditNeed = 0;
+
+  var tmp_coreCredit = 0;
+  var tmp_coreCreditNeed = 0;
+
+  var tmp_free_Credit = 0;
+  var tmp_free_CreditNeed = 0;
+
+  var tmp_gen_reqCredit = 0;
+  var tmp_gen_reqCreditNeed = 0;
+
+  var tmp_gen_elecCredit = 0;
+  var tmp_gen_elecCreditNeed = 0;
+
   const url =
-    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610727";
+    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610768";
 
   function FetchDashBoard() {
     return new Promise(function (resolve, reject) {
@@ -186,70 +232,13 @@ function DashBoard() {
     });
   }
 
-  var [allgetCredit, setAllGetCredit] = React.useState<number>(0);
-  var [allneedCredit, setAllNeedCredit] = React.useState<number>(0);
-
-  var [major_reqCredit, setmajorReqCredit] = React.useState<number>(0);
-  var [major_reqCreditNeed, setmajorReqCreditNeed] = React.useState<number>(0);
-  var [major_elecCredit, setmajorElecCredit] = React.useState<number>(0);
-  var [major_elecCreditNeed, setmajorElecCreditNeed] =
-    React.useState<number>(0);
-  var [core_Credit, setcoreCredit] = React.useState<number>(0);
-  var [core_CreditNeed, setcoreCreditNeed] = React.useState<number>(0);
-
-  var [free_Credit, setfreeCredit] = React.useState<number>(0);
-  var [free_CreditNeed, setfreeCreditNeed] = React.useState<number>(0);
-
-  var [gen_reqCredit, setgenReqCredit] = React.useState<number>(0);
-  var [gen_reqCreditNeed, setgenReqCreditNeed] = React.useState<number>(0);
-  var [gen_elecCredit, setgenElecCredit] = React.useState<number>(0);
-  var [gen_elecCreditNeed, setgenElecCreditNeed] = React.useState<number>(0);
-
-  var [clock, setClock] = React.useState<number>(0);
-
-  var tmp_major_reqCredit = 0;
-  var tmp_major_reqCreditNeed = 0;
-  var tmp_major_elecCredit = 0;
-  var tmp_major_elecCreditNeed = 0;
-
-  var tmp_coreCredit = 0;
-  var tmp_coreCreditNeed = 0;
-
-  var tmp_free_Credit = 0;
-  var tmp_free_CreditNeed = 0;
-
-  var tmp_gen_reqCredit = 0;
-  var tmp_gen_reqCreditNeed = 0;
-
-  var tmp_gen_elecCredit = 0;
-  var tmp_gen_elecCreditNeed = 0;
-
   async function DatchBoardData() {
-    const resp: any = await axios
-      .get(url, {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-          mode: "no-cors",
-        },
-      })
-      .then(function (response) {
-        console.log("fetch dashboard dataaaaaa");
-        return response.data;
-      })
-      .catch((error) => {
-        // handle errors
-        console.log(error);
-        // return testfail1
-      });
+    const resp: any = await FetchDashBoard();
     // console.log(resp["coreCategory"]);
     console.log(resp);
 
     setAllGetCredit(resp["summaryCredit"]);
     setAllNeedCredit(resp["requiredCredits"]);
-
-    setClock(resp["summaryCredit"]);
 
     for (let i = 0; i < resp["coreCategory"].length; i++) {
       tmp_coreCredit += resp["coreCategory"][i]["requiredCreditsGet"];
@@ -268,6 +257,11 @@ function DashBoard() {
       setfreeCreditNeed(tmp_free_CreditNeed);
     }
 
+    setfreeCreditCal(free_Credit);
+    if (free_Credit > free_CreditNeed) {
+      setfreeCreditCal(free_CreditNeed);
+    }
+
     for (let i = 0; i < resp["geCategory"].length; i++) {
       if (resp["geCategory"][i]["requiredCreditsNeed"] > 0) {
         tmp_gen_reqCredit += resp["geCategory"][i]["requiredCreditsGet"];
@@ -283,6 +277,11 @@ function DashBoard() {
         tmp_gen_elecCreditNeed += resp["geCategory"][i]["electiveCreditsNeed"];
         setgenElecCreditNeed(tmp_gen_elecCreditNeed);
       }
+    }
+
+    setgenElecCreditCal(free_Credit);
+    if (gen_elecCredit > gen_elecCreditNeed) {
+      setgenElecCreditCal(gen_elecCreditNeed);
     }
 
     for (let i = 0; i < resp["majorCategory"].length; i++) {
@@ -305,15 +304,65 @@ function DashBoard() {
       }
       // console.log('.')
     }
+
+    setmajorElecCreditCal(major_elecCredit);
+    if (major_elecCredit > major_elecCreditNeed) {
+      setmajorElecCreditCal(major_elecCreditNeed);
+    }
     // console.log('.')
     // setClock(CircularWithValueLabel(allgetCredit,allneedCredit))
 
-    if (resp["summaryCredit"] >= resp["requiredCredits"]) {
-      setClock(100);
-    } else {
-      setClock((resp["summaryCredit"] * 100) / resp["requiredCredits"]);
-    }
+    setAllGetCreditCal(
+      core_Credit +
+        +gen_reqCredit +
+        gen_elecCreditCal +
+        free_CreditCal +
+        major_elecCreditCal +
+        major_reqCredit
+    );
   }
+
+  React.useEffect(() => {
+    DatchBoardData();
+  });
+
+  React.useEffect(() => {
+    setGEPercent(
+      Math.floor(
+        ((gen_reqCredit + gen_elecCreditCal) * 100) /
+          (gen_reqCreditNeed + gen_elecCreditNeed)
+      )
+    );
+
+    setCorePercent(Math.floor((core_Credit * 100) / core_CreditNeed));
+
+    setMajorPercent(
+      Math.floor(
+        ((major_reqCredit + major_elecCreditCal) * 100) /
+          (major_reqCreditNeed + major_elecCreditNeed)
+      )
+    );
+
+    setFreePercent(Math.floor((free_CreditCal * 100) / free_CreditNeed));
+    setClock(Math.floor((allgetCreditCal * 100) / allneedCredit));
+  }, [
+    gen_reqCredit,
+    gen_elecCreditCal,
+    gen_reqCreditNeed,
+    gen_elecCreditNeed,
+    core_Credit,
+    core_CreditNeed,
+    major_reqCredit,
+    major_elecCreditCal,
+    major_reqCreditNeed,
+    major_elecCreditNeed,
+    free_CreditCal,
+    free_CreditNeed,
+    allgetCreditCal,
+    allneedCredit,
+  ]);
+
+  const bp = useMediaQuery(theme.breakpoints.down("lg"));
 
   useEffect(() => {
     //All cookies that belong to the current url will be sent with the request automatically
@@ -343,10 +392,6 @@ function DashBoard() {
       });
   }, []);
 
-  React.useEffect(() => {
-    DatchBoardData();
-  }, []);
-
   function signOut() {
     //Call sign out api without caring what is the result
     //It will fail only in case of client cannot connect to server
@@ -365,201 +410,506 @@ function DashBoard() {
       }}
     >
       {/* Navbar */}
+      {/* <Box sx={{ width: "20vw" }}> */}
       <Navbar />
+      {/* </Box> */}
       {/* Dashboard */}
+
       <Stack
         sx={{
-          height: "100vh",
           width: "100%",
           display: "flex",
-          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
         }}
+        margin={{ xs: "16px", sm: "16px", lg: "48px" }}
+        height={{ xs: "", sm: "", lg: "100vh" }}
+        flexDirection={{ xs: "column", sm: "column", lg: "row" }}
+        gap={{ xs: "16px", sm: "16px", lg: "48px" }}
+        marginTop={{ xs: "20px", sm: "20px", lg: "0px" }}
       >
         <Stack
           sx={{
             height: "100%",
-            width: "50%",
             justifyContent: "center",
             alignItems: "center",
+            flexDirection: "column",
           }}
+          width={{ xs: "80%", sm: "80%", lg: "45%" }}
         >
           {/* Total Nuikit */}
-          <Stack sx={{ marginBottom: "5.5556vh" }}>
-            <Typography>Total Nuikit</Typography>
+          <Stack width={{ xs: "100%", sm: "100%", lg: "100%" }}>
+            <Typography marginBottom={"4px"}>Total Nuaikit</Typography>
             <Stack
               sx={{
-                width: "22.917vw",
-                height: "25.3704vh",
                 border: "2px solid var(--Grey_2, #C2C2C2)",
                 borderRadius: "1.25rem",
+                justifyContent: "center",
+                padding: "8px",
               }}
             >
               <Stack
                 sx={{
                   display: "flex",
-                  flexDirection: "row",
-                  height: "100%",
+                  margin: "16px",
                   justifyContent: "center",
+                  alignItems: "center",
+                  gap: "16px",
                 }}
+                flexDirection={"row"}
               >
+                {/* Total Nuikit */}
                 <Stack
                   sx={{
                     alignItems: "center",
                     justifyContent: "center",
                     height: "100%",
-                    marginRight: "1.563vw",
                   }}
+                  width={"50%"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
                 >
-                  <Box sx={{ position: "relative" }}>
+                  <Box
+                    position="relative"
+                    display="inline-block"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Box
+                      top={0}
+                      left={0}
+                      bottom={0}
+                      right={0}
+                      position="absolute"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <CircularProgress
+                        style={{ color: "#f5f5f5" }}
+                        size={180}
+                        variant="determinate"
+                        value={100}
+                      />
+                    </Box>
                     <CircularProgress
-                      variant="determinate"
-                      sx={{ color: "#C5C5C5" }}
-                      size={160}
-                      thickness={4}
-                      value={100}
-                    />
-                    <CircularProgressWithLabel
-                      variant="determinate"
                       sx={{
-                        position: "absolute",
-                        right: 0,
-                        top: -160,
-                        color: "#F1485B",
                         [`& .${circularProgressClasses.circle}`]: {
                           strokeLinecap: "round",
                         },
                       }}
-                      thickness={4}
-                      size={160}
-                      value={clock}
+                      size={180}
+                      variant="determinate"
+                      value={clock ? (clock < 100 ? clock : 100) : 0}
                     />
+                    <Box
+                      top={0}
+                      left={0}
+                      bottom={0}
+                      right={0}
+                      position="absolute"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      flexDirection={"column"}
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        component="div"
+                        color="textSecondary"
+                      >
+                        Total
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        component="div"
+                        color="textSecondary"
+                      >
+                        {clock ? clock : 0} %
+                      </Typography>
+                    </Box>
                   </Box>
                 </Stack>
+                {/* Total Nuikit */}
 
-                <Stack sx={{ justifyContent: "center" }}>
-                  <Stack
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        bgcolor: "#F1485B",
-                        height: "0.938rem",
-                        width: "0.938rem",
-                        borderRadius: "100%",
-                      }}
-                    ></Box>
-                    <Typography
-                      variant="subtitle1"
-                      sx={{ marginLeft: "0.521vw" }}
+                {/* แยก */}
+                <Stack
+                  flexDirection={"column"}
+                  gap={"16px"}
+                  width={"50%"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                >
+                  <Stack flexDirection={"row"} gap="20px">
+                    <Stack
+                      sx={{ justifyContent: "center", alignItems: "center" }}
+                      width={"100px"}
                     >
-                      Done
-                    </Typography>
+                      <Typography variant="body2" marginBottom={"5px"}>
+                        GE
+                      </Typography>
+
+                      <Box
+                        position="relative"
+                        display="inline-block"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <CircularProgress
+                            style={{ color: "#f5f5f5" }}
+                            size={90}
+                            variant="determinate"
+                            value={90}
+                          />
+                        </Box>
+                        <CircularProgress
+                          sx={{
+                            [`& .${circularProgressClasses.circle}`]: {
+                              strokeLinecap: "round",
+                            },
+                          }}
+                          size={90}
+                          variant="determinate"
+                          value={
+                            gePercent ? (gePercent < 100 ? gePercent : 100) : 0
+                          }
+                        />
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Typography
+                            variant="subtitle1"
+                            component="div"
+                            color="textSecondary"
+                          >
+                            {gePercent ? gePercent : 0} %
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Stack>
+
+                    <Stack
+                      sx={{ justifyContent: "center", alignItems: "center" }}
+                      width={"100px"}
+                    >
+                      <Typography variant="body2" marginBottom={"5px"}>
+                        Core
+                      </Typography>
+
+                      <Box
+                        position="relative"
+                        display="inline-block"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <CircularProgress
+                            style={{ color: "#f5f5f5" }}
+                            size={90}
+                            variant="determinate"
+                            value={100}
+                          />
+                        </Box>
+                        <CircularProgress
+                          sx={{
+                            [`& .${circularProgressClasses.circle}`]: {
+                              strokeLinecap: "round",
+                            },
+                          }}
+                          size={90}
+                          variant="determinate"
+                          value={
+                            corePercent
+                              ? corePercent < 100
+                                ? corePercent
+                                : 100
+                              : 0
+                          }
+                        />
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Typography
+                            variant="subtitle1"
+                            component="div"
+                            color="textSecondary"
+                          >
+                            {corePercent ? corePercent : 0} %
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Stack>
                   </Stack>
-                  <Stack
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        bgcolor: "#C2C2C2",
-                        height: "0.938rem",
-                        width: "0.938rem",
-                        borderRadius: "100%",
-                      }}
-                    ></Box>
-                    <Typography
-                      variant="subtitle1"
-                      sx={{ marginLeft: "0.521vw" }}
+
+                  <Stack flexDirection={"row"} gap="20px">
+                    <Stack
+                      sx={{ justifyContent: "center", alignItems: "center" }}
+                      width={"100px"}
                     >
-                      Undone
-                    </Typography>
+                      <Typography variant="body2" marginBottom={"5px"}>
+                        Major
+                      </Typography>
+
+                      <Box
+                        position="relative"
+                        display="inline-block"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <CircularProgress
+                            style={{ color: "#f5f5f5" }}
+                            size={90}
+                            variant="determinate"
+                            value={100}
+                          />
+                        </Box>
+                        <CircularProgress
+                          sx={{
+                            [`& .${circularProgressClasses.circle}`]: {
+                              strokeLinecap: "round",
+                            },
+                          }}
+                          size={90}
+                          variant="determinate"
+                          value={
+                            majorPercent
+                              ? majorPercent < 100
+                                ? majorPercent
+                                : 100
+                              : 0
+                          }
+                        />
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Typography
+                            variant="subtitle1"
+                            component="div"
+                            color="textSecondary"
+                          >
+                            {majorPercent ? majorPercent : 0} %
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Stack>
+
+                    <Stack
+                      sx={{ justifyContent: "center", alignItems: "center" }}
+                      width={"100px"}
+                    >
+                      <Typography variant="body2" marginBottom={"5px"}>
+                        Free Elective
+                      </Typography>
+
+                      <Box
+                        position="relative"
+                        display="inline-block"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <CircularProgress
+                            style={{ color: "#f5f5f5" }}
+                            size={90}
+                            variant="determinate"
+                            value={100}
+                          />
+                        </Box>
+                        <CircularProgress
+                          sx={{
+                            [`& .${circularProgressClasses.circle}`]: {
+                              strokeLinecap: "round",
+                            },
+                          }}
+                          size={90}
+                          variant="determinate"
+                          value={
+                            freePercent
+                              ? freePercent < 100
+                                ? freePercent
+                                : 100
+                              : 0
+                          }
+                        />
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Typography
+                            variant="subtitle1"
+                            component="div"
+                            color="textSecondary"
+                          >
+                            {freePercent ? freePercent : 0} %
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Stack>
                   </Stack>
                 </Stack>
+                {/* แยก */}
               </Stack>
             </Stack>
-          </Stack>
-          {/* End Total Nuikit */}
 
-          {/* Profile */}
-          <Stack>
-            <Typography>Profile</Typography>
-            <Stack
-              sx={{
-                width: "22.917vw",
-                height: "13.9229vh",
-                border: "2px solid var(--Grey_2, #C2C2C2)",
-                borderRadius: "1.25rem",
-                justifyContent: "center",
-              }}
-            >
-              <Stack
-                sx={{
-                  marginLeft: "1.771vw",
-                  marginRight: "1.771vw",
-                  gap: "1.4815vh",
-                }}
-              >
-                <Stack sx={{ display: "flex", flexDirection: "row" }}>
-                  <Typography variant="subtitle2" sx={{ width: "6.771vw" }}>
-                    Name
-                  </Typography>
-                  <Typography variant="subtitle2" sx={{ marginLeft: "0" }}>
-                    Natcha Sirakorn
-                  </Typography>
+            {/* End Total Nuikit */}
+
+            {!bp && (
+              <>
+                <Stack
+                  width={{ xs: "100%", sm: "100%", lg: "100%" }}
+                  height={"24px"}
+                ></Stack>
+                <Stack width={{ xs: "100%", sm: "100%", lg: "100%" }}>
+                  <Typography marginBottom={"4px"}>Profile</Typography>
+                  <Stack
+                    sx={{
+                      padding: "16px",
+                      border: "2px solid var(--Grey_2, #C2C2C2)",
+                      borderRadius: "1.25rem",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Stack
+                      sx={{
+                        marginLeft: "1.771vw",
+                        marginRight: "1.771vw",
+                        gap: "1.4815vh",
+                        width: "100%",
+                      }}
+                    >
+                      <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ width: "6.771vw" }}
+                        >
+                          Name
+                        </Typography>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ marginLeft: "0" }}
+                        >
+                          {fullName}
+                        </Typography>
+                      </Stack>
+                      <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ width: "6.771vw" }}
+                        >
+                          Email
+                        </Typography>
+                        <Typography variant="subtitle2">
+                          {cmuAccount}
+                        </Typography>
+                      </Stack>
+                      <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ width: "6.771vw" }}
+                        >
+                          Student code
+                        </Typography>
+                        <Typography variant="subtitle2">{studentId}</Typography>
+                      </Stack>
+                    </Stack>
+                  </Stack>
                 </Stack>
-                <Stack sx={{ display: "flex", flexDirection: "row" }}>
-                  <Typography variant="subtitle2" sx={{ width: "6.771vw" }}>
-                    Email
-                  </Typography>
-                  <Typography variant="subtitle2">
-                    natcha_sil@cmu.ac.th
-                  </Typography>
-                </Stack>
-                <Stack sx={{ display: "flex", flexDirection: "row" }}>
-                  <Typography variant="subtitle2" sx={{ width: "6.771vw" }}>
-                    Student code
-                  </Typography>
-                  <Typography variant="subtitle2">630610727</Typography>
-                </Stack>
-              </Stack>
-            </Stack>
+              </>
+            )}
           </Stack>
-          {/* End Profile */}
         </Stack>
 
         {/* Your Nuikit */}
         <Stack
           sx={{
             height: "100%",
-            // width: "50%",
             justifyContent: "center",
             alignItems: "center",
           }}
+          width={{ xs: "80%", sm: "80%", lg: "45%" }}
         >
-          <Stack>
-            <Typography>Your Nuikit</Typography>
+          <Stack
+            sx={{
+              width: "100%",
+            }}
+            height={{ lg: "520px" }}
+          >
+            <Typography marginBottom={"4px"}>Your Nuaikit</Typography>
             {/* frame */}
             <Stack
               sx={{
-                height: "48.8889vh",
-                width: "31.979vw",
+                height: "100%",
+                width: "100%",
                 border: "2px solid var(--Grey_2, #C2C2C2)",
                 borderRadius: "1.25rem",
                 justifyContent: "center",
+                paddingX: "24px",
               }}
             >
               {/* Start */}
               <Stack
                 sx={{
-                  marginLeft: "2.917vw",
-                  marginRight: "2.917vw",
+                  margin: "20px",
                   gap: "2.9630vh",
                   justifyItems: "center",
                 }}
@@ -601,7 +951,7 @@ function DashBoard() {
                           opacity: 0.5,
                         }}
                       >
-                        /{gen_reqCredit + gen_elecCredit}
+                        /{gen_reqCreditNeed + gen_elecCreditNeed}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -1059,7 +1409,53 @@ function DashBoard() {
             </Stack>
           </Stack>
         </Stack>
+
+        {bp && (
+          <Stack width={"80%"}>
+            <Typography>Profile</Typography>
+            <Stack
+              sx={{
+                padding: "16px",
+                width: "100%",
+                height: "13.9229vh",
+                border: "2px solid var(--Grey_2, #C2C2C2)",
+                borderRadius: "1.25rem",
+                justifyContent: "center",
+              }}
+            >
+              <Stack
+                sx={{
+                  marginLeft: "1.771vw",
+                  marginRight: "1.771vw",
+                  gap: "1.4815vh",
+                }}
+              >
+                <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                  <Typography variant="subtitle2" sx={{ width: "80px" }}>
+                    Name
+                  </Typography>
+                  <Typography variant="subtitle2" sx={{ marginLeft: "0" }}>
+                    {fullName}
+                  </Typography>
+                </Stack>
+                <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                  <Typography variant="subtitle2" sx={{ width: "80px" }}>
+                    Email
+                  </Typography>
+                  <Typography variant="subtitle2">{cmuAccount}</Typography>
+                </Stack>
+                <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                  <Typography variant="subtitle2" sx={{ width: "80px" }}>
+                    Student code
+                  </Typography>
+                  <Typography variant="subtitle2">{studentId}</Typography>
+                </Stack>
+              </Stack>
+            </Stack>
+          </Stack>
+        )}
       </Stack>
+
       {/* End Dashboard */}
     </Stack>
   );

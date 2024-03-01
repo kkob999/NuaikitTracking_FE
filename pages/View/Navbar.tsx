@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Stack,
   Typography,
-  Tooltip,
+  Button,
+  Avatar,
   SvgIcon,
   AppBar,
   Drawer,
@@ -27,11 +28,14 @@ import CategoryIcon from "@mui/icons-material/Category";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
 // import { useNavigate, Link } from "react-router-dom";
 
 import { useRouter } from "next/navigation";
 
 import Link from "next/link";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { WhoAmIResponse } from "../api/whoAmI";
 
 function Navbar() {
   const router = useRouter();
@@ -156,12 +160,56 @@ function Navbar() {
     }),
   }));
 
-  
-  
+  const [fullName, setFullName] = useState("");
+  const [f_name, setF_name] = useState("");
+  const [l_name, setL_name] = useState("");
+  const [cmuAccount, setCmuAccount] = useState("");
+  const [studentId, setStudentId] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
-    if (typeof window !== "undefined"){
+    axios
+      .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
+      .then((response) => {
+        if (response.data.ok) {
+          console.log("data ok");
+          setFullName(response.data.firstName + " " + response.data.lastName);
+          setF_name(response.data.firstName);
+          setL_name(response.data.lastName);
+          setCmuAccount(response.data.cmuAccount);
+          setStudentId(response.data.studentId ?? "No Student Id");
+        }
+      })
+      .catch((error: AxiosError<WhoAmIResponse>) => {
+        if (!error.response) {
+          console.log("error.response");
+          setErrorMessage(
+            "Cannot connect to the network. Please try again later."
+          );
+        } else if (error.response.status === 401) {
+          console.log("Authentication failed");
+          setErrorMessage("Authentication failed");
+        } else if (error.response.data.ok === false) {
+          console.log("error.response.data.message");
+          setErrorMessage(error.response.data.message);
+        } else {
+          console.log("Unknown error occurred. Please try again later");
+          setErrorMessage("Unknown error occurred. Please try again later");
+        }
+      });
+  }, []);
+
+  function signOut() {
+    axios.post("/api/signOut").finally(() => {
+      router.push("/");
+    });
+  }
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       if (window.innerWidth <= 1300) setOpen(false);
     }
+    console.log(fullName);
   }, []);
 
   return (
@@ -410,6 +458,110 @@ function Navbar() {
             </ListItemButton>
           </ListItem>
         </List>
+
+        <Stack sx={{ mt: "auto", mb: 6 }}>
+          {!open ? (
+            <Stack sx={{}}>
+              {/* Avatar */}
+              <Avatar
+                sx={{ width: 44, height: 44, mb: 2, ml: "auto", mr: "auto" }}
+              >
+                {f_name === undefined ? null : f_name[0]}
+                {l_name === undefined ? null : l_name[0]}
+              </Avatar>
+
+              <IconButton
+                onClick={signOut}
+                aria-label="Logout"
+                size="large"
+                sx={{
+                  width: 44,
+                  height: 44,
+                  ml: "auto",
+                  mr: "auto",
+                  bgcolor: "#EE6457",
+                  color: "white",
+                  "&:hover": {
+                    bgcolor: "white",
+                    color: "#EE6457",
+                  },
+                }}
+              >
+                <ExitToAppOutlinedIcon />
+              </IconButton>
+            </Stack>
+          ) : (
+            <Stack>
+              <Stack
+                direction={"row"}
+                sx={{
+                  width: "80%",
+                  ml: "auto",
+                  mr: "auto",
+                  mb: 2,
+                  justifyContent: "space-between",
+                }}
+              >
+                {/* Name */}
+                <Stack>
+                  <Typography
+                    sx={{
+                      color: "#EE6457",
+                      fontWeight: "bold",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    {studentId === undefined ? null : studentId}
+                  </Typography>
+                  <Stack direction={"row"} spacing={1}>
+                    <Typography
+                      sx={{
+                        fontSize: "0.9rem",
+                        fontWeight: "medium",
+                        color: "#858382",
+                      }}
+                    >
+                      {f_name === undefined
+                        ? null
+                        : f_name.charAt(0) + f_name.slice(1).toLowerCase()}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "0.9rem",
+                        fontWeight: "medium",
+                        color: "#858382",
+                      }}
+                    >
+                      {l_name === undefined ? null : l_name.charAt(0) + "."}
+                    </Typography>
+                  </Stack>
+                </Stack>
+                {/* Avatar */}
+                <Avatar sx={{ width: 44, height: 44 }}>
+                  {f_name === undefined ? null : f_name[0]}
+                  {l_name === undefined ? null : l_name[0]}
+                </Avatar>
+              </Stack>
+              <Button
+                variant="outlined"
+                onClick={signOut}
+                sx={{
+                  width: "80%",
+                  ml: "auto",
+                  mr: "auto",
+                  textTransform: "capitalize",
+                  color: "#EE6457",
+                  borderColor: "#EE6457",
+                  "&:hover": {
+                    borderColor: "#EE6457",
+                  },
+                }}
+              >
+                Logout
+              </Button>
+            </Stack>
+          )}
+        </Stack>
       </Drawer>
     </Stack>
   );
