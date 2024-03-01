@@ -3,6 +3,5 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/NuikitView": "pages/NuikitView.js",
-  "/Dashboard": "pages/Dashboard.js",
-  "/api/whoAmI": "pages/api/whoAmI.js"
+  "/Dashboard": "pages/Dashboard.js"
 }
