@@ -233,13 +233,13 @@ function TermView() {
   const [studentId, setStudentId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   //url
-  const [isCoop, setisCoop] = useState(isCoop_api);
+  const [isCoop, setisCoop] = useState("false");
   const [stdYear, setStdYear] = useState("2563");
   // filter
   const [filterGE, setFilterGE] = useState(false);
   const [filterSp, setFilterSp] = useState(false);
   const [filterFree, setFilterFree] = useState(false);
-  const [checkedPre, setCheckedPre] = useState(true);
+  const [checkedPre, setCheckedPre] = useState(false);
   const [checkedPreFilter, setCheckedPreFilter] = useState(false);
   const [checkedDone, setCheckedDone] = useState(false);
 
@@ -594,12 +594,20 @@ function TermView() {
     let c = isCoop;
 
     if (c === "true") {
-      setDisButton(true);
+      if (prevFormat === "coop") {
+        setDisButton(false);
+      }else{
+        setDisButton(true);
+      }
+      
       setFormats("coop");
     }
     if (c === "false") {
+      console.log(prevFormat)
+      
       setDisButton(false);
       setFormats("normal");
+      
     }
 
     // console.log("is ge filter clicked " + filterGE);
