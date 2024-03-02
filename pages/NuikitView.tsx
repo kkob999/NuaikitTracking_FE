@@ -24,7 +24,7 @@ import isSelected, {
 
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 import React, { useState, useEffect } from "react";
 
@@ -36,6 +36,8 @@ import NuikitViewNode from "./View/Node/NuikitViewNode";
 import Navbar from "./View/Navbar";
 import { theme } from "../constants/theme";
 import { IOSSwitch } from "./View/SwitchMUI";
+import { WhoAmIResponse } from "./api/whoAmI";
+import { useRouter } from "next/router";
 
 function fetchNuikitData(url: string) {
   return new Promise(function (resolve, reject) {
@@ -50,7 +52,7 @@ function fetchNuikitData(url: string) {
       })
       .then((response) => {
         console.log("fetch nuikit data");
-        console.log(response.data);
+        // console.log(response.data);
         resolve(response.data);
         return response.data;
       })
@@ -98,6 +100,10 @@ var gen_req: any = [];
 var gen_elec: any = [];
 
 function NuikitView() {
+  const router = useRouter();
+
+  const [errorMessage, setErrorMessage] = useState("");
+
   //Modal Part
   const [modal, setModal] = useState<boolean>(false);
 
@@ -174,7 +180,6 @@ function NuikitView() {
   const handleChangePre = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckedPreFilter(event.target.checked);
   };
-
 
   const handleFormat = (
     event: React.MouseEvent<HTMLElement>,
@@ -391,7 +396,6 @@ function NuikitView() {
     // &studentId=630610727
     // &mockData=mockData5
     NuikitData(urlNuikit);
-    
   }, []);
 
   function modalFreeElecNode() {
@@ -561,7 +565,7 @@ function NuikitView() {
             );
           }
         });
-      }else{
+      } else {
         return displayNode.map((node: any) => {
           return (
             <NuikitViewNode
@@ -574,8 +578,6 @@ function NuikitView() {
           );
         });
       }
-
-      
     }
   }
 
@@ -712,7 +714,7 @@ function NuikitView() {
               />
             );
           }
-        }else{
+        } else {
           return (
             <NuikitViewNode
               sub_no={node.courseNo}
@@ -723,7 +725,6 @@ function NuikitView() {
             />
           );
         }
-        
       });
     }
   }
@@ -758,7 +759,7 @@ function NuikitView() {
             );
           }
         });
-      }else{
+      } else {
         return mjreqNode.map((node: any) => {
           return (
             <NuikitViewNode
@@ -771,7 +772,6 @@ function NuikitView() {
           );
         });
       }
-      
     }
   }
 
@@ -820,6 +820,30 @@ function NuikitView() {
     }
   }
 
+  useEffect(() => {
+    //All cookies that belong to the current url will be sent with the request automatically
+    //so we don't have to attach token to the request
+    //You can view token (stored in cookies storage) in browser devtools (F12). Open tab "Application" -> "Cookies"
+    axios
+      .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
+      .then((response) => {
+        if (response.data.ok) {
+        }
+      })
+      .catch((error: AxiosError<WhoAmIResponse>) => {
+        if (!error.response) {
+          setErrorMessage(
+            "Cannot connect to the network. Please try again later."
+          );
+        } else if (error.response.status === 401) {
+          setErrorMessage("Authentication failed");
+        } else if (error.response.data.ok === false) {
+          setErrorMessage(error.response.data.message);
+        } else {
+          setErrorMessage("Unknown error occurred. Please try again later");
+        }
+      });
+  }, []);
   // console.log("free credits need" + free_CreditNeed);
 
   return (
@@ -830,10 +854,48 @@ function NuikitView() {
         display: "flex",
       }}
     >
-      {/* Navbar */}
-      {/* <Box sx={{ width: "20vw" }}> */}
-      <Navbar />
-      {/* </Box> */}
+      {errorMessage !== "" && (
+        <Stack
+          sx={{
+            zIndex: 1,
+            position: "fixed",
+            height: "100%",
+            width: "100%",
+            bgcolor: "white",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h5" sx={{ color: "red", mb: 4 }}>
+            {errorMessage}
+          </Typography>
+          {/* <Typography variant="subtitle1" sx={{color: 'grey', mb: 3}}>Please Log in before use website</Typography> */}
+          <Button
+            variant="outlined"
+            sx={{
+              textTransform: "capitalize",
+              bgcolor: "white",
+              color: "#F1485B",
+              borderColor: "#F1485B",
+              "&:hover": {
+                background: "#F1485B",
+                color: "white",
+                borderColor: "#F1485B",
+              },
+            }}
+            onClick={() => {
+              axios.post("/").finally(() => {
+                router.push("/");
+              });
+            }}
+          >
+            Go back to Login page
+          </Button>
+        </Stack>
+      )}
+      {errorMessage === "" && <Navbar />}
+
+      
       {/* Flow */}
       <Stack
         sx={{

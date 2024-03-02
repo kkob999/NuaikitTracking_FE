@@ -101,6 +101,10 @@ export default async function handler(
       firstName: cmuBasicInfo.firstname_EN,
       lastName: cmuBasicInfo.lastname_EN,
       studentId: cmuBasicInfo.student_id, //Note that not everyone has this. Teachers and CMU Staffs don't have student id!
+      orgCode: cmuBasicInfo.organization_code,
+      orgNameTH: cmuBasicInfo.organization_name_TH,
+      orgNameEN: cmuBasicInfo.organization_name_EN,
+      itAcc: cmuBasicInfo.itaccounttype_TH
     },
     process.env.JWT_SECRET,
     {

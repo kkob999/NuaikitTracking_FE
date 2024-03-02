@@ -9,6 +9,10 @@ type SuccessResponse = {
   firstName: string;
   lastName: string;
   studentId?: string;
+  orgCode: string;
+  orgNameTH: string;
+  orgNameEN: string;
+  itAcc: string;
 };
 
 type ErrorResponse = {
@@ -42,6 +46,10 @@ export default async function handler(
       firstName: decoded.firstName,
       lastName: decoded.lastName,
       studentId: decoded.studentId,
+      orgCode: decoded.orgCode,
+      orgNameTH: decoded.orgNameTH,
+      orgNameEN: decoded.orgNameEN,
+      itAcc: decoded.itAcc,
     });
   } catch (error) {
     return res.status(401).json({ ok: false, message: "Invalid token" });

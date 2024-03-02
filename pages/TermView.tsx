@@ -23,6 +23,7 @@ import {
   ToggleButton,
   Backdrop,
   CircularProgress,
+  Avatar,
 } from "@mui/material";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
@@ -48,6 +49,7 @@ import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
 
 //Smart Edge
 // import { SmartStepEdge, SmartBezierEdge } from "@tisoap/react-flow-smart-edge";
@@ -98,6 +100,8 @@ import { DisplayNodeModal, MajorEModal, GEModal } from "./View/NodeModal";
 import { IOSSwitch } from "./View/SwitchMUI";
 import { NormalTerm, summerTerm } from "./View/TermBlock";
 import { ifError } from "assert";
+import { WhoAmIResponse } from "./api/whoAmI";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 const edgeTypes = {
   "custom-edge": CustomEdge,
@@ -223,6 +227,11 @@ function DisplayBackDrop(checked: boolean) {
 
 function TermView() {
   const router = useRouter();
+  const [fullName, setFullName] = useState("");
+  const [f_name, setF_name] = useState("");
+  const [l_name, setL_name] = useState("");
+  const [studentId, setStudentId] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   //url
   const [isCoop, setisCoop] = useState(isCoop_api);
   const [stdYear, setStdYear] = useState("2563");
@@ -341,7 +350,7 @@ function TermView() {
         });
       }
     } else {
-      console.log("just clicked node");
+      // console.log("just clicked node");
       if (
         node.data["sub_no"] === "Elective" ||
         node.data["sub_no"] === "Co-Creator" ||
@@ -444,7 +453,6 @@ function TermView() {
         sp_str = "" + sp + "vw";
       }
     }
-    
 
     return (
       <Stack>
@@ -456,6 +464,7 @@ function TermView() {
   }
 
   async function waitData() {
+
     SetBackdrop(true);
     await processData(stdYear, "" + isCoop);
     SetBackdrop(false);
@@ -504,14 +513,38 @@ function TermView() {
     SetWidth(convertWidth(width));
   }
 
+  
+
   async function startProgram() {
     setNodes([]);
     setEdges([]);
 
+    axios
+      .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
+      .then((response) => {
+        if (response.data.ok) {
+          setFullName(response.data.firstName + " " + response.data.lastName);
+          setF_name(response.data.firstName);
+          setL_name(response.data.lastName);
+          // setCmuAccount(response.data.cmuAccount);
+          setStudentId(response.data.studentId ?? "No Student Id");
+        }
+      })
+      .catch((error: AxiosError<WhoAmIResponse>) => {
+        if (!error.response) {
+          setErrorMessage(
+            "Cannot connect to the network. Please try again later."
+          );
+        } else if (error.response.status === 401) {
+          setErrorMessage("Authentication failed");
+        } else if (error.response.data.ok === false) {
+          setErrorMessage(error.response.data.message);
+        } else {
+          setErrorMessage("Unknown error occurred. Please try again later");
+        }
+      });
+    
     await waitData();
-
-    console.log("wait data finish");
-    console.log(isCoop);
 
     if (filterGE) {
       termNode.map((nd) => {
@@ -555,15 +588,15 @@ function TermView() {
 
   //UseEffect
   useEffect(() => {
+    
     startProgram();
 
     let c = isCoop;
-    console.log("in useeffect")
-    console.log(c)
+
     if (c === "true") {
       setDisButton(true);
       setFormats("coop");
-    } 
+    }
     if (c === "false") {
       setDisButton(false);
       setFormats("normal");
@@ -581,9 +614,13 @@ function TermView() {
     window.addEventListener("resize", widthResizer);
   });
 
-  useEffect(() => {}, [open, filter]);
+  useEffect(() => {}, [open, filter, f_name]);
 
-  // displayYearContain();
+  function signOut() {
+    axios.post("/api/signOut").finally(() => {
+      router.push("/");
+    });
+  }
 
   return (
     <Stack
@@ -597,157 +634,202 @@ function TermView() {
         // bgcolor: 'bisque'
       }}
     >
+      {errorMessage !== "" && (
+        <Stack
+          sx={{
+            zIndex: 1,
+            position: "fixed",
+            height: "100%",
+            width: "100%",
+            bgcolor: "white",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h5" sx={{ color: "red", mb: 4 }}>
+            {errorMessage}
+          </Typography>
+          {/* <Typography variant="subtitle1" sx={{color: 'grey', mb: 3}}>Please Log in before use website</Typography> */}
+          <Button
+            variant="outlined"
+            sx={{
+              textTransform: "capitalize",
+              bgcolor: "white",
+              color: "#F1485B",
+              borderColor: "#F1485B",
+              "&:hover": {
+                background: "#F1485B",
+                color: "white",
+                borderColor: "#F1485B",
+              },
+            }}
+            onClick={() => {
+              axios.post("/").finally(() => {
+                router.push("/");
+              });
+            }}
+          >
+            Go back to Login page
+          </Button>
+        </Stack>
+      )}
       {/* Navbar */}
-      <Stack>
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader sx={{}}>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
+      {errorMessage === "" && (
+        <Stack>
+          <Drawer variant="permanent" open={open}>
+            <DrawerHeader sx={{}}>
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
+              </IconButton>
+            </DrawerHeader>
 
-          {open === true ? (
-            <Stack
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                // border: "1px solid black",
-                width: "84%",
-                justifyContent: "flex-start",
-                ml: "auto",
-                mr: "auto",
-                mb: "1.4vh",
-              }}
-            >
-              <Box sx={{ width: "1.7625rem", height: "1.7625rem" }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="29"
-                  height="29"
-                  viewBox="0 0 29 29"
-                  fill="none"
-                >
-                  <path
-                    d="M20.6708 4.07891C16.0801 0.32286 7.78669 1.75908 4.02111 7.55756C0.25553 13.356 1.90352 21.1093 7.70201 24.8748C9.90396 26.3048 12.3878 26.9541 14.8281 26.8919C18.8139 26.7903 22.6837 24.7905 25.0193 21.1939C27.3483 17.0164 27.4577 13.6818 26.2057 10.3431"
-                    stroke="#EE6457"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M9 13.125L13.6364 18L26 5"
-                    stroke="#EE6457"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Box>
-
-              <Typography
-                variant="h6"
+            {open === true ? (
+              <Stack
                 sx={{
-                  fontWeight: "600",
-                  fontSize: "1.1875rem",
-                  marginLeft: "4%",
-                  opacity: 1,
+                  display: "flex",
+                  flexDirection: "row",
+                  // border: "1px solid black",
+                  width: "84%",
+                  justifyContent: "flex-start",
+                  ml: "auto",
+                  mr: "auto",
+                  mb: "1.4vh",
                 }}
               >
-                Nuikit Tracking
-              </Typography>
-            </Stack>
-          ) : (
-            <Stack
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                // border: "1px solid black",
-                mr: 2,
-                ml: 2.4,
-                mb: "1.4vh",
-              }}
-            >
-              <Box sx={{ width: "1.7625rem", height: "1.7625rem" }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="29"
-                  height="29"
-                  viewBox="0 0 29 29"
-                  fill="none"
-                >
-                  <path
-                    d="M20.6708 4.07891C16.0801 0.32286 7.78669 1.75908 4.02111 7.55756C0.25553 13.356 1.90352 21.1093 7.70201 24.8748C9.90396 26.3048 12.3878 26.9541 14.8281 26.8919C18.8139 26.7903 22.6837 24.7905 25.0193 21.1939C27.3483 17.0164 27.4577 13.6818 26.2057 10.3431"
-                    stroke="#EE6457"
-                    strokeWidth="3"
-                    stroke-linecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M9 13.125L13.6364 18L26 5"
-                    stroke="#EE6457"
-                    strokeWidth="3"
-                    stroke-linecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Box>
+                <Box sx={{ width: "1.7625rem", height: "1.7625rem" }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="29"
+                    height="29"
+                    viewBox="0 0 29 29"
+                    fill="none"
+                  >
+                    <path
+                      d="M20.6708 4.07891C16.0801 0.32286 7.78669 1.75908 4.02111 7.55756C0.25553 13.356 1.90352 21.1093 7.70201 24.8748C9.90396 26.3048 12.3878 26.9541 14.8281 26.8919C18.8139 26.7903 22.6837 24.7905 25.0193 21.1939C27.3483 17.0164 27.4577 13.6818 26.2057 10.3431"
+                      stroke="#EE6457"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M9 13.125L13.6364 18L26 5"
+                      stroke="#EE6457"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Box>
 
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: "600",
-                  fontSize: "1.1875rem",
-                  marginLeft: "4%",
-                  opacity: 0,
-                }}
-              >
-                Nuikit Tracking
-              </Typography>
-            </Stack>
-          )}
-
-          <Divider />
-          <List>
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              onClick={() => {
-                router.push("/Dashboard");
-              }}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+                <Typography
+                  variant="h6"
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    fontWeight: "600",
+                    fontSize: "1.1875rem",
+                    marginLeft: "4%",
+                    opacity: 1,
                   }}
                 >
-                  <SpaceDashboardIcon sx={{ color: fontChange("dashboard") }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Dashboard"
-                  sx={{ opacity: open ? 1 : 0, color: fontChange("dashboard") }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </List>
+                  Nuikit Tracking
+                </Typography>
+              </Stack>
+            ) : (
+              <Stack
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  // border: "1px solid black",
+                  mr: 2,
+                  ml: 2.4,
+                  mb: "1.4vh",
+                }}
+              >
+                <Box sx={{ width: "1.7625rem", height: "1.7625rem" }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="29"
+                    height="29"
+                    viewBox="0 0 29 29"
+                    fill="none"
+                  >
+                    <path
+                      d="M20.6708 4.07891C16.0801 0.32286 7.78669 1.75908 4.02111 7.55756C0.25553 13.356 1.90352 21.1093 7.70201 24.8748C9.90396 26.3048 12.3878 26.9541 14.8281 26.8919C18.8139 26.7903 22.6837 24.7905 25.0193 21.1939C27.3483 17.0164 27.4577 13.6818 26.2057 10.3431"
+                      stroke="#EE6457"
+                      strokeWidth="3"
+                      stroke-linecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M9 13.125L13.6364 18L26 5"
+                      stroke="#EE6457"
+                      strokeWidth="3"
+                      stroke-linecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Box>
 
-          <Divider />
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: "600",
+                    fontSize: "1.1875rem",
+                    marginLeft: "4%",
+                    opacity: 0,
+                  }}
+                >
+                  Nuikit Tracking
+                </Typography>
+              </Stack>
+            )}
 
-          <List>
-            {open === true ? (
-              // <ListItem disablePadding sx={{ display: "block" }}>
+            <Divider />
+            <List>
+              <ListItem
+                disablePadding
+                sx={{ display: "block" }}
+                onClick={() => {
+                  router.push("/Dashboard");
+                }}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <SpaceDashboardIcon
+                      sx={{ color: fontChange("dashboard") }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Dashboard"
+                    sx={{
+                      opacity: open ? 1 : 0,
+                      color: fontChange("dashboard"),
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </List>
+
+            <Divider />
+
+            <List>
+              {open === true ? (
+                // <ListItem disablePadding sx={{ display: "block" }}>
                 <ListItem
                   sx={{
                     minHeight: 48,
@@ -770,14 +852,17 @@ function TermView() {
                     sx={{ opacity: open ? 1 : 0 }}
                   />
                 </ListItem>
-              // </ListItem>
-            ) : null}
+              ) : // </ListItem>
+              null}
 
-            {/* Category View */}
-              <ListItem disablePadding sx={{ display: "block" }}
-              onClick={() => {
-                router.push("/NuikitView");
-              }}>
+              {/* Category View */}
+              <ListItem
+                disablePadding
+                sx={{ display: "block" }}
+                onClick={() => {
+                  router.push("/NuikitView");
+                }}
+              >
                 <ListItemButton
                   sx={{
                     minHeight: 48,
@@ -805,43 +890,154 @@ function TermView() {
                 </ListItemButton>
               </ListItem>
 
-            {/* Term View */}
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              onClick={() => {
-                router.push("/TermView");
-              }}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+              {/* Term View */}
+              <ListItem
+                disablePadding
+                sx={{ display: "block" }}
+                onClick={() => {
+                  router.push("/TermView");
                 }}
               >
-                <ListItemIcon
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
                   }}
                 >
-                  {open === true ? (
-                    <AccountTreeIcon sx={{ opacity: 0 }} />
-                  ) : (
-                    <AccountTreeIcon sx={{ color: fontChange("term") }} />
-                  )}
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Term View"}
-                  sx={{ opacity: open ? 1 : 0, color: fontChange("term") }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </Drawer>
-      </Stack>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {open === true ? (
+                      <AccountTreeIcon sx={{ opacity: 0 }} />
+                    ) : (
+                      <AccountTreeIcon sx={{ color: fontChange("term") }} />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"Term View"}
+                    sx={{ opacity: open ? 1 : 0, color: fontChange("term") }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </List>
+            {/* Avatar */}
+            <Stack sx={{ mt: "auto", mb: 6 }}>
+              {!open ? (
+                <Stack sx={{}}>
+                  {/* Avatar */}
+                  <Avatar
+                    sx={{
+                      width: 44,
+                      height: 44,
+                      mb: 2,
+                      ml: "auto",
+                      mr: "auto",
+                    }}
+                  >
+                    {f_name === undefined ? null : f_name[0]}
+                    {l_name === undefined ? null : l_name[0]}
+                  </Avatar>
+
+                  <IconButton
+                    onClick={signOut}
+                    aria-label="Logout"
+                    size="large"
+                    sx={{
+                      width: 44,
+                      height: 44,
+                      ml: "auto",
+                      mr: "auto",
+                      bgcolor: "#EE6457",
+                      color: "white",
+                      "&:hover": {
+                        bgcolor: "white",
+                        color: "#EE6457",
+                      },
+                    }}
+                  >
+                    <ExitToAppOutlinedIcon />
+                  </IconButton>
+                </Stack>
+              ) : (
+                <Stack>
+                  <Stack
+                    direction={"row"}
+                    sx={{
+                      width: "80%",
+                      ml: "auto",
+                      mr: "auto",
+                      mb: 2,
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {/* Name */}
+                    <Stack>
+                      <Typography
+                        sx={{
+                          color: "#EE6457",
+                          fontWeight: "bold",
+                          fontSize: "1rem",
+                        }}
+                      >
+                        {studentId === undefined ? null : studentId}
+                      </Typography>
+                      <Stack direction={"row"} spacing={1}>
+                        <Typography
+                          sx={{
+                            fontSize: "0.9rem",
+                            fontWeight: "medium",
+                            color: "#858382",
+                          }}
+                        >
+                          {f_name === undefined
+                            ? null
+                            : f_name.charAt(0) + f_name.slice(1).toLowerCase()}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            fontSize: "0.9rem",
+                            fontWeight: "medium",
+                            color: "#858382",
+                          }}
+                        >
+                          {l_name === undefined ? null : l_name.charAt(0) + "."}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                    {/* Avatar */}
+                    <Avatar sx={{ width: 44, height: 44 }}>
+                      {f_name === undefined ? null : f_name[0]}
+                      {l_name === undefined ? null : l_name[0]}
+                    </Avatar>
+                  </Stack>
+                  <Button
+                    variant="outlined"
+                    onClick={signOut}
+                    sx={{
+                      width: "80%",
+                      ml: "auto",
+                      mr: "auto",
+                      textTransform: "capitalize",
+                      color: "#EE6457",
+                      borderColor: "#EE6457",
+                      "&:hover": {
+                        borderColor: "#EE6457",
+                      },
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </Stack>
+              )}
+            </Stack>
+          </Drawer>
+        </Stack>
+      )}
 
       {/* Flow */}
       <Stack
@@ -1320,9 +1516,9 @@ function TermView() {
                         }
 
                         if (prevFormat !== null) {
-                          console.log("not first time");
-                          console.log("prev " + prevFormat);
-                          console.log("click " + formats);
+                          // console.log("not first time");
+                          // console.log("prev " + prevFormat);
+                          // console.log("click " + formats);
                           if (
                             prevFormat === undefined &&
                             formats === "normal"
