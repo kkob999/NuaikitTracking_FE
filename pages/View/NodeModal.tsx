@@ -19,31 +19,42 @@ export function DisplayNodeModal(
   TermArr: any[]
 ) {
   // var courseData = Object.values(NodeArr);
-  var courseDetail = NodeArr["courseDetails"]
-  var pre = "-"
-  var enForceEN = ""
-  var enForceTH = ""
+  var courseDetail = NodeArr["courseDetails"];
+  var pre = "-";
+  var enForceEN = "";
+  var enForceTH = "";
 
   if (courseDetail !== undefined) {
-    TermArr.map((n:any)=>{
+    TermArr.map((n: any) => {
       if (n.id === courseDetail[0]["courseNo"]) {
         // console.log(n)
-        if(n.data.sub_data["prerequisites"].length !== 0){
-          if(n.data.sub_data["prerequisites"].length === 1) pre = n.data.sub_data["prerequisites"][0]
-          else if(n.data.sub_data["prerequisites"].length === 2) pre = n.data.sub_data["prerequisites"][0] + " or "+n.data.sub_data["prerequisites"][1]
+        if (n.data.sub_data["prerequisites"].length !== 0) {
+          if (n.data.sub_data["prerequisites"].length === 1)
+            pre = n.data.sub_data["prerequisites"][0];
+          else if (n.data.sub_data["prerequisites"].length === 2)
+            pre =
+              n.data.sub_data["prerequisites"][0] +
+              " or " +
+              n.data.sub_data["prerequisites"][1];
         }
       }
-    })
+    });
 
-    if (courseDetail[0]["updatedSemester"]===1) {
-      enForceEN = "1st Semester Academic Year " + (Number(courseDetail[0]["updatedYear"])-543)
-      enForceTH = "ภาคการศึกษาที่ 1 ปีการศึกษา " + courseDetail[0]["updatedYear"]
-    }else if(courseDetail[0]["updatedSemester"]===2){
-      enForceEN = "2nd Semester Academic Year " + (Number(courseDetail[0]["updatedYear"])-543)
-      enForceTH = "ภาคการศึกษาที่ 2 ปีการศึกษา " + courseDetail[0]["updatedYear"]
+    if (courseDetail[0]["updatedSemester"] === 1) {
+      enForceEN =
+        "1st Semester Academic Year " +
+        (Number(courseDetail[0]["updatedYear"]) - 543);
+      enForceTH =
+        "ภาคการศึกษาที่ 1 ปีการศึกษา " + courseDetail[0]["updatedYear"];
+    } else if (courseDetail[0]["updatedSemester"] === 2) {
+      enForceEN =
+        "2nd Semester Academic Year " +
+        (Number(courseDetail[0]["updatedYear"]) - 543);
+      enForceTH =
+        "ภาคการศึกษาที่ 2 ปีการศึกษา " + courseDetail[0]["updatedYear"];
     }
   }
-  
+
   // console.log(courseDetail)
   if (isClicked) {
     return (
@@ -92,61 +103,85 @@ export function DisplayNodeModal(
                 marginLeft: "46vw",
                 // marginRight: "2vw",
                 color: "white",
-                position: 'absolute'
+                position: "absolute",
               }}
             >
               <CloseRoundedIcon />
             </IconButton>
           </Stack>
           {/* Content */}
-          <Stack sx={{ width: "86%", height: '82%', ml: "auto", mr: "auto", overflowY: 'scroll', mt: 'auto', mb: 'auto', rowGap: 1 }}>
+          <Stack
+            sx={{
+              width: "86%",
+              height: "82%",
+              ml: "auto",
+              mr: "auto",
+              overflowY: "scroll",
+              mt: "auto",
+              mb: "auto",
+              rowGap: 1,
+            }}
+          >
             {/* Name */}
-            <Stack direction={'row'} spacing={2} sx={{}}>
+            <Stack direction={"row"} spacing={2} sx={{}}>
               <Typography>Name : </Typography>
-              <Typography>{courseDetail !== undefined && courseDetail[0]["courseNameEN"]}</Typography>
+              <Typography>
+                {courseDetail !== undefined && courseDetail[0]["courseNameEN"]}
+              </Typography>
             </Stack>
             {/* ชื่อ */}
-            <Stack direction={'row'} spacing={2} sx={{}}>
+            <Stack direction={"row"} spacing={2} sx={{}}>
               <Typography>ชื่อ : </Typography>
-              <Typography>{courseDetail !== undefined && courseDetail[0]["courseNameTH"]}</Typography>
+              <Typography>
+                {courseDetail !== undefined && courseDetail[0]["courseNameTH"]}
+              </Typography>
             </Stack>
             {/* CourseId */}
-            <Stack direction={'row'} spacing={2} sx={{}}>
+            <Stack direction={"row"} spacing={2} sx={{}}>
               <Typography>Course ID / รหัสกระบวนวิชา : </Typography>
-              <Typography>{courseDetail !== undefined && courseDetail[0]["courseNo"]}</Typography>
+              <Typography>
+                {courseDetail !== undefined && courseDetail[0]["courseNo"]}
+              </Typography>
             </Stack>
             {/* Credit */}
-            <Stack direction={'row'} spacing={2} sx={{}}>
+            <Stack direction={"row"} spacing={2} sx={{}}>
               <Typography>Credit / หน่วยกิต : </Typography>
-              <Typography>{courseDetail !== undefined && courseDetail[0]["credits"]["credits"]}</Typography>
+              <Typography>
+                {courseDetail !== undefined &&
+                  courseDetail[0]["credits"]["credits"]}
+              </Typography>
             </Stack>
             {/* Prerequisite */}
-            <Stack direction={'row'} spacing={2} sx={{}}>
-              <Typography>Prerequisite / เงื่อนไขที่ต้องผ่านก่อนเรียน : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{}}>
+              <Typography>
+                Prerequisite / เงื่อนไขที่ต้องผ่านก่อนเรียน :{" "}
+              </Typography>
               <Typography>{courseDetail !== undefined && pre}</Typography>
             </Stack>
             {/* Enforce since */}
-            <Stack direction={'row'} spacing={2} sx={{}}>
+            <Stack direction={"row"} spacing={2} sx={{}}>
               <Typography>Enforce since : </Typography>
               <Typography>{courseDetail !== undefined && enForceEN}</Typography>
             </Stack>
             {/* มีผลบังคับใช้ */}
-            <Stack direction={'row'} spacing={2} sx={{}}>
+            <Stack direction={"row"} spacing={2} sx={{}}>
               <Typography>มีผลบังคับใช้ : </Typography>
               <Typography>{courseDetail !== undefined && enForceTH}</Typography>
             </Stack>
             {/* Description */}
             <Stack sx={{}}>
               <Typography>Description : </Typography>
-              <Typography sx={{fontSize: '0.9rem'}}>{courseDetail !== undefined && courseDetail[0]["detailEN"]}</Typography>
+              <Typography sx={{ fontSize: "0.9rem" }}>
+                {courseDetail !== undefined && courseDetail[0]["detailEN"]}
+              </Typography>
             </Stack>
             {/* คำอธิบายลักษณะกระบวนวิชา */}
             <Stack sx={{}}>
               <Typography>คำอธิบายลักษณะกระบวนวิชา : </Typography>
-              <Typography sx={{fontSize: '0.9rem'}}>{courseDetail !== undefined && courseDetail[0]["detailTH"]}</Typography>
+              <Typography sx={{ fontSize: "0.9rem" }}>
+                {courseDetail !== undefined && courseDetail[0]["detailTH"]}
+              </Typography>
             </Stack>
-
-
           </Stack>
         </Stack>
       </Stack>
@@ -228,11 +263,11 @@ function checkisPass(isPass: boolean, color: string) {
 export function MajorEModal(
   isClicked: boolean,
   setClicked: Function,
-  NodeArr: any[],
+  NodeArr: any,
   TermNode: any[]
 ) {
   if (isClicked) {
-    var mjNode = Object.values(NodeArr);
+    var mjNode = NodeArr["courseLists"];
 
     return (
       <Stack
@@ -268,7 +303,7 @@ export function MajorEModal(
               borderRadius: "1rem 1rem 0 0",
             }}
           >
-            <Typography sx={{ color: "white", ml: "auto" }}>
+            <Typography sx={{ color: "white", ml: "44%", mt: 'auto', mb: 'auto' }}>
               Major Elective
             </Typography>
             <IconButton
@@ -295,7 +330,6 @@ export function MajorEModal(
               mb: "auto",
               mr: 4,
               ml: 4,
-
               overflowY: "scroll",
               justifyItems: "center",
               // alignContent: "center",
@@ -305,11 +339,11 @@ export function MajorEModal(
               sx={{
                 flexDirection: "row",
                 rowGap: 2,
-                columnGap: 2.6,
+                columnGap: 2.2,
                 flexWrap: "wrap",
                 justifySelf: "center",
                 // border: '1px solid red',
-                width: "fit-content",
+                width: "auto",
                 [theme.breakpoints.between("sm", "md")]: {
                   columnGap: 2.6,
                 },
@@ -318,8 +352,8 @@ export function MajorEModal(
                 },
               }}
             >
-              {mjNode[0] !== undefined &&
-                mjNode[0].map((node: any) => {
+              {mjNode !== undefined &&
+                mjNode.map((node: any) => {
                   var isPass = false;
                   TermNode.map((tn: any) => {
                     if (tn.id === node.courseNo) {
@@ -333,19 +367,19 @@ export function MajorEModal(
                       sx={{
                         m: 0,
                         width: "6.466vw",
-                        height: "3.3704vh",
+                        height: "5.3704vh",
                         padding: "1vh 0",
                         border: "1.5px solid #FF7D0F",
                         borderRadius: "0.5rem",
                         [theme.breakpoints.between("sm", "md")]: {
-                          height: "16px",
+                          height: "36px",
                           width: "9.466vw",
                           bgcolor: "lavender",
                         },
                         [theme.breakpoints.only("md")]: {
-                          height: "24px", //+2
+                          height: "40px", //44-16
                           width: "6.966vw", //+0.32
-                          // bgcolor: 'pink',
+                          bgcolor: "pink",
                         },
                       }}
                     >
@@ -366,14 +400,15 @@ export function MajorEModal(
                           <Typography
                             sx={{
                               [theme.breakpoints.between("sm", "md")]: {
-                                fontSize: "0.68em",
-                              },
-                              [theme.breakpoints.only("md")]: {
-                                fontSize: "0.7em",
-                              },
-                              [theme.breakpoints.between(1200, 1439)]: {
                                 fontSize: "0.78em",
                               },
+                              [theme.breakpoints.only("md")]: {
+                                fontSize: "0.8em",
+                              },
+                              [theme.breakpoints.between(1200, 1439)]: {
+                                fontSize: "0.88em",
+                              },
+                              fontSize: "0.9rem",
                             }}
                           >
                             {node.courseNo}
@@ -398,12 +433,13 @@ export function MajorEModal(
 export function GEModal(
   isClicked: boolean,
   setClicked: Function,
-  NodeArr: any[],
+  NodeArr: any,
   TermNode: any[],
   groupName: string
 ) {
   if (isClicked) {
-    var GENode = Object.values(NodeArr);
+    var GENode = NodeArr["courseLists"];
+    console.log(GENode);
 
     return (
       <Stack
@@ -439,7 +475,7 @@ export function GEModal(
               borderRadius: "1rem 1rem 0 0",
             }}
           >
-            <Typography sx={{ color: "white", ml: "auto" }}>
+            <Typography sx={{ color: "white", ml: "44%", mt: 'auto', mb: 'auto' }}>
               {groupName}
             </Typography>
             <IconButton
@@ -476,7 +512,7 @@ export function GEModal(
               sx={{
                 flexDirection: "row",
                 rowGap: 2,
-                columnGap: 2.6,
+                columnGap: 2.2,
                 flexWrap: "wrap",
                 justifySelf: "center",
                 // border: '1px solid red',
@@ -489,8 +525,8 @@ export function GEModal(
                 },
               }}
             >
-              {GENode[0] !== undefined &&
-                GENode[0].map((node: any) => {
+              {GENode !== undefined &&
+                GENode.map((node: any) => {
                   var isPass = false;
                   TermNode.map((tn: any) => {
                     if (tn.id === node.courseNo) {
@@ -504,19 +540,19 @@ export function GEModal(
                       sx={{
                         m: 0,
                         width: "6.466vw",
-                        height: "3.3704vh",
+                        height: "5.3704vh",
                         padding: "1vh 0",
                         border: "1.5px solid #7C4DFF",
                         borderRadius: "0.5rem",
                         [theme.breakpoints.between("sm", "md")]: {
-                          height: "16px",
+                          height: "36px",
                           width: "9.466vw",
                           bgcolor: "lavender",
                         },
                         [theme.breakpoints.only("md")]: {
-                          height: "24px", //+2
+                          height: "40px", //44-16
                           width: "6.966vw", //+0.32
-                          // bgcolor: 'pink',
+                          bgcolor: "pink",
                         },
                       }}
                     >
@@ -537,14 +573,15 @@ export function GEModal(
                           <Typography
                             sx={{
                               [theme.breakpoints.between("sm", "md")]: {
-                                fontSize: "0.68em",
-                              },
-                              [theme.breakpoints.only("md")]: {
-                                fontSize: "0.7em",
-                              },
-                              [theme.breakpoints.between(1200, 1439)]: {
                                 fontSize: "0.78em",
                               },
+                              [theme.breakpoints.only("md")]: {
+                                fontSize: "0.8em",
+                              },
+                              [theme.breakpoints.between(1200, 1439)]: {
+                                fontSize: "0.88em",
+                              },
+                              fontSize: "0.9rem",
                             }}
                           >
                             {node.courseNo}
