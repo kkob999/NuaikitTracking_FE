@@ -7,6 +7,7 @@ import {
   CircularProgressProps,
   circularProgressClasses,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 import * as React from "react";
 import jsonData from "../Model/NodeDB.json";
@@ -375,6 +376,10 @@ function DashBoard() {
           setFullName(response.data.firstName + " " + response.data.lastName);
           setCmuAccount(response.data.cmuAccount);
           setStudentId(response.data.studentId ?? "No Student Id");
+          console.log("orgCode")
+          console.log(response.data.orgCode)
+          console.log(response.data.orgNameEN)
+          // console.log(response.data.itAcc)
         }
       })
       .catch((error: AxiosError<WhoAmIResponse>) => {
@@ -409,10 +414,48 @@ function DashBoard() {
         display: "flex",
       }}
     >
+      {errorMessage !== "" && (
+        <Stack
+          sx={{
+            zIndex: 1,
+            position: "fixed",
+            height: "100%",
+            width: "100%",
+            bgcolor: "white",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h5" sx={{ color: "red", mb: 4 }}>
+            {errorMessage}
+          </Typography>
+          {/* <Typography variant="subtitle1" sx={{color: 'grey', mb: 3}}>Please Log in before use website</Typography> */}
+          <Button
+            variant="outlined"
+            sx={{
+              textTransform: "capitalize",
+              bgcolor: "white",
+              color: "#F1485B",
+              borderColor: "#F1485B",
+              "&:hover": {
+                background: "#F1485B",
+                color: 'white',
+                borderColor: "#F1485B",
+              },
+            }}
+            onClick={()=>{
+              axios.post("/").finally(() => {
+                router.push("/");
+              });
+            }}
+          >
+            Go back to Login page
+          </Button>
+        </Stack>
+      )}
+      {errorMessage === "" && <Navbar />}
       {/* Navbar */}
-      {/* <Box sx={{ width: "20vw" }}> */}
-      <Navbar />
-      {/* </Box> */}
+
       {/* Dashboard */}
 
       <Stack
