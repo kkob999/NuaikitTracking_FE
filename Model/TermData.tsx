@@ -660,13 +660,13 @@ async function processData(year: string, isCoop: string) {
     year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop +
-    "&mockData=mockData1";
+    "&studentId=630610727";
   var nuikitURL =
     "http://localhost:8080/categoryView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop +
-    "&mockData=mockData1";
+    "&studentId=630610727";
 
   // &mockData=mockData5
   // &studentId=630610727
@@ -1037,7 +1037,7 @@ async function processData(year: string, isCoop: string) {
               core.map((value: any) => {
                 if (value["courseNo"] == strsubId) {
                   isPass = value["isPass"];
-                  typeNode = "sp";
+                  typeNode = "sp_core";
                 }
               })
             )
@@ -1045,7 +1045,7 @@ async function processData(year: string, isCoop: string) {
                 major.map((value: any) => {
                   if (value["courseNo"] == strsubId) {
                     isPass = value["isPass"];
-                    typeNode = "sp";
+                    typeNode = "sp_major";
                   }
                 })
               )
@@ -1168,7 +1168,7 @@ async function processData(year: string, isCoop: string) {
               sub_no: currData[i][j],
               pre: tempId,
               sub_data: subData[tempId],
-              category: "sp",
+              category: "sp_major",
               credit: 3,
               is_pass: isPass,
             },

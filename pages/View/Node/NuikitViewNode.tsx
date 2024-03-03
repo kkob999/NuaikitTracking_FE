@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { theme } from "../../../constants/theme";
+import { free_notpass, free_pass, ge_notpass, ge_pass, majorCore_notpass, majorCore_pass, major_notpass, major_pass,} from "../../../constants/color";
 // import { nodes } from "../../Model/InitialNode";
 // import {nodes}
 // import "./node.css";
@@ -14,36 +15,43 @@ interface node {
 
 function NuikitViewNode(props: node) {
   const node = props;
-  let style = "";
+  let style = "1px solid ";
   let color = "";
 
   if (node.type == "gen") {
     if (node.isPass == true) {
-      style = "1px solid #8850EA";
-      color = "#8850EA";
+      style += ge_pass;
+      color = ge_pass;
     } else {
-      style = "1px solid #9F91CE";
-      color = "#9F91CE";
+      style += ge_notpass;
+      color = ge_notpass;
     }
-  } else if (node.type == "spec") {
+  } 
+  else if (node.type == "spec_mj") {
+
     if (node.isPass == true) {
-      style = "1px solid #FF7D0F";
-      color = "#FF7D0F";
+      style += major_pass;
+      color = major_pass;
     } else {
-      style = "1px solid #FFB271";
-      color = "#FFB271";
+      style += major_notpass;
+      color = major_notpass;
+    }
+  } else if (node.type == "spec_core") {
+    if (node.isPass == true) {
+      style += majorCore_pass;
+      color = majorCore_pass;
+    } else {
+      style += majorCore_notpass;
+      color = majorCore_notpass;
     }
   } else {
     if (node.isPass == true) {
-      style = "1px solid #1976D2";
-      color = "#1976D2";
-      // style = "1px solid #3BBD84";
-      // color = "#3BBD84";
+      style += free_pass;
+      color = free_pass;
+
     } else {
-      style = "1px solid #77A4ED";
-      color = "#77A4ED";
-      // style = "1px solid #8EDCBA";
-      // color = "#8EDCBA";
+      style += free_notpass;
+      color = free_notpass;
     }
   }
 

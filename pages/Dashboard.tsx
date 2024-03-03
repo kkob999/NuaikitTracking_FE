@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { WhoAmIResponse } from "./api/whoAmI";
 import { theme } from "../constants/theme";
+import { free_pass, ge_pass, majorCore_pass, major_pass } from "../constants/color";
 
 function CircularProgressWithLabel(
   props: CircularProgressProps & { value: number }
@@ -539,6 +540,7 @@ function DashBoard() {
                         [`& .${circularProgressClasses.circle}`]: {
                           strokeLinecap: "round",
                         },
+                        color: '#F1485B'
                       }}
                       size={180}
                       variant="determinate"
@@ -618,6 +620,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
+                            color: "#FF7D0F"
                           }}
                           size={90}
                           variant="determinate"
@@ -681,6 +684,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
+                            color: '#FB5C95'
                           }}
                           size={90}
                           variant="determinate"
@@ -750,6 +754,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
+                            color: '#3366FF'
                           }}
                           size={90}
                           variant="determinate"
@@ -817,6 +822,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
+                            color: '#46CD89'
                           }}
                           size={90}
                           variant="determinate"
@@ -968,7 +974,7 @@ function DashBoard() {
                   >
                     <Typography
                       variant="subtitle1"
-                      sx={{ color: "var(--GE_done, #7C4DFF)" }}
+                      sx={{ color: ge_pass }}
                     >
                       General Education
                     </Typography>
@@ -982,7 +988,7 @@ function DashBoard() {
                     >
                       <Typography
                         variant="subtitle1"
-                        sx={{ color: "var(--GE_done, #7C4DFF)" }}
+                        sx={{ color: ge_pass }}
                       >
                         {gen_reqCredit + gen_elecCredit}
                       </Typography>
@@ -1050,7 +1056,7 @@ function DashBoard() {
                         >
                           <Typography
                             variant="body2"
-                            sx={{ color: "var(--GE_done, #7C4DFF)" }}
+                            sx={{ color: ge_pass }}
                           >
                             {gen_reqCredit}
                           </Typography>
@@ -1088,7 +1094,7 @@ function DashBoard() {
                         >
                           <Typography
                             variant="body2"
-                            sx={{ color: "var(--GE_done, #7C4DFF)" }}
+                            sx={{ color: ge_pass }}
                           >
                             {gen_elecCredit}
                           </Typography>
@@ -1120,7 +1126,7 @@ function DashBoard() {
                   >
                     <Typography
                       variant="subtitle1"
-                      sx={{ color: "var(--SP_done, #FF7D0F)" }}
+                      sx={{ color: majorCore_pass }}
                     >
                       Specification
                     </Typography>
@@ -1134,7 +1140,7 @@ function DashBoard() {
                     >
                       <Typography
                         variant="subtitle1"
-                        sx={{ color: "var(--GE_done, #FF7D0F)" }}
+                        sx={{ color: majorCore_pass }}
                       >
                         {major_elecCredit + major_reqCredit + core_Credit}
                       </Typography>
@@ -1205,7 +1211,7 @@ function DashBoard() {
                         >
                           <Typography
                             variant="body2"
-                            sx={{ color: "var(--GE_done, #FF7D0F)" }}
+                            sx={{ color: majorCore_pass }}
                           >
                             {core_Credit}
                           </Typography>
@@ -1243,7 +1249,7 @@ function DashBoard() {
                         >
                           <Typography
                             variant="body2"
-                            sx={{ color: "var(--GE_done, #FF7D0F)" }}
+                            sx={{ color: major_pass }}
                           >
                             {major_elecCredit + major_reqCredit}
                           </Typography>
@@ -1314,7 +1320,7 @@ function DashBoard() {
                         >
                           <Typography
                             variant="body2"
-                            sx={{ color: "var(--GE_done, #FF7D0F)" }}
+                            sx={{ color: major_pass }}
                           >
                             {major_reqCredit}
                           </Typography>
@@ -1353,7 +1359,7 @@ function DashBoard() {
                         >
                           <Typography
                             variant="body2"
-                            sx={{ color: "var(--GE_done, #FF7D0F)" }}
+                            sx={{ color: major_pass }}
                           >
                             {major_elecCredit}
                           </Typography>
@@ -1378,7 +1384,7 @@ function DashBoard() {
                 {/* Free Elective */}
                 <Stack
                   sx={{
-                    color: "var(--Free_2_done, #3BBD84)",
+                    color: free_pass,
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
@@ -1395,7 +1401,7 @@ function DashBoard() {
                   >
                     <Typography
                       variant="subtitle1"
-                      sx={{ color: "var(--GE_done, #3BBD84)" }}
+                      sx={{ color: free_pass }}
                     >
                       {free_Credit}
                     </Typography>

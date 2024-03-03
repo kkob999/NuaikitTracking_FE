@@ -2,6 +2,7 @@ import { Box, Stack, Typography, Breakpoint } from "@mui/material";
 import React, { memo } from "react";
 import { Handle, Position, Node, NodeProps } from "reactflow";
 import { theme } from "../../../constants/theme";
+import { free_pass, ge_notpass, ge_pass, majorCore_pass, major_pass } from "../../../constants/color";
 
 type NodeData = {
   sub_no: string;
@@ -26,11 +27,13 @@ export default function TermNode({
   var textSize = "body2";
   var color = "#7C4DFF";
   if (data.category == "gen") {
-    color = "#7C4DFF";
-  } else if (data.category == "sp") {
-    color = "#FF7D0F";
+    color = ge_pass;
+  } else if (data.category == "sp_core") {
+    color = majorCore_pass;
+  } else if (data.category == "sp_major") {
+    color = major_pass;
   } else {
-    color = "#1976D2";
+    color = free_pass;
   }
 
   function checkSubNo(sub_no: string) {
@@ -39,7 +42,7 @@ export default function TermNode({
       data.sub_no == "Co-Creator" ||
       data.sub_no == "Major Elective" ||
       data.sub_no == "Learner Person" ||
-      data.sub_no == "Free" 
+      data.sub_no == "Free"
     ) {
       return (
         <Typography
@@ -60,14 +63,14 @@ export default function TermNode({
           variant="body2"
           sx={{
             fontSize: "0.9em",
-            
-            [theme.breakpoints.between("sm","md")]: {
+
+            [theme.breakpoints.between("sm", "md")]: {
               fontSize: "0.68em",
             },
             [theme.breakpoints.only("md")]: {
               fontSize: "0.7em",
             },
-            [theme.breakpoints.between(1200,1439)]: {
+            [theme.breakpoints.between(1200, 1439)]: {
               fontSize: "0.78em",
             },
           }}
@@ -98,7 +101,7 @@ export default function TermNode({
               height: "0.7em",
               width: "0.7em",
             },
-            [theme.breakpoints.between(1200,1439)]: {
+            [theme.breakpoints.between(1200, 1439)]: {
               height: "0.78em",
               width: "0.78em",
             },
@@ -137,7 +140,7 @@ export default function TermNode({
               height: "0.7em",
               width: "0.7em",
             },
-            [theme.breakpoints.between(1200,1439)]: {
+            [theme.breakpoints.between(1200, 1439)]: {
               height: "0.78em",
               width: "0.78em",
             },
@@ -173,7 +176,7 @@ export default function TermNode({
           padding: "1vh 0",
           border: "1.5px solid" + color,
           borderRadius: "0.5rem",
-          [theme.breakpoints.between("sm","md")]: {
+          [theme.breakpoints.between("sm", "md")]: {
             height: "16px",
             width: "9.146vw",
             // bgcolor: 'lavender',
@@ -202,7 +205,6 @@ export default function TermNode({
             {checkSubNo(data.sub_no)}
           </Stack>
           {checkisPass(data.is_pass)}
-
         </Stack>
       </Stack>
       <Handle

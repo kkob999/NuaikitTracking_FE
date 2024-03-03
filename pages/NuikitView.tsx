@@ -22,6 +22,9 @@ import isSelected, {
   displaySp,
 } from "./View/MUIFilter";
 
+import { free_pass, ge_pass, majorCore_pass, major_pass,} from "../constants/color";
+
+
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 import axios, { AxiosError, AxiosResponse } from "axios";
@@ -708,7 +711,7 @@ function NuikitView() {
               <NuikitViewNode
                 sub_no={node.courseNo}
                 sub_name={node.courseNo}
-                type="spec"
+                type="spec_core"
                 isPass={node["isPass"]}
                 credit={node.credits}
               />
@@ -719,7 +722,7 @@ function NuikitView() {
             <NuikitViewNode
               sub_no={node.courseNo}
               sub_name={node.courseNo}
-              type="spec"
+              type="spec_core"
               isPass={node["isPass"]}
               credit={node.credits}
             />
@@ -752,7 +755,7 @@ function NuikitView() {
               <NuikitViewNode
                 sub_no={node.courseNo}
                 sub_name={node.courseNo}
-                type="spec"
+                type="spec_mj"
                 isPass={node["isPass"]}
                 credit={node.credits}
               />
@@ -765,7 +768,7 @@ function NuikitView() {
             <NuikitViewNode
               sub_no={node.courseNo}
               sub_name={node.courseNo}
-              type="spec"
+              type="spec_mj"
               isPass={node["isPass"]}
               credit={node.credits}
             />
@@ -784,7 +787,7 @@ function NuikitView() {
           <NuikitViewNode
             sub_no={"Major Elective"}
             sub_name={"Major Elective"}
-            type="spec"
+            type="spec_mj"
             isPass={false}
             credit={3}
           />
@@ -798,7 +801,7 @@ function NuikitView() {
           <NuikitViewNode
             sub_no={"Major Elective"}
             sub_name={"Major Elective"}
-            type="spec"
+            type="spec_mj"
             isPass={false}
             credit={3}
           />
@@ -809,7 +812,7 @@ function NuikitView() {
           <NuikitViewNode
             sub_no={node.courseNo}
             sub_name={node.courseNo}
-            type="spec"
+            type="spec_mj"
             isPass={node.isPass}
             credit={node.credits}
           />
@@ -1071,7 +1074,7 @@ function NuikitView() {
                         sx={{
                           height: "0.74em",
                           width: "0.74em",
-                          bgcolor: "#7C4DFF",
+                          bgcolor: ge_pass,
                           borderRadius: "100%",
                           mr: "0.3em",
                         }}
@@ -1112,7 +1115,7 @@ function NuikitView() {
                         sx={{
                           height: "0.74em",
                           width: "0.74em",
-                          bgcolor: "#FF7D0F",
+                          bgcolor: majorCore_pass,
                           borderRadius: "100%",
                           mr: "0.3em",
                         }}
@@ -1152,7 +1155,7 @@ function NuikitView() {
                         sx={{
                           height: "0.74em",
                           width: "0.74em",
-                          bgcolor: "#1976D2",
+                          bgcolor: free_pass,
                           borderRadius: "100%",
                           mr: "0.3em",
                         }}
@@ -1279,7 +1282,7 @@ function NuikitView() {
                 justifyContent: "space-between",
               }}
             >
-              <Typography variant="subtitle1" sx={{ color: "#8850EA" }}>
+              <Typography variant="subtitle1" sx={{ color: ge_pass }}>
                 General Education
               </Typography>
 
@@ -1291,7 +1294,7 @@ function NuikitView() {
                   alignItems: "baseline",
                 }}
               >
-                <Typography variant="subtitle1" sx={{ color: "#8850EA" }}>
+                <Typography variant="subtitle1" sx={{ color: ge_pass }}>
                   {gen_reqCredit + gen_elecCredit}
                 </Typography>
                 <Typography
@@ -1317,7 +1320,7 @@ function NuikitView() {
                 justifyContent: "space-between",
               }}
             >
-              <Typography variant="subtitle1" sx={{ color: "#1976D2" }}>
+              <Typography variant="subtitle1" sx={{ color: free_pass }}>
                 Free Elective
               </Typography>
 
@@ -1333,7 +1336,7 @@ function NuikitView() {
                   alignItems: "baseline",
                 }}
               >
-                <Typography variant="subtitle1" sx={{ color: "#1976D2" }}>
+                <Typography variant="subtitle1" sx={{ color: free_pass }}>
                   {free_Credit}
                 </Typography>
 
@@ -1399,7 +1402,7 @@ function NuikitView() {
                       alignItems: "baseline",
                     }}
                   >
-                    <Typography variant="body2" sx={{ color: "#8850EA" }}>
+                    <Typography variant="body2" sx={{ color: ge_pass }}>
                       {gen_reqCredit}
                     </Typography>
                     <Typography
@@ -1472,7 +1475,7 @@ function NuikitView() {
                       alignItems: "baseline",
                     }}
                   >
-                    <Typography variant="body2" sx={{ color: "#8850EA" }}>
+                    <Typography variant="body2" sx={{ color: ge_pass }}>
                       {gen_elecCredit}
                     </Typography>
                     <Typography
@@ -1571,7 +1574,7 @@ function NuikitView() {
               justifyContent: "space-between",
             }}
           >
-            <Typography variant="subtitle1" sx={{ color: "#FF7D0F" }}>
+            <Typography variant="subtitle1" sx={{ color: majorCore_pass }}>
               Specfication
             </Typography>
 
@@ -1583,7 +1586,7 @@ function NuikitView() {
                 alignItems: "baseline",
               }}
             >
-              <Typography variant="subtitle1" sx={{ color: "#FF7D0F" }}>
+              <Typography variant="subtitle1" sx={{ color: majorCore_pass }}>
                 {core_Credit + major_reqCredit + major_elecCredit}
               </Typography>
               <Typography
@@ -1638,7 +1641,7 @@ function NuikitView() {
                     alignItems: "baseline",
                   }}
                 >
-                  <Typography variant="body2" sx={{ color: "#FF7D0F" }}>
+                  <Typography variant="body2" sx={{ color: majorCore_pass }}>
                     {core_Credit}
                   </Typography>
                   <Typography
@@ -1706,7 +1709,7 @@ function NuikitView() {
                     alignItems: "baseline",
                   }}
                 >
-                  <Typography variant="body2" sx={{ color: "#FF7D0F" }}>
+                  <Typography variant="body2" sx={{ color: major_pass }}>
                     {major_reqCredit + major_elecCredit}
                   </Typography>
                   <Typography
@@ -1739,7 +1742,7 @@ function NuikitView() {
                     alignItems: "baseline",
                   }}
                 >
-                  <Typography variant="body2" sx={{ color: "#FF7D0F" }}>
+                  <Typography variant="body2" sx={{ color: major_pass }}>
                     {major_reqCredit}
                   </Typography>
                   <Typography
@@ -1810,7 +1813,7 @@ function NuikitView() {
                     alignItems: "baseline",
                   }}
                 >
-                  <Typography variant="body2" sx={{ color: "#FF7D0F" }}>
+                  <Typography variant="body2" sx={{ color: major_pass }}>
                     {major_elecCredit}
                   </Typography>
                   <Typography
