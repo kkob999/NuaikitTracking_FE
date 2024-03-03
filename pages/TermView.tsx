@@ -252,10 +252,13 @@ function TermView() {
   // Node Clicked
   const [nodeClicked, setNodeClicked] = useState(false);
   const [majorENodeClicked, setMajorENodeClicked] = useState(false);
+  const [insideNodeClicked, setInsideNodeClicked] = useState(false);
+  const [insideNode, setInsideNode] = useState("");
   const [GENodeClicked, setGENodeClicked] = useState(false);
   const [groupName, setGroupName] = useState("");
 
   const [nodeArr, setNodeArr] = useState([]);
+  const [insideNodeArr, setInsideNodeArr] = useState([]);
 
   // Set Height and Width
   const [ttWidth, SetWidth] = useState("100vw");
@@ -372,6 +375,11 @@ function TermView() {
     }
   };
 
+  async function getInSideNodeDetail(insideNode: string) {
+    console.log("inside node "+ insideNode)
+    setInsideNodeArr(await FetchCourse(insideNode));
+  };
+
   function fontChange(nav: string) {
     if (url === "/dashboard" && nav === "dashboard") return "#EE6457";
     else if (url === "/TermView" && nav === "term") return "#EE6457";
@@ -464,7 +472,6 @@ function TermView() {
   }
 
   async function waitData() {
-
     SetBackdrop(true);
     await processData(stdYear, "" + isCoop);
     SetBackdrop(false);
@@ -513,8 +520,6 @@ function TermView() {
     SetWidth(convertWidth(width));
   }
 
-  
-
   async function startProgram() {
     setNodes([]);
     setEdges([]);
@@ -543,7 +548,7 @@ function TermView() {
           setErrorMessage("Unknown error occurred. Please try again later");
         }
       });
-    
+
     await waitData();
 
     if (filterGE) {
@@ -588,7 +593,6 @@ function TermView() {
 
   //UseEffect
   useEffect(() => {
-    
     startProgram();
 
     let c = isCoop;
@@ -596,18 +600,17 @@ function TermView() {
     if (c === "true") {
       if (prevFormat === "coop") {
         setDisButton(false);
-      }else{
+      } else {
         setDisButton(true);
       }
-      
+
       setFormats("coop");
     }
     if (c === "false") {
-      console.log(prevFormat)
-      
+      console.log(prevFormat);
+
       setDisButton(false);
       setFormats("normal");
-      
     }
 
     // console.log("is ge filter clicked " + filterGE);
@@ -622,7 +625,11 @@ function TermView() {
     window.addEventListener("resize", widthResizer);
   });
 
-  useEffect(() => {}, [open, filter, f_name]);
+  useEffect(() => {
+    if (insideNodeClicked) {
+      getInSideNodeDetail(insideNode);
+    }
+  }, [open, filter, f_name, insideNodeClicked]);
 
   function signOut() {
     axios.post("/api/signOut").finally(() => {
@@ -1059,20 +1066,36 @@ function TermView() {
         {DisplayBackDrop(backdrop)}
         {/* Node Clicked */}
         {nodeClicked
-          ? DisplayNodeModal(nodeClicked, setNodeClicked, nodeArr, termNode)
+          ? DisplayNodeModal(nodeClicked, setNodeClicked, nodeArr, termNode, true)
           : null}
-        {majorENodeClicked
+
+          
+        {insideNodeClicked
+          ? DisplayNodeModal(
+              insideNodeClicked,
+              setInsideNodeClicked,
+              insideNodeArr,
+              termNode,
+              false
+            )
+          : null}
+
+        {majorENodeClicked && !insideNodeClicked
           ? MajorEModal(
               majorENodeClicked,
               setMajorENodeClicked,
+              setInsideNodeClicked,
+              setInsideNode,
               nodeArr,
-              termNode
+              termNode,
             )
           : null}
         {GENodeClicked
           ? GEModal(
               GENodeClicked,
               setGENodeClicked,
+              setInsideNodeClicked,
+              setInsideNode,
               nodeArr,
               termNode,
               groupName

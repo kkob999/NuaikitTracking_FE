@@ -11,12 +11,14 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 // import { fetchMajorElective } from "../Controller/Fetch";
 
 import { theme } from "../../constants/theme";
+import { fetchCourseDescription } from "../../Controller/Fetch";
 
 export function DisplayNodeModal(
   isClicked: boolean,
   setClicked: Function,
   NodeArr: any,
-  TermArr: any[]
+  TermArr: any[],
+  isInsideNode: boolean
 ) {
   // var courseData = Object.values(NodeArr);
   var courseDetail = NodeArr["courseDetails"];
@@ -79,6 +81,7 @@ export function DisplayNodeModal(
             left: "28vw",
             zIndex: "1",
             borderRadius: "1rem",
+            opacity: isInsideNode ? 2 : 1
           }}
         >
           <Stack
@@ -263,9 +266,15 @@ function checkisPass(isPass: boolean, color: string) {
 export function MajorEModal(
   isClicked: boolean,
   setClicked: Function,
+  setInsideNodeClicked: Function,
+  setInsideNode: Function,
   NodeArr: any,
-  TermNode: any[]
+  TermNode: any[],
+  
 ) {
+  function isCloseClicked() {
+    return true
+  }
   if (isClicked) {
     var mjNode = NodeArr["courseLists"];
 
@@ -281,6 +290,7 @@ export function MajorEModal(
           zIndex: 1,
         }}
       >
+        
         <Stack
           sx={{
             position: "fixed",
@@ -303,7 +313,9 @@ export function MajorEModal(
               borderRadius: "1rem 1rem 0 0",
             }}
           >
-            <Typography sx={{ color: "white", ml: "44%", mt: 'auto', mb: 'auto' }}>
+            <Typography
+              sx={{ color: "white", ml: "44%", mt: "auto", mb: "auto" }}
+            >
               Major Elective
             </Typography>
             <IconButton
@@ -364,6 +376,10 @@ export function MajorEModal(
                   // console.log(TermNode)
                   return (
                     <Stack
+                      onClick={()  => {
+                        setInsideNode(node.courseNo)
+                        setInsideNodeClicked(true)
+                      }}
                       sx={{
                         m: 0,
                         width: "6.466vw",
@@ -383,6 +399,7 @@ export function MajorEModal(
                         },
                       }}
                     >
+                      
                       <Stack
                         sx={{
                           display: "flex",
@@ -433,6 +450,8 @@ export function MajorEModal(
 export function GEModal(
   isClicked: boolean,
   setClicked: Function,
+  setInsideNodeClicked: Function,
+  setInsideNode: Function,
   NodeArr: any,
   TermNode: any[],
   groupName: string
@@ -475,7 +494,9 @@ export function GEModal(
               borderRadius: "1rem 1rem 0 0",
             }}
           >
-            <Typography sx={{ color: "white", ml: "44%", mt: 'auto', mb: 'auto' }}>
+            <Typography
+              sx={{ color: "white", ml: "44%", mt: "auto", mb: "auto" }}
+            >
               {groupName}
             </Typography>
             <IconButton
@@ -537,6 +558,10 @@ export function GEModal(
                   // console.log(TermNode)
                   return (
                     <Stack
+                    onClick={()  => {
+                      setInsideNode(node.courseNo)
+                      setInsideNodeClicked(true)
+                    }}
                       sx={{
                         m: 0,
                         width: "6.466vw",
