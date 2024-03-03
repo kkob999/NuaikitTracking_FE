@@ -12,7 +12,7 @@ type NodeData = {
 };
 
 type CustomNode = Node<NodeData>;
-import { free_pass, ge_notpass, ge_pass, majorCore_pass, major_pass } from "../../../constants/color";
+import { free_notpass, free_pass, ge_notpass, ge_pass, majorCore_notpass, majorCore_pass, major_notpass, major_pass } from "../../../constants/color";
 
 export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
   var st = { opacity: 0, top: "1rem" };
@@ -22,13 +22,31 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
 
   var color = "#7C4DFF";
   if (data.category == "gen") {
-    color = ge_pass;
+    if (!data.is_pass) {
+      color = ge_notpass;
+    } else {
+      color = ge_pass;
+    }
   } else if (data.category == "sp_core") {
-    color = majorCore_pass;
+    if (!data.is_pass) {
+      color = majorCore_notpass;
+    } else {
+      color = majorCore_pass;
+    }
   } else if (data.category == "sp_major") {
-    color = major_pass;
+    if (!data.is_pass) {
+      color = major_notpass;
+    }else{
+      color = major_pass;
+    }
+    
   } else {
-    color = free_pass;
+    if (!data.is_pass){
+      color = free_notpass;
+    }else{
+      color = free_pass;
+    }
+    
   }
 
   function checkisPass(isPass: boolean) {

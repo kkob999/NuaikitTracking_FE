@@ -2,7 +2,16 @@ import { Box, Stack, Typography, Breakpoint } from "@mui/material";
 import React, { memo } from "react";
 import { Handle, Position, Node, NodeProps } from "reactflow";
 import { theme } from "../../../constants/theme";
-import { free_pass, ge_notpass, ge_pass, majorCore_pass, major_pass } from "../../../constants/color";
+import {
+  free_notpass,
+  free_pass,
+  ge_notpass,
+  ge_pass,
+  majorCore_notpass,
+  majorCore_pass,
+  major_notpass,
+  major_pass,
+} from "../../../constants/color";
 
 type NodeData = {
   sub_no: string;
@@ -27,13 +36,31 @@ export default function TermNode({
   var textSize = "body2";
   var color = "#7C4DFF";
   if (data.category == "gen") {
-    color = ge_pass;
+    if (!data.is_pass) {
+      color = ge_notpass;
+    } else {
+      color = ge_pass;
+    }
   } else if (data.category == "sp_core") {
-    color = majorCore_pass;
+    if (!data.is_pass) {
+      color = majorCore_notpass;
+    } else {
+      color = majorCore_pass;
+    }
   } else if (data.category == "sp_major") {
-    color = major_pass;
+    if (!data.is_pass) {
+      color = major_notpass;
+    }else{
+      color = major_pass;
+    }
+    
   } else {
-    color = free_pass;
+    if (!data.is_pass){
+      color = free_notpass;
+    }else{
+      color = free_pass;
+    }
+    
   }
 
   function checkSubNo(sub_no: string) {
