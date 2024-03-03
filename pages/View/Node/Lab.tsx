@@ -1,6 +1,7 @@
 import { Box, Stack, Typography, Theme, Breakpoint } from "@mui/material";
 import React, { memo } from "react";
 import { Handle, Position, Node, NodeProps } from "reactflow";
+import { free_pass, ge_notpass, ge_pass, majorCore_pass, major_pass } from "../../../constants/color";
 
 import { theme } from "../../../constants/theme";
 
@@ -21,11 +22,13 @@ export default function Lab({ data, isConnectable }: NodeProps<NodeData>) {
   }
   var color = "#7C4DFF";
   if (data.category == "gen") {
-    color = "#7C4DFF";
-  } else if (data.category == "sp") {
-    color = "#FF7D0F";
+    color = ge_pass;
+  } else if (data.category == "sp_core") {
+    color = majorCore_pass;
+  } else if (data.category == "sp_major") {
+    color = major_pass;
   } else {
-    color = "#1976D2";
+    color = free_pass;
   }
   function checkisPass(isPass: boolean) {
     if (isPass) {
