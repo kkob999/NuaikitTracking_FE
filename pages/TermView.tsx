@@ -721,7 +721,6 @@ function TermView() {
       setFormats("coop");
     }
     if (c === "false") {
-      
 
       setdisButtonNormal(false);
       if (fetchData !== undefined) {
@@ -875,7 +874,7 @@ function TermView() {
                     opacity: 1,
                   }}
                 >
-                  Nuikit Tracking
+                  Nuaikit Tracking
                 </Typography>
               </Stack>
             ) : (

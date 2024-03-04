@@ -272,7 +272,7 @@ function Navbar() {
                 opacity: 1,
               }}
             >
-              Nuikit Tracking
+              Nuaikit Tracking
             </Typography>
           </Stack>
         ) : (
