@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { SignInResponse } from "./api/signIn";
+import { Backdrop, CircularProgress, Stack } from "@mui/material";
 
 export default function CMUOAuthCallback() {
   const router = useRouter();
@@ -33,5 +34,22 @@ export default function CMUOAuthCallback() {
       });
   }, [code]);
 
-  return <div className="p-3">{message || "Redirecting ..."}</div>;
+  return (
+    // <div className="p-3">{message || "Redirecting ..."}</div>
+    <Stack
+      sx={{
+        height: "100vh",
+        width: "100%",
+        justifyContent: "center",
+        alignContent: "center",
+      }}
+    >
+      <Backdrop
+      open={true}
+      sx={{ color: '#F1485B', zIndex: 0.5 }}
+      >
+        <CircularProgress color="inherit" sx={{zIndex: 1}} />
+      </Backdrop>
+    </Stack>
+  );
 }

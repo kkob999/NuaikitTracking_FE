@@ -380,7 +380,7 @@ function DashBoard() {
   async function fetchStdData() {
     await cmuOauth()
     var url =
-    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId="+stdId;
+    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId="+"630610725";
   DatchBoardData(url);
   }
   React.useEffect(() => {

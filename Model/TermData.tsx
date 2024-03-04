@@ -677,18 +677,20 @@ async function processData(year: string, isCoop: string) {
 
   var termURL =
     "http://localhost:8080/termView?year=" +
-    year +
+    "2563" +
     "&curriculumProgram=CPE&isCOOP=" +
-    isCoop + "&mockData=mockData5"
-    // "&studentId=" +
-    // "630610725";
+    isCoop + 
+    "&studentId=630610725";
+    // "630610723";
   var nuikitURL =
     "http://localhost:8080/categoryView?year=" +
-    year +
+    "2563" +
     "&curriculumProgram=CPE&isCOOP=" +
-    isCoop + "&mockData=mockData5"
-    // "&studentId=" +
-    // "630610725";
+    isCoop + 
+    // "&studentId=" + 
+    // "63061072";
+    "&studentId=630610725";
+    
 
   // &mockData=mockData5
   // &studentId=630610727
@@ -697,6 +699,8 @@ async function processData(year: string, isCoop: string) {
   // "&studentId=630610727";
 
   // console.log(termURL);
+
+  //mock6 mock7 mock13 mock14 mock15
 
   // console.log('in termdata.tsx '+window.innerWidth)
 
@@ -979,7 +983,10 @@ async function processData(year: string, isCoop: string) {
         }
       }
 
-      if (i === 3 && summerArr[i - 1] === 2) {
+      if(summerArr[0] === 0 && summerArr[2]=== 0 && i === 2) xpos += (window.innerWidth * xx) / 1440;
+      if(summerArr[6] === 0 && summerArr[7]=== 0 && i === 7) xpos += (window.innerWidth * xx) / 1440;
+
+      if (i === 3 && summerArr[i - 1] === 2  ) {
         xpos += (window.innerWidth * x_sum) / 1440;
       }
 
@@ -1010,7 +1017,7 @@ async function processData(year: string, isCoop: string) {
           summerArr[i - 2] === 0 &&
           i < summerArr.length - 3
         ) {
-          // console.log('xx ' + i)
+          console.log('xx ' + i)
           console.log(summerArr.length);
           xpos += (window.innerWidth * xx) / 1440;
         }
@@ -1018,8 +1025,11 @@ async function processData(year: string, isCoop: string) {
 
       //last term
       if (i === summerArr.length - 2) {
-        // console.log('last term ' + i)
-        xpos += (window.innerWidth * xx) / 1440;
+        console.log('last term ' + i)
+        if (!isSumYear1) xpos += (window.innerWidth * xx) / 1440;
+        else if (isSumYear1 && summerArr[7] === 2 && i === 8) xpos += (window.innerWidth * xx) / 1440;
+        
+        
       }
     }
     //normal term

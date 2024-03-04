@@ -11,6 +11,7 @@ import {
   FormControlLabel,
   InputBase,
   Paper,
+  Alert,
 } from "@mui/material";
 
 import isSelected, {
@@ -115,10 +116,10 @@ function NuikitView() {
   const [filter, setFilter] = useState(false);
   const [isCoop, setisCoop] = useState(false);
 
-  const [filterGE, setFilterGE] = useState(false);
+  const [filterGE, setFilterGE] = useState(true);
+  const [filterSp, setFilterSp] = useState(true);
+  const [filterFree, setFilterFree] = useState(true);
 
-  const [filterSp, setFilterSp] = useState(false);
-  const [filterFree, setFilterFree] = useState(false);
   const [checkedPreFilter, setCheckedPreFilter] = useState(true);
   const [checkedDone, setCheckedDone] = useState(false);
 
@@ -1142,12 +1143,12 @@ function NuikitView() {
 
           <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
             <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
-              {isCoop && saveBtn ? displayCoopPlan(screen) : displayNormalPlan()}
-              {checkedDone && saveBtn && displayDone()}
+              {isCoop  ? displayCoopPlan(screen) : displayNormalPlan()}
+              {checkedDone  && displayDone()}
               {/* {checkedPreFilter && displayPre()} */}
-              {filterGE && saveBtn && displayGE(screen)}
-              {filterSp && saveBtn && displaySp()}
-              {filterFree && saveBtn && displayFree(screen)}
+              {filterGE  && displayGE(screen)}
+              {filterSp  && displaySp()}
+              {filterFree  && displayFree(screen)}
             </Stack>
             {/* Filter */}
             <Button
@@ -1354,7 +1355,7 @@ function NuikitView() {
                 position: "fixed",
                 bgcolor: "white",
                 width: "50%",
-                height: "30%",
+                // height: "30%",
                 top: "32vh",
                 left: "28vw",
                 zIndex: "1",
@@ -1397,8 +1398,19 @@ function NuikitView() {
                   width: "100%",
                   height: "100%",
                   borderRadius: "0 0 1rem 1rem",
+                  justifyContent: "center",
                 }}
               >
+                <Alert
+                  severity="info"
+                  sx={{ borderRadius: "0.8rem", width: "90%", mt: 1 }}
+                >
+                  เนื่องจากข้อมูลของหน่วยกิต หรือ credits
+                  ในเว็บไซต์นี้อาจมีความไม่ถูกต้อง
+                  หากท่านรู้หน่วยกิตที่แท้จริงของวิชานี้
+                  โปรดกรอกจำนวนของหน่วยกิต แล้วกดยืนยัน
+                  ทางระบบจะทำการคำนวณหน่วยกิตรวมทั้งหมดให้ใหม่
+                </Alert>
                 <Paper
                   component="form"
                   sx={{
@@ -1407,11 +1419,12 @@ function NuikitView() {
                     width: "90%",
                     justifyContent: "center",
                     mt: 2,
+                    mb: 2,
                   }}
                 >
                   {}
                   <InputBase
-                    sx={{ ml: 1, flex: 1, justifyContent: "center" }}
+                    sx={{ ml: 1, flex: 1, justifyContent: "center", textAlign: 'center' }}
                     placeholder="3"
                     inputProps={{ "aria-label": "checkFree" }}
                     defaultValue={dfValue} //
@@ -1419,10 +1432,12 @@ function NuikitView() {
                       setText(event.target.value);
                     }}
                   />
-                  <IconButton
+                  <Button
                     type="button"
-                    sx={{ p: 1, bgcolor: blue[500] }}
-                    aria-label="search"
+                    sx={{ p: 1, bgcolor: blue[500], height: '100%','&:hover': {
+                      bgcolor: green[500], color: 'white'
+                   }, }}
+                    aria-label="confirm"
                     onClick={async () => {
                       // console.log(freeNode);
                       var tempArr: any = [];
@@ -1436,7 +1451,13 @@ function NuikitView() {
                       tempArr.map((n: any, index: number) => {
                         if (n.courseId === freeCID) {
                           n.credit = +text;
-                          free[index]["credits"] = +text;
+
+                          if (Number(text) < dfValue) {
+                            free[index]["credits"] -= dfValue - Number(text) ;
+                          } else if (Number(text) > dfValue) {
+                            free[index]["credits"] += Number(text) - dfValue;
+                          }
+                          // free[index]["credits"] = +text;
                           setDFValue(+text);
                         }
                       });
@@ -1450,7 +1471,7 @@ function NuikitView() {
                     }}
                   >
                     <CheckIcon />
-                  </IconButton>
+                  </Button>
                 </Paper>
               </Stack>
             </Stack>
@@ -1741,11 +1762,12 @@ function NuikitView() {
                     variant="outlined"
                     sx={{ color: "#000000", borderColor: "#000000" }}
                     onClick={() => {
-                      setFilterGE(false);
-                      setFilterSp(false);
-                      setFilterFree(false);
+                      setFilterGE(true);
+                      setFilterSp(true);
+                      setFilterFree(true);
                       setCheckedDone(false);
-                      setFormats("normal");
+                      if(isCoop === false)setFormats("normal");
+                      
                       setisCoop(false);
                     }}
                   >
@@ -1947,7 +1969,7 @@ function NuikitView() {
                   {/* {majorReqNode} */}
                   {/* {actNode} */}
                   {/* {CoReqNode} */}
-                  {filterGE && saveBtn ? (
+                  {!filterGE && saveBtn ? (
                     <Stack sx={{ height: "5.3704vh", width: "100%" }}></Stack>
                   ) : (
                     GeneralReq(checkedDone)
@@ -2018,7 +2040,7 @@ function NuikitView() {
                   {/* {freeNode}
                   {GEfreeNode}
                   {CoFreeNode} */}
-                  {filterGE && saveBtn ? null : GenElec()}
+                  {!filterGE && saveBtn ? null : GenElec()}
                 </Stack>
               </Stack>
             </Stack>
@@ -2053,7 +2075,7 @@ function NuikitView() {
                   },
                 }}
               >
-                {filterFree && saveBtn ? (
+                {!filterFree && saveBtn ? (
                   <Stack sx={{ height: "5.3704vh", width: "100%" }}></Stack>
                 ) : (
                   FreeNode()
@@ -2182,7 +2204,7 @@ function NuikitView() {
                   },
                 }}
               >
-                {filterSp && saveBtn ? (
+                {!filterSp && saveBtn ? (
                   <Stack sx={{ height: "5.3704vh", width: "100%" }}></Stack>
                 ) : (
                   CoreNode()
@@ -2283,7 +2305,7 @@ function NuikitView() {
                   },
                 }}
               >
-                {filterSp && saveBtn ? (
+                {!filterSp && saveBtn ? (
                   <Stack sx={{ height: "5.3704vh", width: "100%" }}></Stack>
                 ) : (
                   majorNode()
@@ -2354,7 +2376,7 @@ function NuikitView() {
                   //   overflowX: 'scroll'
                 }}
               >
-                {filterSp && saveBtn ? (
+                {!filterSp && saveBtn ? (
                   <Stack sx={{ height: "5.3704vh", width: "100%" }}></Stack>
                 ) : (
                   majorENode()

@@ -576,6 +576,8 @@ function TermView() {
   async function waitData() {
     SetBackdrop(true);
     if (studentId !== undefined || studentId !== "" || studentId !== null) {
+      setStdYear("25"+studentId.substring(0,2))
+      // console.log(stdYear)
       await processData(stdYear, "" + isCoop);
     }
 
@@ -741,6 +743,7 @@ function TermView() {
     if (window.innerWidth <= 1300) setOpen(false);
     // console.log("this is height");
     // console.log(window.innerHeight);
+    // console.log(fullName)
   }, [columnNode, isCoop]);
 
   useEffect(() => {
@@ -1423,6 +1426,7 @@ function TermView() {
                   โปรดกรอกจำนวนของหน่วยกิต แล้วกดยืนยัน
                   ทางระบบจะทำการคำนวณหน่วยกิตรวมทั้งหมดให้ใหม่
                 </Alert>
+                {/* <Stack direction={"row"}> */}
                 <Paper
                   component="form"
                   sx={{
@@ -1435,7 +1439,7 @@ function TermView() {
                   }}
                 >
                   <InputBase
-                    sx={{ ml: 1, flex: 1, justifyContent: "center" }}
+                    sx={{ ml: 1, flex: 1, justifyContent: "center", textAlign: 'center' }}
                     placeholder="3"
                     inputProps={{ "aria-label": "checkFree" }}
                     defaultValue={dfValue} //
@@ -1443,10 +1447,12 @@ function TermView() {
                       setText(event.target.value);
                     }}
                   />
-                  <IconButton
+                  <Button
                     type="button"
-                    sx={{ p: 1, bgcolor: blue[500] }}
-                    aria-label="search"
+                    sx={{ p: 1, bgcolor: blue[500], height: '100%','&:hover': {
+                      bgcolor: green[500], color: 'white'
+                   }, }}
+                    aria-label="confirm"
                     onClick={async () => {
                       var tempArr: any = [];
                       free.map((n: any) => {
@@ -1481,9 +1487,9 @@ function TermView() {
                               console.log(index);
                               console.log(credits[index]);
                               if (Number(text) < dfValue) {
-                                credits[index] -= Number(text);
+                                credits[index] -= dfValue - Number(text) ;
                               } else if (Number(text) > dfValue) {
-                                credits[index] += Number(text) - 3;
+                                credits[index] += Number(text) - dfValue;
                               }
                             }
                           });
@@ -1492,8 +1498,10 @@ function TermView() {
                     }}
                   >
                     <CheckIcon />
-                  </IconButton>
+                  </Button>
                 </Paper>
+                {/* </Stack> */}
+                
               </Stack>
             </Stack>
           </Stack>

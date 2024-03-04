@@ -36,7 +36,7 @@ export const NormalTerm = (
       sx={{
         height: height, //dynamic 136.77vh 190.77vh
         width: "18.438vw",
-        border: "1px solid black",
+        border: "1px solid #9B9B9B",
         marginTop: "0.9259vh",
         borderRadius: "0.5rem",
         [theme.breakpoints.between("sm", "md")]: {
@@ -59,8 +59,9 @@ export const NormalTerm = (
             sx={{
               width: "50%",
               height: halfline, //dynamic 132.77
-              borderRight: "0.5px solid black",
+              borderRight: "0.5px solid #9B9B9B",
               alignItems: "center",
+              opacity: 0.25
             }}
           >
             <Typography>1st sem</Typography>
@@ -71,8 +72,9 @@ export const NormalTerm = (
             sx={{
               width: "50%",
               height: halfline, //dynamic
-              borderLeft: "0.5px solid black",
+              borderLeft: "0.5px solid #9B9B9B",
               alignItems: "center",
+              opacity: 0.25
             }}
           >
             <Typography>2nd sem</Typography>
@@ -116,7 +118,7 @@ export const summerTerm = (
       sx={{
         height: height, //dynamic 136.77vh 190.77vh
         width: "27.657vw",
-        border: "1px solid black",
+        border: "1px solid #9B9B9B",
         marginTop: "0.9259vh",
         borderRadius: "0.5rem",
         [theme.breakpoints.between("sm", "md")]: {
@@ -138,7 +140,7 @@ export const summerTerm = (
           sx={{
             width: "9.219vw",
             height: halfline, //dynamic 132.77
-            borderRight: "0.5px solid black",
+            borderRight: "0.5px solid #9B9B9B",
             alignItems: "center",
             [theme.breakpoints.between("sm", "md")]: {
               width: "12.1vw",
@@ -146,6 +148,7 @@ export const summerTerm = (
             [theme.breakpoints.only("md")]: {
               width: "9.87vw",
             },
+            opacity: 0.25
           }}
         >
           <Typography
@@ -164,8 +167,8 @@ export const summerTerm = (
           sx={{
             width: "9.219vw",
             height: halfline, //dynamic
-            borderLeft: "0.5px solid black",
-            borderRight: "0.5px solid black",
+            borderLeft: "0.5px solid #9B9B9B",
+            borderRight: "0.5px solid #9B9B9B",
             alignItems: "center",
             [theme.breakpoints.between("sm", "md")]: {
               width: "12.1vw",
@@ -173,6 +176,7 @@ export const summerTerm = (
             [theme.breakpoints.only("md")]: {
               width: "9.87vw",
             },
+            opacity: 0.25
           }}
         >
           <Typography
@@ -192,7 +196,7 @@ export const summerTerm = (
           sx={{
             width: "9.219vw",
             height: halfline, //dynamic
-            borderLeft: "0.5px solid black",
+            borderLeft: "0.5px solid #9B9B9B",
             alignItems: "center",
             [theme.breakpoints.between("sm", "md")]: {
               width: "12.1vw",
@@ -200,6 +204,7 @@ export const summerTerm = (
             [theme.breakpoints.only("md")]: {
               width: "9.87vw",
             },
+            opacity: 0.25
           }}
         >
           <Typography
