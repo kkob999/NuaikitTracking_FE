@@ -354,8 +354,7 @@ function TermView() {
     console.log("Previous Format " + newFormats);
     if (newFormats == null) newFormats = formats;
     setFormats(newFormats);
-    // console.log(newFormats);
-    // window.location.reload();
+
   };
 
   const [nodes, setNodes] = useNodesState<any[]>([]);
@@ -554,6 +553,11 @@ function TermView() {
         sp = 4.355;
         sp_str = "" + sp + "vw";
       }
+      // if (window.innerWidth > 1000 && window.innerWidth < 1400) {
+      //   sp = 3.355;
+      //   sp_str = "" + sp + "vw";
+      // }
+
     }
 
     return (
@@ -567,7 +571,10 @@ function TermView() {
 
   async function waitData() {
     SetBackdrop(true);
-    await processData(stdYear, "" + isCoop);
+    if(studentId !== undefined || studentId !== "" || studentId !== null){
+      await processData(stdYear, "" + isCoop);
+    }
+    
     SetBackdrop(false);
     setNodes(termNode);
     setEdges(edArr);
@@ -607,10 +614,14 @@ function TermView() {
     if (window.innerWidth > 600 && window.innerWidth < 900) plus_w = 17 + 15;
     if (window.innerWidth > 900 && window.innerWidth < 1000) plus_w = 0 - 2;
     if (window.innerWidth > 1000 && window.innerWidth < 1400) plus_w = 2;
+    if (window.innerWidth > 1000 && window.innerWidth < 1300) plus_w = 0-3;
 
     width += (y - 1) * 1.875 + 20.623 + plus_w;
 
+
     console.log("total width" + width);
+
+    // width = 140
 
     SetWidth(convertWidth(width));
   }
@@ -629,6 +640,7 @@ function TermView() {
           setL_name(response.data.lastName);
           // setCmuAccount(response.data.cmuAccount);
           setStudentId(response.data.studentId ?? "No Student Id");
+          console.log("who am i")
         }
       })
       .catch((error: AxiosError<WhoAmIResponse>) => {
@@ -720,7 +732,7 @@ function TermView() {
     if (window.innerWidth <= 1300) setOpen(false);
     // console.log("this is height");
     // console.log(window.innerHeight);
-    // console.log(fetchData["study term"])
+
   }, [columnNode, isCoop]);
 
   useEffect(() => {

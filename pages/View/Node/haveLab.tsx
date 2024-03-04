@@ -150,12 +150,12 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
           padding: "1vh 0",
           borderRadius: "0.5rem",
           [theme.breakpoints.between("sm","md")]: {
-            height: "16px",
+            // height: "16px",
             width: "9.146vw",
             // bgcolor: 'lavender',
           },
           [theme.breakpoints.only("md")]: {
-            height: "22px",
+            // height: "22px",
             width: "6.646vw",
             // bgcolor: 'pink',
           },

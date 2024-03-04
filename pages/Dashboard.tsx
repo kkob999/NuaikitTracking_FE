@@ -214,10 +214,7 @@ function DashBoard() {
   var tmp_gen_elecCredit = 0;
   var tmp_gen_elecCreditNeed = 0;
 
-  const url =
-    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610768";
-
-  function FetchDashBoard() {
+  async function FetchDashBoard(url: string) {
     return new Promise(function (resolve, reject) {
       axios
         .get(url, {
@@ -242,8 +239,8 @@ function DashBoard() {
     });
   }
 
-  async function DatchBoardData() {
-    const resp: any = await FetchDashBoard();
+  async function DatchBoardData(url: string) {
+    const resp: any = await FetchDashBoard(url);
     // console.log(resp["coreCategory"]);
     // console.log(resp);
 
@@ -332,9 +329,9 @@ function DashBoard() {
     );
   }
 
-  React.useEffect(() => {
-    DatchBoardData();
-  });
+  // React.useEffect(() => {
+  //   DatchBoardData();
+  // });
 
   React.useEffect(() => {
     setGEPercent(
@@ -374,21 +371,24 @@ function DashBoard() {
 
   const bp = useMediaQuery(theme.breakpoints.down("lg"));
 
+  // var url =
+  //   "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610768";
+
+  var stdId = ""
   useEffect(() => {
-    //All cookies that belong to the current url will be sent with the request automatically
-    //so we don't have to attach token to the request
-    //You can view token (stored in cookies storage) in browser devtools (F12). Open tab "Application" -> "Cookies"
-    axios
+    async function cmuOauth(){
+      await axios
       .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
       .then((response) => {
         if (response.data.ok) {
           setFullName(response.data.firstName + " " + response.data.lastName);
           setCmuAccount(response.data.cmuAccount);
           setStudentId(response.data.studentId ?? "No Student Id");
+          stdId = response.data.studentId ?? "No Student Id"
+          console.log(studentId);
           console.log("orgCode");
           console.log(response.data.orgCode);
           console.log(response.data.orgNameEN);
-          // console.log(response.data.itAcc)
         }
       })
       .catch((error: AxiosError<WhoAmIResponse>) => {
@@ -404,6 +404,19 @@ function DashBoard() {
           setErrorMessage("Unknown error occurred. Please try again later");
         }
       });
+    }
+    
+
+    async function fetchStdData() {
+      await cmuOauth()
+      var url =
+      "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId="+stdId;
+    DatchBoardData(url);
+    }
+
+    
+
+    fetchStdData();
   }, []);
 
   function signOut() {
@@ -491,7 +504,7 @@ function DashBoard() {
         >
           {/* Total Nuikit */}
           <Stack width={{ xs: "100%", sm: "100%", lg: "100%" }}>
-            <Stack direction={"row"} sx={{alignItems: 'center'}}>
+            <Stack direction={"row"} sx={{ alignItems: "center" }}>
               <Typography variant="h6" marginBottom={"4px"}>
                 Total Nuaikit
               </Typography>

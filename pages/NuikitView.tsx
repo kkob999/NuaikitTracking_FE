@@ -173,6 +173,8 @@ function NuikitView() {
   var [modalTopic, setModalTopic] = useState("");
   var tempArr: any = [];
 
+  var studentId = "";
+
   function defaultCredits(courseId: string) {
     var tempArr: any = [];
     // console.log(courseId)
@@ -422,14 +424,6 @@ function NuikitView() {
     // setFreeModalNode(respFree["courseLists"]);
     toggleModal();
   }
-
-  useEffect(() => {
-    const urlNuikit =
-      "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&mockData=mockData5";
-    // &studentId=630610727
-    // &mockData=mockData5
-    NuikitData(urlNuikit);
-  }, []);
 
   // useEffect(() => {}, [freeCID]);
 
@@ -1025,31 +1019,43 @@ function NuikitView() {
   }
 
   useEffect(() => {
-    //All cookies that belong to the current url will be sent with the request automatically
-    //so we don't have to attach token to the request
-    //You can view token (stored in cookies storage) in browser devtools (F12). Open tab "Application" -> "Cookies"
-    axios
-      .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
-      .then((response) => {
-        if (response.data.ok) {
-        }
-      })
-      .catch((error: AxiosError<WhoAmIResponse>) => {
-        if (!error.response) {
-          setErrorMessage(
-            "Cannot connect to the network. Please try again later."
-          );
-        } else if (error.response.status === 401) {
-          setErrorMessage("Authentication failed");
-        } else if (error.response.data.ok === false) {
-          setErrorMessage(error.response.data.message);
-        } else {
-          setErrorMessage("Unknown error occurred. Please try again later");
-        }
-      });
-    console.log(gen_elecCredit);
+    async function cmuOauth() {
+      await axios
+        .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
+        .then((response) => {
+          if (response.data.ok) {
+            studentId = response.data.studentId ?? "No Student Id";
+          }
+        })
+        .catch((error: AxiosError<WhoAmIResponse>) => {
+          if (!error.response) {
+            setErrorMessage(
+              "Cannot connect to the network. Please try again later."
+            );
+          } else if (error.response.status === 401) {
+            setErrorMessage("Authentication failed");
+          } else if (error.response.data.ok === false) {
+            setErrorMessage(error.response.data.message);
+          } else {
+            setErrorMessage("Unknown error occurred. Please try again later");
+          }
+        });
+    }
+
+    async function fetchStdData() {
+      await cmuOauth();
+      const urlNuikit =
+        "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=" +
+        studentId;
+      // &studentId=630610727
+      // &mockData=mockData5
+      NuikitData(urlNuikit);
+    }
+
+    fetchStdData()
   }, []);
   // console.log("free credits need" + free_CreditNeed);
+  useEffect(() => {}, []);
 
   return (
     <Stack
@@ -1119,7 +1125,7 @@ function NuikitView() {
           }}
         >
           {/* Topic section */}
-          <Stack direction={"row"} sx={{alignItems: 'center'}}>
+          <Stack direction={"row"} sx={{ alignItems: "center" }}>
             <Typography variant="h6" sx={{}}>
               Category View
             </Typography>
@@ -1215,7 +1221,7 @@ function NuikitView() {
                     setFreeClicked(false);
                     setText("");
                     setIsFree(false);
-                    setErrInp(false)
+                    setErrInp(false);
                   }}
                   sx={{
                     width: "2.222vw",
@@ -1262,28 +1268,29 @@ function NuikitView() {
                     aria-label="search"
                     onClick={async () => {
                       if (text !== "" || text !== null) {
-                        var regex=/^[a-zA-Z]+$/;
-                        if (text.match(regex) || text.length > 6 || text.length < 6) {
-                          setErrInp(true)
-                          
-                          console.log('this is text')
-                        }
-                        else{
+                        var regex = /^[a-zA-Z]+$/;
+                        if (
+                          text.match(regex) ||
+                          text.length > 6 ||
+                          text.length < 6
+                        ) {
+                          setErrInp(true);
+
+                          console.log("this is text");
+                        } else {
                           var resp: any = await FetchIsFree(text);
                           if (resp !== null) {
                             const group = resp["group"];
                             if (group === "Free") setIsFree(true);
-  
+
                             setSearchBtn(true);
                           }
-                          setErrInp(false)
+                          setErrInp(false);
                         }
-                        
 
                         // console.log(resp);
                       }
-                    }
-                  }
+                    }}
                   >
                     <SearchIcon />
                   </IconButton>
@@ -1301,7 +1308,8 @@ function NuikitView() {
                   )}
                   {errInp && (
                     <Typography variant="subtitle1">
-                      โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6 ตัว
+                      โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6
+                      ตัว
                     </Typography>
                   )}
                 </Stack>

@@ -1,9 +1,10 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { MarkerType } from "reactflow";
 // import catData from "../Model/NodeDB.json";
 import { fetchNuikitData, mjelec } from "../pages/NuikitView";
 import { start } from "repl";
 import { Set } from "typescript";
+import { WhoAmIResponse } from "../pages/api/whoAmI";
 
 const mockjSon = {
   "list of course": {
@@ -637,6 +638,8 @@ var isCoop_api: string = "false";
 
 var arrTogglePrereq: any[] = [];
 
+var stdId = ""
+
 // var width = 100
 // console.log(edArr);
 
@@ -655,21 +658,41 @@ async function processData(year: string, isCoop: string) {
 
   summerArr = [];
 
+  await axios
+      .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
+      .then((response) => {
+        if (response.data.ok) {
+          // setFullName(response.data.firstName + " " + response.data.lastName);
+          // setF_name(response.data.firstName);
+          // setL_name(response.data.lastName);
+          // setCmuAccount(response.data.cmuAccount);
+          // setStudentId(response.data.studentId ?? "No Student Id");
+          stdId = response.data.studentId ?? "No Student Id"
+          console.log("who am i")
+        }
+      })
+      .catch((error: AxiosError<WhoAmIResponse>) => {
+        console.log(error)
+      });
+
   var termURL =
     "http://localhost:8080/termView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop +
-    "&mockData=mockData5";
+    "&studentId="+stdId;
   var nuikitURL =
     "http://localhost:8080/categoryView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop +
-    "&mockData=mockData5";
+    "&studentId="+stdId;
 
   // &mockData=mockData5
   // &studentId=630610727
+  // "&mockData=mockData5"
+  // "&studentId="+stdId;
+  // "&studentId=630610727";
 
   // console.log(termURL);
 
