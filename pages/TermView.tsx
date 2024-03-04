@@ -709,6 +709,7 @@ function TermView() {
     startProgram();
 
     let c = isCoop;
+    console.log('c ' + c)
 
     if (c === "true") {
       if (prevFormat === "coop") {
@@ -720,14 +721,20 @@ function TermView() {
       setFormats("coop");
     }
     if (c === "false") {
-      console.log(prevFormat);
+      
 
       setdisButtonNormal(false);
       if (fetchData !== undefined) {
-        if (fetchData["study term"] >= 4) {
+        console.log(fetchData["study term"])
+        if (fetchData["study term"].length >= 4) {
           setdisButtonCoop(true);
+          
+        }else{
+          console.log('kkkk')
+          setdisButtonCoop(false);
         }
-        setdisButtonCoop(true);
+
+        
       }
       setFormats("normal");
     }
