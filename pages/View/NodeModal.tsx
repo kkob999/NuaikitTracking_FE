@@ -31,6 +31,8 @@ export function DisplayNodeModal(
   var enForceEN = "";
   var enForceTH = "";
 
+  console.log("click")
+
   if (courseDetail !== undefined) {
     TermArr.map((n: any) => {
       if (n.id === courseDetail[0]["courseNo"]) {
@@ -64,8 +66,8 @@ export function DisplayNodeModal(
 
   // console.log(courseDetail)
   if (isClicked) {
-    console.log("in node modal");
-    console.log(TermArr);
+    // console.log("in node modal");
+    // console.log(TermArr);
     return (
       <Stack
         sx={{

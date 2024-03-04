@@ -135,7 +135,6 @@ function NuikitView() {
   const [isFree, setIsFree] = useState<boolean>(false);
   const [searchBtn, setSearchBtn] = useState<boolean>(false);
 
-  // cosnt [creditFree, setCreditFree]
   const [freePassClick, setFreePassClick] = useState<boolean>(false);
   const [freeCreditArr, setFreeCreditArr] = useState<number[]>([]);
   const [freeCID, setFreeCID] = useState("");

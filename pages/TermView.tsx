@@ -24,6 +24,10 @@ import {
   Backdrop,
   CircularProgress,
   Avatar,
+  Paper,
+  InputBase,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
@@ -31,6 +35,7 @@ import MuiDrawer from "@mui/material/Drawer";
 
 // import fetch
 import {
+  FetchIsFree,
   fetchCourseDescription,
   fetchGEElective,
   fetchMajorElective,
@@ -50,6 +55,12 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
+
+import SearchIcon from "@mui/icons-material/Search";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckIcon from "@mui/icons-material/Check";
+import { red, green, blue } from "@mui/material/colors";
 
 //Smart Edge
 // import { SmartStepEdge, SmartBezierEdge } from "@tisoap/react-flow-smart-edge";
@@ -306,6 +317,18 @@ function TermView() {
   const [columnNode, SetColumnNode] = useState(18);
   const [credits, setCredits] = useState<number[]>([]);
 
+  const [text, setText] = useState("");
+  const [freeClicked, setFreeClicked] = useState<boolean>(false);
+  const [isFree, setIsFree] = useState<boolean>(false);
+  const [searchBtn, setSearchBtn] = useState<boolean>(false);
+
+  const [freePassClick, setFreePassClick] = useState<boolean>(false);
+  const [freeCreditArr, setFreeCreditArr] = useState<number[]>([]);
+  const [freeCID, setFreeCID] = useState("");
+  const [dfValue, setDFValue] = useState(3);
+
+  const [free, setFree] = useState<any[]>([]);
+
   // Handle Change for Swicth Plan Toggle
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckedDone(event.target.checked);
@@ -392,7 +415,25 @@ function TermView() {
         });
       }
     } else {
-      // console.log("just clicked node");
+      var tempFreeArr: any[] = [];
+      if (node.data["category"] === "free") {
+        // console.log('click')
+
+        termNode.map((n: any) => {
+          if (n.data["category"] === "free")
+            tempFreeArr.push(n.data["sub_data"]);
+        });
+
+        freeCreditArr.map((n: any) => {
+          // console.log(n)
+          if (n.courseId === node.data["sub_no"]) setDFValue(n.credit);
+        });
+
+        setFreePassClick(true);
+        setFreeCID(node.data["sub_no"]);
+      }
+
+      setFree(tempFreeArr);
       if (
         node.data["sub_no"] === "Elective" ||
         node.data["sub_no"] === "Co-Creator" ||
@@ -410,6 +451,10 @@ function TermView() {
         setNodeClicked(!nodeClicked);
         var tempArr = FetchCourse(node.data["sub_no"]);
         setNodeArr(await tempArr);
+      }
+
+      if (node.data["sub_no"] === "Free") {
+        setFreeClicked(!freeClicked);
       }
     }
   };
@@ -520,6 +565,7 @@ function TermView() {
     setStartSubj(startNode);
     setTerm(fetchData["study term"]);
     setisCoop(isCoop_api);
+    setDFValue(3);
 
     SetColumnNode(totalSubColumn);
 
@@ -562,6 +608,7 @@ function TermView() {
   async function startProgram() {
     setNodes([]);
     setEdges([]);
+    setDFValue(3);
 
     axios
       .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
@@ -1109,7 +1156,284 @@ function TermView() {
       >
         {/* Display Backdrop */}
         {DisplayBackDrop(backdrop)}
+
+        {freeClicked && (
+          <Stack
+            sx={{
+              bgcolor: "rgba(0, 0, 0, 0.50)",
+              position: "fixed",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            }}
+          >
+            <Stack
+              sx={{
+                position: "fixed",
+                bgcolor: "white",
+                width: "50%",
+                height: "30%",
+                top: "32vh",
+                left: "28vw",
+                zIndex: "1",
+                // borderRadius: "1rem",
+                borderRadius: "1rem 1rem 1rem 1rem",
+              }}
+            >
+              <Stack
+                direction={"row"}
+                sx={{
+                  bgcolor: "#F1485B",
+                  pt: 1,
+                  pb: 1,
+                  borderRadius: "1rem 1rem 0 0",
+                }}
+              >
+                <Typography
+                  sx={{ color: "white", ml: "44%", mt: "auto", mb: "auto" }}
+                >
+                  Free Elective
+                </Typography>
+                <IconButton
+                  onClick={() => {
+                    setFreeClicked(false);
+                    setText("");
+                    setIsFree(false);
+                  }}
+                  sx={{
+                    width: "2.222vw",
+                    height: "2.222vw",
+                    marginLeft: "auto",
+                    marginRight: "2vw",
+                    color: "white",
+                  }}
+                >
+                  <CloseRoundedIcon />
+                </IconButton>
+              </Stack>
+
+              <Stack
+                sx={{
+                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "0 0 1rem 1rem",
+                }}
+              >
+                <Paper
+                  component="form"
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    width: "90%",
+                    justifyContent: "center",
+                    mt: 2,
+                  }}
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder="check if this course is free elective or not"
+                    inputProps={{ "aria-label": "checkFree" }}
+                    value={text}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      setText(event.target.value);
+                      setSearchBtn(false);
+                    }}
+                  />
+                  <IconButton
+                    type="button"
+                    sx={{ p: 1 }}
+                    aria-label="search"
+                    onClick={async () => {
+                      console.log(text);
+                      if (text !== "" || text !== null) {
+                        var resp: any = await FetchIsFree(text);
+                        if (resp !== null) {
+                          const group = resp["group"];
+                          if (group === "Free") setIsFree(true);
+
+                          setSearchBtn(true);
+                        }
+
+                        console.log(resp);
+                      }
+                    }}
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                </Paper>
+                <Stack sx={{ mt: 2 }}>
+                  {isFree && (
+                    <Typography variant="h6">
+                      {text} is Free Elective
+                    </Typography>
+                  )}
+                  {searchBtn && !isFree && text !== "" && (
+                    <Typography variant="h6">
+                      {text} is not Free Elective
+                    </Typography>
+                  )}
+                </Stack>
+                <Stack sx={{ mt: 1 }}>
+                  {isFree && (
+                    <CheckCircleIcon sx={{ fontSize: 44, color: green[500] }} />
+                  )}
+                  {searchBtn && !isFree && text !== "" && (
+                    <CancelIcon sx={{ fontSize: 44, color: red[500] }} />
+                  )}
+                </Stack>
+              </Stack>
+            </Stack>
+          </Stack>
+        )}
+
+        {freePassClick && (
+          <Stack
+            sx={{
+              bgcolor: "rgba(0, 0, 0, 0.50)",
+              position: "fixed",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            }}
+          >
+            <Stack
+              sx={{
+                position: "fixed",
+                bgcolor: "white",
+                width: "50%",
+                // height: "30%",
+                top: "32vh",
+                left: "28vw",
+                zIndex: "1",
+                // borderRadius: "1rem",
+                borderRadius: "1rem 1rem 1rem 1rem",
+              }}
+            >
+              <Stack
+                direction={"row"}
+                sx={{
+                  bgcolor: "#F1485B",
+                  pt: 1,
+                  pb: 1,
+                  borderRadius: "1rem 1rem 0 0",
+                }}
+              >
+                <Typography
+                  sx={{ color: "white", ml: "32%", mt: "auto", mb: "auto" }}
+                >
+                  Free Elective Credits Config
+                </Typography>
+                <IconButton
+                  onClick={() => {
+                    setFreePassClick(false);
+                  }}
+                  sx={{
+                    width: "2.222vw",
+                    height: "2.222vw",
+                    marginLeft: "auto",
+                    marginRight: "2vw",
+                    color: "white",
+                  }}
+                >
+                  <CloseRoundedIcon />
+                </IconButton>
+              </Stack>
+              <Stack
+                sx={{
+                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "0 0 1rem 1rem",
+                  justifyContent: 'center'
+                }}
+              >
+                <Alert severity="info" sx={{borderRadius: '0.8rem', width: '90%', mt: 1}}>
+                  เนื่องจากข้อมูลของหน่วยกิต หรือ credits ในเว็บไซต์นี้อาจมีความไม่ถูกต้อง หากท่านรู้หน่วยกิตที่แท้จริงของวิชานี้ โปรดกรอกจำนวนของหน่วยกิต แล้วกดยืนยัน
+                  ทางระบบจะทำการคำนวณหน่วยกิตรวมทั้งหมดให้ใหม่
+                </Alert>
+                <Paper
+                  component="form"
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    width: "90%",
+                    justifyContent: "center",
+                    mt: 2,
+                    mb: 2
+                  }}
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1, justifyContent: "center" }}
+                    placeholder="3"
+                    inputProps={{ "aria-label": "checkFree" }}
+                    defaultValue={dfValue} //
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      setText(event.target.value);
+                    }}
+                  />
+                  <IconButton
+                    type="button"
+                    sx={{ p: 1, bgcolor: blue[500] }}
+                    aria-label="search"
+                    onClick={async () => {
+                      var tempArr: any = [];
+                      free.map((n: any) => {
+                        tempArr.push({
+                          courseId: n.courseNo,
+                          credit: n.credits,
+                        });
+                      });
+
+                      tempArr.map((n: any, index: number) => {
+                        if (n.courseId === freeCID) {
+                          console.log(text);
+                          n.credit = +text;
+                          free[index]["credits"] = +text;
+                          setDFValue(+text);
+                        }
+                      });
+                      var tmpCredit = 0;
+                      tempArr.map((n: any) => {
+                        tmpCredit += n.credit;
+                      });
+                      setFreeCreditArr(tempArr);
+
+                      // console.log(tempArr);
+
+                      // console.log(credits)
+                      // console.log(fet)
+                      fetchData["template"].map(
+                        (row: string[], index: number) => {
+                          row.map((n: any) => {
+                            if (freeCID === n) {
+                              console.log(index);
+                              console.log(credits[index]);
+                              if (Number(text) < dfValue) {
+                                credits[index] -= Number(text);
+                              } else if (Number(text) > dfValue) {
+                                credits[index] += Number(text) - 3;
+                              }
+                            }
+                          });
+                        }
+                      );
+                    }}
+                  >
+                    <CheckIcon />
+                  </IconButton>
+                </Paper>
+              </Stack>
+            </Stack>
+          </Stack>
+        )}
+
         {/* Node Clicked */}
+
         {nodeClicked
           ? DisplayNodeModal(
               nodeClicked,
@@ -1168,87 +1492,89 @@ function TermView() {
 
             {/* Display Filter Status */}
             <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
-            <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
-              {/* {isCoop === false && displayNormalPlan()}
+              <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
+                {/* {isCoop === false && displayNormalPlan()}
                 {isCoop === true && displayCoopPlan()} */}
-              {isCoop === "true" ? displayCoopPlan() : displayNormalPlan()}
-              {checkedDone && displayDone()}
-              {checkedPreFilter && displayPre()}
-              {filterGE && displayGE()}
-              {filterSp && displaySp()}
-              {filterFree && displayFree()}
-            </Stack>
+                {isCoop === "true" ? displayCoopPlan() : displayNormalPlan()}
+                {checkedDone && displayDone()}
+                {checkedPreFilter && displayPre()}
+                {filterGE && displayGE()}
+                {filterSp && displaySp()}
+                {filterFree && displayFree()}
+              </Stack>
 
-            {/* <Stack direction={"row"} sx={{columnGap: 1.4, justifyContent: 'flex-end'}}> */}
-            <Button
-              sx={{
-                bgcolor: "white",
-                pt: 0.5,
-                pb: 0.5,
-                pr: 1.4,
-                pl: 1.4,
-                alignItems: "center",
-                borderRadius: 5,
-                border: checkedPre ? "1px solid #EE6457" : "1px solid #9B9B9B",
-                textTransform: "none",
-                maxHeight: "4.2vh",
-                maxWidth: "20vw",
-              }}
-              onClick={() => {
-                setCheckedPre(!checkedPre);
-                setEdges((eds) =>
-                  eds.map((edge) => {
-                    if (checkedPre) edge.hidden = false;
-                    else edge.hidden = true;
-                    return edge;
-                  })
-                );
-              }}
-            >
-              <Typography
+              {/* <Stack direction={"row"} sx={{columnGap: 1.4, justifyContent: 'flex-end'}}> */}
+              <Button
                 sx={{
-                  fontSize: "0.8rem",
-                  color: checkedPre ? "#EE6457" : "#9B9B9B",
+                  bgcolor: "white",
+                  pt: 0.5,
+                  pb: 0.5,
+                  pr: 1.4,
+                  pl: 1.4,
+                  alignItems: "center",
+                  borderRadius: 5,
+                  border: checkedPre
+                    ? "1px solid #EE6457"
+                    : "1px solid #9B9B9B",
+                  textTransform: "none",
+                  maxHeight: "4.2vh",
+                  maxWidth: "20vw",
+                }}
+                onClick={() => {
+                  setCheckedPre(!checkedPre);
+                  setEdges((eds) =>
+                    eds.map((edge) => {
+                      if (checkedPre) edge.hidden = false;
+                      else edge.hidden = true;
+                      return edge;
+                    })
+                  );
                 }}
               >
-                See Prerequisite Course
-              </Typography>
-            </Button>
+                <Typography
+                  sx={{
+                    fontSize: "0.8rem",
+                    color: checkedPre ? "#EE6457" : "#9B9B9B",
+                  }}
+                >
+                  See Prerequisite Course
+                </Typography>
+              </Button>
 
-            {/* Filter */}
-            <Button
-              variant="outlined"
-              endIcon={<FilterListIcon />}
-              onClick={() => {
-                setFilter(!filter);
-                setSave(false);
-              }}
-              sx={{
-                width: "8vw",
-                maxHeight: "4vh",
-                position: "relatice",
-                // mr: "1.9vw",
-                textTransform: "none",
-                borderRadius: 5,
-                color: filter ? "#EE6457" : "#9B9B9B",
-                borderColor: filter ? "#EE6457" : "#9B9B9B",
-                pt: 0.25,
-                pb: 0,
-                pr: 1.4,
-                pl: 1.4,
-                "&:hover": {
-                  color: "#EE6457",
-                  borderColor: "#EE6457",
-                  bgcolor: "white",
-                },
-                [theme.breakpoints.between("sm", "md")]: {
-                  width: "10vw",
-                },
-              }}
-            >
-              Filter
-            </Button>
-          </Stack>
+              {/* Filter */}
+              <Button
+                variant="outlined"
+                endIcon={<FilterListIcon />}
+                onClick={() => {
+                  setFilter(!filter);
+                  setSave(false);
+                }}
+                sx={{
+                  width: "8vw",
+                  maxHeight: "4vh",
+                  position: "relatice",
+                  // mr: "1.9vw",
+                  textTransform: "none",
+                  borderRadius: 5,
+                  color: filter ? "#EE6457" : "#9B9B9B",
+                  borderColor: filter ? "#EE6457" : "#9B9B9B",
+                  pt: 0.25,
+                  pb: 0,
+                  pr: 1.4,
+                  pl: 1.4,
+                  "&:hover": {
+                    color: "#EE6457",
+                    borderColor: "#EE6457",
+                    bgcolor: "white",
+                  },
+                  [theme.breakpoints.between("sm", "md")]: {
+                    width: "10vw",
+                  },
+                }}
+              >
+                Filter
+              </Button>
+            </Stack>
           </Stack>
           {/* </Stack> */}
 

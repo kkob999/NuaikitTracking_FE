@@ -660,13 +660,13 @@ async function processData(year: string, isCoop: string) {
     year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop +
-    "&mockData=mockData5";
+    "&studentId=630610727";
   var nuikitURL =
     "http://localhost:8080/categoryView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop +
-    "&mockData=mockData5";
+    "&studentId=630610727";
 
   // &mockData=mockData5
   // &studentId=630610727
