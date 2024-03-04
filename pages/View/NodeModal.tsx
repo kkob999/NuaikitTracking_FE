@@ -21,6 +21,7 @@ import { amber, yellow } from "@mui/material/colors";
 import { theme } from "../../constants/theme";
 import { fetchCourseDescription, FetchIsFree } from "../../Controller/Fetch";
 import exp from "constants";
+import { ge_notpass, ge_pass, major_notpass, major_pass } from "../../constants/color";
 
 export function DisplayNodeModal(
   isClicked: boolean,
@@ -396,7 +397,7 @@ export function MajorEModal(
                         width: "6.466vw",
                         height: "5.3704vh",
                         padding: "1vh 0",
-                        border: "1.5px solid #FF7D0F",
+                        border: isPass ? "1.5px solid " + major_pass : "1.5px solid " + major_notpass,
                         borderRadius: "0.5rem",
                         [theme.breakpoints.between("sm", "md")]: {
                           height: "36px",
@@ -442,7 +443,7 @@ export function MajorEModal(
                           </Typography>
                         </Stack>
                         {/* Checkbox */}
-                        {checkisPass(isPass, "#FF7D0F")}
+                        {isPass ? checkisPass(isPass, major_pass) : checkisPass(isPass, major_notpass)}
                       </Stack>
                     </Stack>
                   );
@@ -577,7 +578,7 @@ export function GEModal(
                         width: "6.466vw",
                         height: "5.3704vh",
                         padding: "1vh 0",
-                        border: "1.5px solid #7C4DFF",
+                        border: isPass ? "1.5px solid " + ge_pass : "1.5px solid " + ge_notpass,
                         borderRadius: "0.5rem",
                         [theme.breakpoints.between("sm", "md")]: {
                           height: "36px",
@@ -623,7 +624,7 @@ export function GEModal(
                           </Typography>
                         </Stack>
                         {/* Checkbox */}
-                        {checkisPass(isPass, "#7C4DFF")}
+                        {isPass ? checkisPass(isPass, ge_pass) : checkisPass(isPass, ge_notpass)}
                       </Stack>
                     </Stack>
                   );

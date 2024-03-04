@@ -149,6 +149,8 @@ function NuikitView() {
 
   const [warning, setWarning] = useState(true);
 
+  const [screen, setScreen] = useState(1440)
+
   var tmp_major_reqCredit = 0;
   var tmp_major_reqCreditNeed = 0;
   var tmp_major_elecCredit = 0;
@@ -1055,6 +1057,12 @@ function NuikitView() {
     fetchStdData()
   }, []);
   // console.log("free credits need" + free_CreditNeed);
+  function widthResizer() {
+    var width = window.innerWidth;
+    // if (window.innerWidth <= 1300) setOpen(false);
+    console.log(width);
+    setScreen(width)
+  }
   useEffect(() => {}, []);
 
   return (
@@ -1134,12 +1142,12 @@ function NuikitView() {
 
           <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
             <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
-              {isCoop && saveBtn ? displayCoopPlan() : displayNormalPlan()}
+              {isCoop && saveBtn ? displayCoopPlan(screen) : displayNormalPlan()}
               {checkedDone && saveBtn && displayDone()}
               {/* {checkedPreFilter && displayPre()} */}
-              {filterGE && saveBtn && displayGE()}
+              {filterGE && saveBtn && displayGE(screen)}
               {filterSp && saveBtn && displaySp()}
-              {filterFree && saveBtn && displayFree()}
+              {filterFree && saveBtn && displayFree(screen)}
             </Stack>
             {/* Filter */}
             <Button

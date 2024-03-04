@@ -638,7 +638,7 @@ var isCoop_api: string = "false";
 
 var arrTogglePrereq: any[] = [];
 
-var stdId = ""
+var stdId = "";
 
 // var width = 100
 // console.log(edArr);
@@ -659,34 +659,36 @@ async function processData(year: string, isCoop: string) {
   summerArr = [];
 
   await axios
-      .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
-      .then((response) => {
-        if (response.data.ok) {
-          // setFullName(response.data.firstName + " " + response.data.lastName);
-          // setF_name(response.data.firstName);
-          // setL_name(response.data.lastName);
-          // setCmuAccount(response.data.cmuAccount);
-          // setStudentId(response.data.studentId ?? "No Student Id");
-          stdId = response.data.studentId ?? "No Student Id"
-          console.log("who am i")
-        }
-      })
-      .catch((error: AxiosError<WhoAmIResponse>) => {
-        console.log(error)
-      });
+    .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
+    .then((response) => {
+      if (response.data.ok) {
+        // setFullName(response.data.firstName + " " + response.data.lastName);
+        // setF_name(response.data.firstName);
+        // setL_name(response.data.lastName);
+        // setCmuAccount(response.data.cmuAccount);
+        // setStudentId(response.data.studentId ?? "No Student Id");
+        stdId = response.data.studentId ?? "No Student Id";
+        console.log("who am i");
+      }
+    })
+    .catch((error: AxiosError<WhoAmIResponse>) => {
+      console.log(error);
+    });
 
   var termURL =
     "http://localhost:8080/termView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
-    isCoop +
-    "&studentId="+stdId;
+    isCoop + "&mockData=mockData5"
+    // "&studentId=" +
+    // "630610725";
   var nuikitURL =
     "http://localhost:8080/categoryView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
-    isCoop +
-    "&studentId="+stdId;
+    isCoop + "&mockData=mockData5"
+    // "&studentId=" +
+    // "630610725";
 
   // &mockData=mockData5
   // &studentId=630610727
@@ -924,7 +926,16 @@ async function processData(year: string, isCoop: string) {
   var xx = 27.5;
 
   if (window.innerWidth === 1024) {
-    // console.log("jajfo");
+    // if (summerArr.includes(2)) {
+    //   console.log("have summer");
+    //   x = 133.5 + 30;
+    //   x_sum = 26.2 + 30;
+    //   xx = 22 + 30;
+    // } else {
+    //   x = 133.5 + 30;
+    //   x_sum = 26.2 + 30;
+    //   xx = 22 + 30;
+    // }
     x = 133.5 + 30;
     x_sum = 26.2 + 30;
     xx = 22 + 30;
@@ -954,23 +965,20 @@ async function processData(year: string, isCoop: string) {
 
   var isSumYear1 = false;
 
-  
-
   for (let i = 0; i < currData.length; i++) {
     tempi++;
     //have summer
     if (summerArr.includes(2)) {
-
       //check is summer is in year 1
       if (i === 0 && summerArr[i] === 1) {
         isSumYear1 = true;
         if (window.innerWidth < 1300) {
-          xpos - 2;
+          xpos += -20;
         } else {
           xpos += -29; //(window.innerWidth * (1)) / 1440
         }
       }
-      
+
       if (i === 3 && summerArr[i - 1] === 2) {
         xpos += (window.innerWidth * x_sum) / 1440;
       }
@@ -980,7 +988,7 @@ async function processData(year: string, isCoop: string) {
         summerArr[i + 2] === 2 &&
         i !== summerArr.length - 3
       ) {
-        // console.log("i === 1 " + i); 
+        // console.log("i === 1 " + i);
         if (i <= 5) {
           xpos += (window.innerWidth * 30) / 1440; //screen 1024 => 22
         } else {
@@ -997,21 +1005,22 @@ async function processData(year: string, isCoop: string) {
       }
 
       if (isSumYear1 && summerArr[i] === 0) {
-        if (summerArr[i - 1] === 0 && summerArr[i - 2] === 0 && i < summerArr.length-3) {
+        if (
+          summerArr[i - 1] === 0 &&
+          summerArr[i - 2] === 0 &&
+          i < summerArr.length - 3
+        ) {
           // console.log('xx ' + i)
-          console.log(summerArr.length)
-          xpos += (window.innerWidth * (xx)) / 1440;
+          console.log(summerArr.length);
+          xpos += (window.innerWidth * xx) / 1440;
         }
-        
       }
 
       //last term
-      if (i === summerArr.length-2) {
+      if (i === summerArr.length - 2) {
         // console.log('last term ' + i)
-        xpos += (window.innerWidth * (xx)) / 1440;
+        xpos += (window.innerWidth * xx) / 1440;
       }
-
-      
     }
     //normal term
     if (!summerArr.includes(2)) {

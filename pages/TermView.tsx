@@ -28,6 +28,7 @@ import {
   InputBase,
   Alert,
   AlertTitle,
+  useMediaQuery,
 } from "@mui/material";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
@@ -371,6 +372,10 @@ function TermView() {
 
   const [backdrop, SetBackdrop] = useState(true);
 
+  const [screen ,setScreen] = useState(1440)
+
+  const bp = useMediaQuery(theme.breakpoints.down("lg"));
+  
   const handleDrawerClose = () => {
     setOpen(!open);
   };
@@ -485,6 +490,7 @@ function TermView() {
     var width = window.innerWidth;
     if (window.innerWidth <= 1300) setOpen(false);
     console.log(width);
+    setScreen(width)
   }
 
   function displayTerm() {
@@ -614,7 +620,7 @@ function TermView() {
     if (window.innerWidth > 600 && window.innerWidth < 900) plus_w = 17 + 15;
     if (window.innerWidth > 900 && window.innerWidth < 1000) plus_w = 0 - 2;
     if (window.innerWidth > 1000 && window.innerWidth < 1400) plus_w = 2;
-    if (window.innerWidth > 1000 && window.innerWidth < 1300) plus_w = 0-3;
+    // if (window.innerWidth > 1000 && window.innerWidth < 1300) plus_w = 0-3;
 
     width += (y - 1) * 1.875 + 20.623 + plus_w;
 
@@ -640,7 +646,6 @@ function TermView() {
           setL_name(response.data.lastName);
           // setCmuAccount(response.data.cmuAccount);
           setStudentId(response.data.studentId ?? "No Student Id");
-          console.log("who am i")
         }
       })
       .catch((error: AxiosError<WhoAmIResponse>) => {
@@ -1518,7 +1523,7 @@ function TermView() {
               termNode
             )
           : null}
-        {GENodeClicked
+        {GENodeClicked && !insideNodeClicked
           ? GEModal(
               GENodeClicked,
               setGENodeClicked,
@@ -1547,15 +1552,15 @@ function TermView() {
 
             {/* Display Filter Status */}
             <Stack direction={"row"} sx={{ columnGap: 1.4, alignItems: 'center' }}>
-              <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
+              <Stack direction={"row"} sx={{ columnGap: 1.4,  }}>
                 {/* {isCoop === false && displayNormalPlan()}
                 {isCoop === true && displayCoopPlan()} */}
-                {isCoop === "true" ? displayCoopPlan() : displayNormalPlan()}
+                {isCoop === "true" ? displayCoopPlan(screen) : displayNormalPlan()}
                 {checkedDone && displayDone()}
                 {checkedPreFilter && displayPre()}
-                {filterGE && displayGE()}
+                {filterGE && displayGE(screen)}
                 {filterSp && displaySp()}
-                {filterFree && displayFree()}
+                {filterFree && displayFree(screen)}
               </Stack>
 
               {/* <Stack direction={"row"} sx={{columnGap: 1.4, justifyContent: 'flex-end'}}> */}
@@ -1596,6 +1601,10 @@ function TermView() {
                   sx={{
                     fontSize: "0.8rem",
                     color: checkedPre ? "#EE6457" : "#9B9B9B",
+                    [theme.breakpoints.only("md")]: {
+                      fontSize: "0.68rem",
+                      
+                    },
                   }}
                 >
                   See Prerequisite Course
@@ -1631,6 +1640,10 @@ function TermView() {
                   [theme.breakpoints.down("lg")]: {
                     fontSize: "0.86rem",
                     maxHeight: "3.4vh",
+                  },
+                  [theme.breakpoints.only("md")]: {
+                    fontSize: "0.68rem",
+                    
                   },
                   [theme.breakpoints.between("sm", "md")]: {
                     fontSize: "0.7rem",

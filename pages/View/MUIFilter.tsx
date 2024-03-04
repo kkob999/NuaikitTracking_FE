@@ -7,6 +7,7 @@ import {
   IconButton,
   ToggleButton,
   ToggleButtonGroup,
+  useMediaQuery,
 } from "@mui/material";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { free_pass, ge_pass, majorCore_pass } from "../../constants/color";
@@ -36,7 +37,7 @@ export function TogglePlan() {
   );
 }
 
-export const displayGE = () => {
+export const displayGE = (screenWidth : number) => {
   return (
     <Stack
       direction={"row"}
@@ -67,20 +68,37 @@ export const displayGE = () => {
           borderRadius: 100,
         }}
       ></Stack>
-      <Typography
-        sx={{
-          fontSize: "0.9rem",
-          color: "#EE6457",
-          [theme.breakpoints.down("lg")]: {
-            fontSize: "0.86rem",
-          },
-          [theme.breakpoints.between("sm", "md")]: {
-            fontSize: "0.7rem",
-          },
-        }}
-      >
-        General Education
-      </Typography>
+      {screenWidth < 1367 ? (
+        <Typography
+          sx={{
+            fontSize: "0.9rem",
+            color: "#EE6457",
+            [theme.breakpoints.down("lg")]: {
+              fontSize: "0.86rem",
+            },
+            [theme.breakpoints.between("sm", "md")]: {
+              fontSize: "0.7rem",
+            },
+          }}
+        >
+          GE
+        </Typography>
+      ) : (
+        <Typography
+          sx={{
+            fontSize: "0.9rem",
+            color: "#EE6457",
+            [theme.breakpoints.down("lg")]: {
+              fontSize: "0.86rem",
+            },
+            [theme.breakpoints.between("sm", "md")]: {
+              fontSize: "0.7rem",
+            },
+          }}
+        >
+          General Education
+        </Typography>
+      )}
     </Stack>
   );
 };
@@ -116,19 +134,25 @@ export const displaySp = () => {
           borderRadius: 100,
         }}
       ></Stack>
-      <Typography sx={{ fontSize: "0.9rem", color: "#EE6457",[theme.breakpoints.down("lg")]: {
+      <Typography
+        sx={{
+          fontSize: "0.9rem",
+          color: "#EE6457",
+          [theme.breakpoints.down("lg")]: {
             fontSize: "0.86rem",
           },
           [theme.breakpoints.between("sm", "md")]: {
             fontSize: "0.7rem",
-          }, }}>
+          },
+        }}
+      >
         Specification
       </Typography>
     </Stack>
   );
 };
 
-export const displayFree = () => {
+export const displayFree = (screenWidth : number) => {
   return (
     <Stack
       direction={"row"}
@@ -159,14 +183,38 @@ export const displayFree = () => {
           borderRadius: 100,
         }}
       ></Stack>
-      <Typography sx={{ fontSize: "0.9rem", color: "#EE6457", [theme.breakpoints.down("lg")]: {
-            fontSize: "0.86rem",
-          },
-          [theme.breakpoints.between("sm", "md")]: {
-            fontSize: "0.7rem",
-          }, }}>
-        Free Elective
-      </Typography>
+
+      {screenWidth < 1367 ? (
+        <Typography
+          sx={{
+            fontSize: "0.9rem",
+            color: "#EE6457",
+            [theme.breakpoints.down("lg")]: {
+              fontSize: "0.86rem",
+            },
+            [theme.breakpoints.between("sm", "md")]: {
+              fontSize: "0.7rem",
+            },
+          }}
+        >
+          Free
+        </Typography>
+      ) : (
+        <Typography
+          sx={{
+            fontSize: "0.9rem",
+            color: "#EE6457",
+            [theme.breakpoints.down("lg")]: {
+              fontSize: "0.86rem",
+            },
+            [theme.breakpoints.between("sm", "md")]: {
+              fontSize: "0.7rem",
+            },
+          }}
+        >
+          Free Elective
+        </Typography>
+      )}
     </Stack>
   );
 };
@@ -193,19 +241,25 @@ export const displayNormalPlan = () => {
         },
       }}
     >
-      <Typography sx={{ fontSize: "0.9rem", color: "#EE6457",[theme.breakpoints.down("lg")]: {
+      <Typography
+        sx={{
+          fontSize: "0.9rem",
+          color: "#EE6457",
+          [theme.breakpoints.down("lg")]: {
             fontSize: "0.86rem",
           },
           [theme.breakpoints.between("sm", "md")]: {
             fontSize: "0.7rem",
-          }, }}>
+          },
+        }}
+      >
         Normal Plan
       </Typography>
     </Stack>
   );
 };
 
-export const displayCoopPlan = () => {
+export const displayCoopPlan = (screenWidth : number) => {
   return (
     <Stack
       direction={"row"}
@@ -227,14 +281,37 @@ export const displayCoopPlan = () => {
         },
       }}
     >
-      <Typography sx={{ fontSize: "0.9rem", color: "#EE6457",[theme.breakpoints.down("lg")]: {
-            fontSize: "0.86rem",
-          },
-          [theme.breakpoints.between("sm", "md")]: {
-            fontSize: "0.7rem",
-          }, }}>
-        Cooperative Plan
-      </Typography>
+      {screenWidth < 1367 ? (
+        <Typography
+          sx={{
+            fontSize: "0.9rem",
+            color: "#EE6457",
+            [theme.breakpoints.down("lg")]: {
+              fontSize: "0.86rem",
+            },
+            [theme.breakpoints.between("sm", "md")]: {
+              fontSize: "0.7rem",
+            },
+          }}
+        >
+          Coop Plan
+        </Typography>
+      ) : (
+        <Typography
+          sx={{
+            fontSize: "0.9rem",
+            color: "#EE6457",
+            [theme.breakpoints.down("lg")]: {
+              fontSize: "0.86rem",
+            },
+            [theme.breakpoints.between("sm", "md")]: {
+              fontSize: "0.7rem",
+            },
+          }}
+        >
+          Cooperative Plan
+        </Typography>
+      )}
     </Stack>
   );
 };
@@ -253,7 +330,6 @@ export const displayPlan = () => {
         borderRadius: 5,
         border: "1px solid #EE6457",
         maxHeight: "4.2vh",
-        
       }}
     ></Stack>
   );
@@ -281,12 +357,18 @@ export const displayDone = () => {
         },
       }}
     >
-      <Typography sx={{ fontSize: "0.9rem", color: "#EE6457",[theme.breakpoints.down("lg")]: {
+      <Typography
+        sx={{
+          fontSize: "0.9rem",
+          color: "#EE6457",
+          [theme.breakpoints.down("lg")]: {
             fontSize: "0.86rem",
           },
           [theme.breakpoints.between("sm", "md")]: {
             fontSize: "0.7rem",
-          }, }}>
+          },
+        }}
+      >
         Doned Course
       </Typography>
     </Stack>
@@ -315,12 +397,18 @@ export const displayPre = () => {
         },
       }}
     >
-      <Typography sx={{ fontSize: "0.9rem", color: "#EE6457",[theme.breakpoints.down("lg")]: {
+      <Typography
+        sx={{
+          fontSize: "0.9rem",
+          color: "#EE6457",
+          [theme.breakpoints.down("lg")]: {
             fontSize: "0.86rem",
           },
           [theme.breakpoints.between("sm", "md")]: {
             fontSize: "0.7rem",
-          }, }}>
+          },
+        }}
+      >
         Prerequisite Course
       </Typography>
     </Stack>
