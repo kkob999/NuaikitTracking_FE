@@ -11,6 +11,10 @@ import {
 } from "@mui/material";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import SearchIcon from "@mui/icons-material/Search";
+import WarningIcon from "@mui/icons-material/Warning";
+import InfoIcon from "@mui/icons-material/Info";
+
+import { amber, yellow } from "@mui/material/colors";
 
 // import { fetchMajorElective } from "../Controller/Fetch";
 
@@ -31,7 +35,7 @@ export function DisplayNodeModal(
   var enForceEN = "";
   var enForceTH = "";
 
-  console.log("click")
+  console.log("click");
 
   if (courseDetail !== undefined) {
     TermArr.map((n: any) => {
@@ -639,8 +643,7 @@ export function CheckIsFreeModal(
   text: string,
   setText: Function
 ) {
-  
-  var isFree = false
+  var isFree = false;
   return (
     <Stack
       sx={{
@@ -718,26 +721,110 @@ export function CheckIsFreeModal(
               type="button"
               sx={{ p: 1 }}
               aria-label="search"
-              onClick={async() => {
-                console.log(text)
+              onClick={async () => {
+                console.log(text);
                 if (text !== "" || text !== null) {
-                  var resp : any = await FetchIsFree(text)
+                  var resp: any = await FetchIsFree(text);
                   if (resp !== null) {
-                    const group = resp["group"]
-                    isFree = true
+                    const group = resp["group"];
+                    isFree = true;
                   }
-                  
-                  console.log(resp)
+
+                  console.log(resp);
                 }
               }}
             >
               <SearchIcon />
             </IconButton>
           </Paper>
-          {isFree && text !== null && (<Typography>Goo</Typography>)}
-          
+          {isFree && text !== null && <Typography>Goo</Typography>}
         </Stack>
       </Stack>
     </Stack>
+  );
+}
+
+export function warningModal(setOpen: Function) {
+  return (
+    <Stack
+      sx={{
+        bgcolor: "rgba(0, 0, 0, 0.50)",
+        position: "fixed",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+      }}
+    >
+      <Stack
+        sx={{
+          position: "fixed",
+          bgcolor: "white",
+          width: "50%",
+          // height: "30%",
+          top: "50%",
+          left: "50%",
+          mt: "-100px",
+          ml: "-250px",
+          zIndex: "1",
+          borderRadius: "1rem",
+        }}
+      >
+        <Stack
+          direction={"row"}
+          sx={{
+            bgcolor: "#F1485B",
+            pt: 1,
+            pb: 1,
+            borderRadius: "1rem 1rem 0 0",
+          }}
+        >
+          <Stack
+            direction={"row"}
+            spacing={1}
+            sx={{ ml: "43%", mt: "auto", mb: "auto" }}
+          >
+            <WarningIcon sx={{ color: amber[500] }} />
+            <Typography sx={{ color: "white" }}>Warning</Typography>
+          </Stack>
+
+          <IconButton
+            onClick={() => {
+              setOpen(false);
+            }}
+            sx={{
+              width: "2.222vw",
+              height: "2.222vw",
+              marginLeft: "auto",
+              marginRight: "2vw",
+              color: "white",
+            }}
+          >
+            <CloseRoundedIcon />
+          </IconButton>
+        </Stack>
+        <Stack sx={{ alignContent: "center", width: "100%", p: 2.6 }}>
+          <Typography>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;เนื่องจากในขณะนี้ข้อมูลของหน่วยกิต
+            หรือ credits ของวิชา Free Elective อาจมีความไม่ถูกต้อง
+            โปรดตรวจสอบความถูกต้องของข้อมูลหน่วยกิตก่อนทำการตัดสินใจวางแผนการเรียนในเทอมต่อไป
+            ท่านสามารถแก้ไขข้อมูลของหน่วยกิตเองได้ ด้วยกดกล่องที่วิชา Free
+            Elective เพื่อทำการแก้ไขข้อมูล
+            หลังจากกดยืนยันระบบจะทำการคำนวณจำนวนหน่วยกิตรวมให้ใหม่
+          </Typography>
+        </Stack>
+      </Stack>
+    </Stack>
+  );
+}
+
+export function warningIcon(setOpen: Function) {
+  return (
+    <IconButton aria-label="warning" onClick={() => {
+      setOpen(true)
+    }}>
+      <InfoIcon sx={{ color: amber[500] }} />
+    </IconButton>
   );
 }

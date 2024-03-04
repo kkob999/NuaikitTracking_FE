@@ -47,7 +47,12 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 
 import jsonData from "../Model/NodeDB.json";
 import NuikitViewNode from "./View/Node/NuikitViewNode";
-import { CheckIsFreeModal, DisplayNodeModal } from "./View/NodeModal";
+import {
+  CheckIsFreeModal,
+  DisplayNodeModal,
+  warningIcon,
+  warningModal,
+} from "./View/NodeModal";
 
 import Navbar from "./View/Navbar";
 import { theme } from "../constants/theme";
@@ -139,6 +144,8 @@ function NuikitView() {
   const [freeCreditArr, setFreeCreditArr] = useState<number[]>([]);
   const [freeCID, setFreeCID] = useState("");
   const [dfValue, setDFValue] = useState(3);
+
+  const [warning, setWarning] = useState(true);
 
   var tmp_major_reqCredit = 0;
   var tmp_major_reqCreditNeed = 0;
@@ -1110,9 +1117,12 @@ function NuikitView() {
           }}
         >
           {/* Topic section */}
-          <Typography variant="h6" sx={{}}>
-            Category View
-          </Typography>
+          <Stack direction={"row"} sx={{alignItems: 'center'}}>
+            <Typography variant="h6" sx={{}}>
+              Category View
+            </Typography>
+            {warningIcon(setWarning)}
+          </Stack>
 
           <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
             <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
@@ -1395,7 +1405,7 @@ function NuikitView() {
                       tempArr.map((n: any) => {
                         tmpCredit += n.credit;
                       });
-                      setfreeCredit(tmpCredit)
+                      setfreeCredit(tmpCredit);
                       // console.log(tempArr);
                       setFreeCreditArr(tempArr);
                     }}
@@ -1407,7 +1417,7 @@ function NuikitView() {
             </Stack>
           </Stack>
         )}
-
+        {warning && warningModal(setWarning)}
         {modal && DisplayModal(modalTopic)}
         {detailClicked &&
           DisplayNodeModal(

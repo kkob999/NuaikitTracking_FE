@@ -105,7 +105,13 @@ import isSelected, {
 } from "./View/MUIFilter";
 import { displayGE } from "./View/MUIFilter";
 
-import { DisplayNodeModal, MajorEModal, GEModal } from "./View/NodeModal";
+import {
+  DisplayNodeModal,
+  MajorEModal,
+  GEModal,
+  warningModal,
+  warningIcon,
+} from "./View/NodeModal";
 
 //import Switch
 import { IOSSwitch } from "./View/SwitchMUI";
@@ -328,6 +334,8 @@ function TermView() {
   const [dfValue, setDFValue] = useState(3);
 
   const [free, setFree] = useState<any[]>([]);
+
+  const [warning, setWarning] = useState(true);
 
   // Handle Change for Swicth Plan Toggle
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -1157,6 +1165,8 @@ function TermView() {
         {/* Display Backdrop */}
         {DisplayBackDrop(backdrop)}
 
+        {warning && warningModal(setWarning)}
+
         {freeClicked && (
           <Stack
             sx={{
@@ -1349,11 +1359,17 @@ function TermView() {
                   width: "100%",
                   height: "100%",
                   borderRadius: "0 0 1rem 1rem",
-                  justifyContent: 'center'
+                  justifyContent: "center",
                 }}
               >
-                <Alert severity="info" sx={{borderRadius: '0.8rem', width: '90%', mt: 1}}>
-                  เนื่องจากข้อมูลของหน่วยกิต หรือ credits ในเว็บไซต์นี้อาจมีความไม่ถูกต้อง หากท่านรู้หน่วยกิตที่แท้จริงของวิชานี้ โปรดกรอกจำนวนของหน่วยกิต แล้วกดยืนยัน
+                <Alert
+                  severity="info"
+                  sx={{ borderRadius: "0.8rem", width: "90%", mt: 1 }}
+                >
+                  เนื่องจากข้อมูลของหน่วยกิต หรือ credits
+                  ในเว็บไซต์นี้อาจมีความไม่ถูกต้อง
+                  หากท่านรู้หน่วยกิตที่แท้จริงของวิชานี้
+                  โปรดกรอกจำนวนของหน่วยกิต แล้วกดยืนยัน
                   ทางระบบจะทำการคำนวณหน่วยกิตรวมทั้งหมดให้ใหม่
                 </Alert>
                 <Paper
@@ -1364,7 +1380,7 @@ function TermView() {
                     width: "90%",
                     justifyContent: "center",
                     mt: 2,
-                    mb: 2
+                    mb: 2,
                   }}
                 >
                   <InputBase
@@ -1486,9 +1502,15 @@ function TermView() {
               // border: '1px solid black'
             }}
           >
-            <Typography variant="h5" sx={{ alignSelf: "baseline" }}>
-              Term View
-            </Typography>
+            <Stack direction={"row"} sx={{alignItems: 'center'}}>
+              <Typography variant="h5" >
+                Term View
+              </Typography>
+              <Stack >
+              {warningIcon(setWarning)}
+              </Stack>
+              
+            </Stack>
 
             {/* Display Filter Status */}
             <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
