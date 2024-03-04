@@ -1213,7 +1213,7 @@ function TermView() {
                     setFreeClicked(false);
                     setText("");
                     setIsFree(false);
-                    setErrInp(false)
+                    setErrInp(false);
                   }}
                   sx={{
                     width: "2.222vw",
@@ -1262,23 +1262,27 @@ function TermView() {
                     onClick={async () => {
                       // console.log(text)
                       if (text !== "" || text !== null) {
-                        var regex=/^[a-zA-Z]+$/;
-                        if (text.match(regex) || text.length > 6 || text.length < 6) {
-                          setErrInp(true)
-                          setErrInpMessage("โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6 ตัว")
-                          console.log('this is text')
-                        }
-                        else{
+                        var regex = /^[a-zA-Z]+$/;
+                        if (
+                          text.match(regex) ||
+                          text.length > 6 ||
+                          text.length < 6
+                        ) {
+                          setErrInp(true);
+                          setErrInpMessage(
+                            "โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6 ตัว"
+                          );
+                          console.log("this is text");
+                        } else {
                           var resp: any = await FetchIsFree(text);
                           if (resp !== null) {
                             const group = resp["group"];
                             if (group === "Free") setIsFree(true);
-  
+
                             setSearchBtn(true);
                           }
-                          setErrInp(false)
+                          setErrInp(false);
                         }
-                        
 
                         // console.log(resp);
                       }
@@ -1300,7 +1304,8 @@ function TermView() {
                   )}
                   {errInp && (
                     <Typography variant="subtitle1">
-                      โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6 ตัว
+                      โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6
+                      ตัว
                     </Typography>
                   )}
                 </Stack>
@@ -1523,18 +1528,13 @@ function TermView() {
               // border: '1px solid black'
             }}
           >
-            <Stack direction={"row"} sx={{alignItems: 'center'}}>
-              <Typography variant="h5" >
-                Term View
-              </Typography>
-              <Stack >
-              {warningIcon(setWarning)}
-              </Stack>
-              
+            <Stack direction={"row"} sx={{ alignItems: "center" }}>
+              <Typography variant="h5">Term View</Typography>
+              <Stack>{warningIcon(setWarning)}</Stack>
             </Stack>
 
             {/* Display Filter Status */}
-            <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
+            <Stack direction={"row"} sx={{ columnGap: 1.4, alignItems: 'center' }}>
               <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
                 {/* {isCoop === false && displayNormalPlan()}
                 {isCoop === true && displayCoopPlan()} */}
@@ -1562,6 +1562,12 @@ function TermView() {
                   textTransform: "none",
                   maxHeight: "4.2vh",
                   maxWidth: "20vw",
+                  [theme.breakpoints.down("lg")]: {
+                    maxHeight: "3.4vh",
+                  },
+                  [theme.breakpoints.between("sm", "md")]: {
+                    maxHeight: "4vh",
+                  },
                 }}
                 onClick={() => {
                   setCheckedPre(!checkedPre);
@@ -1610,8 +1616,14 @@ function TermView() {
                     borderColor: "#EE6457",
                     bgcolor: "white",
                   },
+                  [theme.breakpoints.down("lg")]: {
+                    fontSize: "0.86rem",
+                    maxHeight: "3.4vh",
+                  },
                   [theme.breakpoints.between("sm", "md")]: {
+                    fontSize: "0.7rem",
                     width: "10vw",
+                    maxHeight: "4vh",
                   },
                 }}
               >
@@ -1641,6 +1653,7 @@ function TermView() {
                   right: 26,
                   bgcolor: "white",
                   borderRadius: 2.6,
+
                   [theme.breakpoints.between("sm", "md")]: {
                     width: "48vw",
                   },
@@ -1655,7 +1668,14 @@ function TermView() {
                     direction={"row"}
                     sx={{ justifyContent: "space-between" }}
                   >
-                    <Typography sx={{ alignSelf: "center" }}>Filter</Typography>
+                    <Typography
+                      sx={{
+                        alignSelf: "center",
+                        
+                      }}
+                    >
+                      Filter
+                    </Typography>
                     <IconButton
                       onClick={() => {
                         setFilter(!filter);
@@ -1665,6 +1685,7 @@ function TermView() {
                         height: "2vw",
                         marginLeft: "auto",
                         color: "black",
+                        
                       }}
                     >
                       <CloseRoundedIcon />

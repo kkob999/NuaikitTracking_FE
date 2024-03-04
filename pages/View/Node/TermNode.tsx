@@ -90,16 +90,16 @@ export default function TermNode({
           variant="body2"
           sx={{
             fontSize: "0.9em",
-
+            [theme.breakpoints.between(1200, 1439)]: {
+              fontSize: "0.78em",
+            },
             [theme.breakpoints.between("sm", "md")]: {
               fontSize: "0.68em",
             },
             [theme.breakpoints.only("md")]: {
               fontSize: "0.7em",
             },
-            [theme.breakpoints.between(1200, 1439)]: {
-              fontSize: "0.78em",
-            },
+            
           }}
         >
           {data.sub_no}
@@ -120,6 +120,10 @@ export default function TermNode({
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "#34C759",
+            [theme.breakpoints.between(1200, 1439)]: {
+              height: "0.78em",
+              width: "0.78em",
+            },
             [theme.breakpoints.between("sm", "md")]: {
               height: "0.68em",
               width: "0.68em",
@@ -128,10 +132,7 @@ export default function TermNode({
               height: "0.7em",
               width: "0.7em",
             },
-            [theme.breakpoints.between(1200, 1439)]: {
-              height: "0.78em",
-              width: "0.78em",
-            },
+            
           }}
         >
           <svg
@@ -159,6 +160,10 @@ export default function TermNode({
             width: "0.9rem",
             border: "1px solid" + color,
             borderRadius: "100%",
+            [theme.breakpoints.between(1200, 1439)]: {
+              height: "0.78em",
+              width: "0.78em",
+            },
             [theme.breakpoints.between("sm", "md")]: {
               height: "0.68em",
               width: "0.68em",
@@ -167,10 +172,7 @@ export default function TermNode({
               height: "0.7em",
               width: "0.7em",
             },
-            [theme.breakpoints.between(1200, 1439)]: {
-              height: "0.78em",
-              width: "0.78em",
-            },
+            
           }}
         ></Box>
       );
@@ -203,6 +205,10 @@ export default function TermNode({
           padding: "1vh 0",
           border: "1.5px solid" + color,
           borderRadius: "0.5rem",
+          // [theme.breakpoints.down("lg")]: {
+          //   maxHeight: "30px",
+          //   bgcolor: 'gainsboro'
+          // },
           [theme.breakpoints.between("sm", "md")]: {
             height: "16px",
             width: "9.146vw",
