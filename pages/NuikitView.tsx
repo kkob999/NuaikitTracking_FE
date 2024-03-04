@@ -36,7 +36,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { red, green } from "@mui/material/colors";
+import CheckIcon from "@mui/icons-material/Check";
+import { red, green, blue } from "@mui/material/colors";
 
 import axios, { AxiosError, AxiosResponse } from "axios";
 
@@ -134,6 +135,12 @@ function NuikitView() {
   const [isFree, setIsFree] = useState<boolean>(false);
   const [searchBtn, setSearchBtn] = useState<boolean>(false);
 
+  // cosnt [creditFree, setCreditFree]
+  const [freePassClick, setFreePassClick] = useState<boolean>(false);
+  const [freeCreditArr, setFreeCreditArr] = useState<number[]>([]);
+  const [freeCID, setFreeCID] = useState("");
+  const [dfValue, setDFValue] = useState(3);
+
   var tmp_major_reqCredit = 0;
   var tmp_major_reqCreditNeed = 0;
   var tmp_major_elecCredit = 0;
@@ -157,6 +164,30 @@ function NuikitView() {
   var [notLearnGEArr, setnotLearnGE] = useState<any>(null);
   var [modalTopic, setModalTopic] = useState("");
   var tempArr: any = [];
+
+  function defaultCredits(courseId: string) {
+    var tempArr: any = [];
+    // console.log(courseId)
+    if (freeCreditArr.length !== 0) {
+      console.log("jjiojp");
+      console.log(freeCreditArr);
+      freeCreditArr.map((n: any) => {
+        // console.log(n.credit)
+        if (n.courseId === freeCID) {
+          console.log(n.credit);
+          return n.credit;
+        }
+      });
+    } else {
+      free.map((n: any) => {
+        tempArr.push({ courseId: n.courseNo, credit: n.credits });
+      });
+
+      tempArr.map((n: any) => {
+        if (n.courseId === freeCID) return n.credit;
+      });
+    }
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckedDone(event.target.checked);
@@ -285,6 +316,7 @@ function NuikitView() {
 
         tmp_free_Credit += resp["freeCategory"][i]["electiveCreditsGet"];
         setfreeCredit(tmp_free_Credit);
+        // tempFreeCdArr.push(resp["freeCategory"][i]["electiveCreditsGet"])
 
         tmp_free_CreditNeed += resp["freeCategory"][i]["electiveCreditsNeed"];
         setfreeCreditNeed(tmp_free_CreditNeed);
@@ -385,11 +417,13 @@ function NuikitView() {
 
   useEffect(() => {
     const urlNuikit =
-      "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&mockData=mockData5";
+      "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610727";
     // &studentId=630610727
     // &mockData=mockData5
     NuikitData(urlNuikit);
   }, []);
+
+  useEffect(() => {}, [freeCID]);
 
   function modalFreeElecNode() {
     var type = "free";
@@ -768,13 +802,29 @@ function NuikitView() {
     } else {
       return freeNode.map((node: any) => {
         return (
-          <NuikitViewNode
-            sub_no={node.courseNo}
-            sub_name={node.courseNo}
-            type="free"
-            isPass={node["isPass"]}
-            credit={node.credits}
-          />
+          <Stack
+            onClick={() => {
+              setFreeCID(node.courseNo);
+
+              setFreePassClick(true);
+
+              if (freeCreditArr.length !== 0) {
+                freeCreditArr.map((n: any) => {
+                  if (n.courseId === node.courseNo) {
+                    setDFValue(n.credit);
+                  }
+                });
+              }
+            }}
+          >
+            <NuikitViewNode
+              sub_no={node.courseNo}
+              sub_name={node.courseNo}
+              type="free"
+              isPass={node["isPass"]}
+              credit={node.credits}
+            />
+          </Stack>
         );
       });
     }
@@ -1238,6 +1288,127 @@ function NuikitView() {
             </Stack>
           </Stack>
         )}
+
+        {freePassClick && (
+          <Stack
+            sx={{
+              bgcolor: "rgba(0, 0, 0, 0.50)",
+              position: "fixed",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            }}
+          >
+            <Stack
+              sx={{
+                position: "fixed",
+                bgcolor: "white",
+                width: "50%",
+                height: "30%",
+                top: "32vh",
+                left: "28vw",
+                zIndex: "1",
+                // borderRadius: "1rem",
+                borderRadius: "1rem 1rem 1rem 1rem",
+              }}
+            >
+              <Stack
+                direction={"row"}
+                sx={{
+                  bgcolor: "#F1485B",
+                  pt: 1,
+                  pb: 1,
+                  borderRadius: "1rem 1rem 0 0",
+                }}
+              >
+                <Typography
+                  sx={{ color: "white", ml: "32%", mt: "auto", mb: "auto" }}
+                >
+                  Free Elective Credits Config
+                </Typography>
+                <IconButton
+                  onClick={() => {
+                    setFreePassClick(false);
+                  }}
+                  sx={{
+                    width: "2.222vw",
+                    height: "2.222vw",
+                    marginLeft: "auto",
+                    marginRight: "2vw",
+                    color: "white",
+                  }}
+                >
+                  <CloseRoundedIcon />
+                </IconButton>
+              </Stack>
+              <Stack
+                sx={{
+                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "0 0 1rem 1rem",
+                }}
+              >
+                <Paper
+                  component="form"
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    width: "90%",
+                    justifyContent: "center",
+                    mt: 2,
+                  }}
+                >
+                  {}
+                  <InputBase
+                    sx={{ ml: 1, flex: 1, justifyContent: "center" }}
+                    placeholder="3"
+                    inputProps={{ "aria-label": "checkFree" }}
+                    defaultValue={dfValue} //
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      setText(event.target.value);
+                    }}
+                  />
+                  <IconButton
+                    type="button"
+                    sx={{ p: 1, bgcolor: blue[500] }}
+                    aria-label="search"
+                    onClick={async () => {
+                      // console.log(freeNode);
+                      var tempArr: any = [];
+                      free.map((n: any) => {
+                        tempArr.push({
+                          courseId: n.courseNo,
+                          credit: n.credits,
+                        });
+                      });
+                      // defaultCredits()
+                      tempArr.map((n: any, index: number) => {
+                        if (n.courseId === freeCID) {
+                          n.credit = +text;
+                          free[index]["credits"] = +text;
+                          setDFValue(+text);
+                        }
+                      });
+                      var tmpCredit = 0;
+                      tempArr.map((n: any) => {
+                        tmpCredit += n.credit;
+                      });
+                      setfreeCredit(tmpCredit)
+                      // console.log(tempArr);
+                      setFreeCreditArr(tempArr);
+                    }}
+                  >
+                    <CheckIcon />
+                  </IconButton>
+                </Paper>
+              </Stack>
+            </Stack>
+          </Stack>
+        )}
+
         {modal && DisplayModal(modalTopic)}
         {detailClicked &&
           DisplayNodeModal(
