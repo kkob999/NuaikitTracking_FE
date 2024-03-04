@@ -52,11 +52,11 @@ function Navbar() {
   let bg = "";
 
   const url = usePathname();
-  // console.log(url);
+  console.log(url);
 
   // const nevigate = useNavigate();
 
-  if (url == "/dashboard") {
+  if (url == "/Dashboard") {
     dashboardPage = true;
   } else if (url == "/TermView") {
     termPage = true;
@@ -213,7 +213,7 @@ function Navbar() {
   }, []);
 
   return (
-    <Stack>
+    <Stack sx={{ bgcolor: "#FDF5F4" }}>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader sx={{}}>
           <IconButton onClick={handleDrawerClose}>
@@ -339,21 +339,47 @@ function Navbar() {
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
+                bgcolor: url === "/Dashboard" ? "#EE6457" : "",
+                width: "96%",
+                ml: 0,
+                mr: 1,
+                borderRadius: "0 0.6rem 0.6rem 0",
               }}
             >
+              {/* <Stack direction={"row"}> */}
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: open ? 3 : "auto",
+                  mr: open ? 1 : "auto",
+                  // ml: -3.2,
                   justifyContent: "center",
+                  // position: 'fixed'
                 }}
               >
-                <SpaceDashboardIcon sx={{ color: fontChange("dashboard") }} />
+                {url === "/Dashboard" && open && (
+                  <SpaceDashboardIcon
+                    sx={{ color: open ? "white" : "#EE6457" }}
+                  />
+                )}
+                {url === "/Dashboard" && !open && (
+                  <SpaceDashboardIcon sx={{ color: "white" }} />
+                )}
+                {url !== "/Dashboard" && open && (
+                  <SpaceDashboardIcon sx={{ color: "grey" }} />
+                )}
+                {url !== "/Dashboard" && !open && (
+                  <SpaceDashboardIcon sx={{ color: "grey" }} />
+                )}
               </ListItemIcon>
               <ListItemText
                 primary="Dashboard"
-                sx={{ opacity: open ? 1 : 0, color: fontChange("dashboard") }}
+                sx={{
+                  opacity: open ? 1 : 0,
+                  color: url === "/Dashboard" ? "white" : "grey",
+                  ml: open ? 2 : 0,
+                }}
               />
+              {/* </Stack> */}
             </ListItemButton>
           </ListItem>
         </List>
@@ -401,24 +427,47 @@ function Navbar() {
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
+                bgcolor: url === "/NuikitView" ? "#EE6457" : "",
+                width: "96%",
+                ml: 0,
+                mr: 1,
+                borderRadius: "0 0.6rem 0.6rem 0",
+                
               }}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: open ? 3 : "auto",
+                  // ml: open ? 0 : 0,
+                  // mr: open ? 0 : 2.3,
                   justifyContent: "center",
                 }}
               >
-                {open == true ? (
+                {/* {open == true ? (
                   <CategoryIcon sx={{ opacity: 0 }} />
                 ) : (
-                  <CategoryIcon sx={{ color: fontChange("nuikit") }} />
+                  <CategoryIcon sx={{ color: open ? "gray" : "white" }} />
+                )} */}
+                {url === "/NuikitView" && open && (
+                  <CategoryIcon sx={{ color: open ? "white" : "#EE6457" }} />
+                )}
+                {url === "/NuikitView" && !open && (
+                  <CategoryIcon sx={{ color: "white" }} />
+                )}
+                {url !== "/NuikitView" && open && (
+                  <CategoryIcon sx={{ opacity: 0 }} />
+                )}
+                {url !== "/NuikitView" && !open && (
+                  <CategoryIcon sx={{ color: "grey" }} />
                 )}
               </ListItemIcon>
               <ListItemText
                 primary={"Category View"}
-                sx={{ opacity: open ? 1 : 0, color: fontChange("nuikit") }}
+                sx={{
+                  opacity: open ? 1 : 0,
+                  color: url === "/NuikitView" ? "white" : "grey",
+                  ml: open ? 3 : 0,
+                }}
               />
             </ListItemButton>
           </ListItem>
@@ -436,24 +485,45 @@ function Navbar() {
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
+                bgcolor: url === "/TermView" ? "#EE6457" : "",
+                width: "96%",
+                ml: 0,
+                mr: 1,
+                borderRadius: "0 0.6rem 0.6rem 0",
               }}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: open ? 3 : "auto",
+                  ml: open ? 3 : "auto",
                   justifyContent: "center",
                 }}
               >
-                {open == true ? (
+                {/* {open == true ? (
                   <AccountTreeIcon sx={{ opacity: 0 }} />
                 ) : (
-                  <AccountTreeIcon sx={{ color: fontChange("term") }} />
+                  <AccountTreeIcon sx={{ color: open ? "gray" : "white" }} />
+                )} */}
+
+                {url === "/TermView" && open && (
+                  <AccountTreeIcon sx={{ color: open ? "white" : "#EE6457" }} />
+                )}
+                {url === "/TermView" && !open && (
+                  <AccountTreeIcon sx={{ opacity: 0 }} />
+                )}
+                {url !== "/TermView" && open && (
+                  <AccountTreeIcon sx={{ opacity: 0 }} />
+                )}
+                {url !== "/TermView" && !open && (
+                  <AccountTreeIcon sx={{ color: "grey" }} />
                 )}
               </ListItemIcon>
               <ListItemText
                 primary={"Term View"}
-                sx={{ opacity: open ? 1 : 0, color: fontChange("term") }}
+                sx={{
+                  opacity: open ? 1 : 0,
+                  color: url === "/TermView" ? "white" : "grey",
+                }}
               />
             </ListItemButton>
           </ListItem>

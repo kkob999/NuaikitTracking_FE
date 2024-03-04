@@ -355,7 +355,6 @@ function TermView() {
     console.log("Previous Format " + newFormats);
     if (newFormats == null) newFormats = formats;
     setFormats(newFormats);
-
   };
 
   const [nodes, setNodes] = useNodesState<any[]>([]);
@@ -372,10 +371,10 @@ function TermView() {
 
   const [backdrop, SetBackdrop] = useState(true);
 
-  const [screen ,setScreen] = useState(1440)
+  const [screen, setScreen] = useState(1440);
 
   const bp = useMediaQuery(theme.breakpoints.down("lg"));
-  
+
   const handleDrawerClose = () => {
     setOpen(!open);
   };
@@ -490,7 +489,7 @@ function TermView() {
     var width = window.innerWidth;
     if (window.innerWidth <= 1300) setOpen(false);
     console.log(width);
-    setScreen(width)
+    setScreen(width);
   }
 
   function displayTerm() {
@@ -563,7 +562,6 @@ function TermView() {
       //   sp = 3.355;
       //   sp_str = "" + sp + "vw";
       // }
-
     }
 
     return (
@@ -577,10 +575,10 @@ function TermView() {
 
   async function waitData() {
     SetBackdrop(true);
-    if(studentId !== undefined || studentId !== "" || studentId !== null){
+    if (studentId !== undefined || studentId !== "" || studentId !== null) {
       await processData(stdYear, "" + isCoop);
     }
-    
+
     SetBackdrop(false);
     setNodes(termNode);
     setEdges(edArr);
@@ -623,7 +621,6 @@ function TermView() {
     // if (window.innerWidth > 1000 && window.innerWidth < 1300) plus_w = 0-3;
 
     width += (y - 1) * 1.875 + 20.623 + plus_w;
-
 
     console.log("total width" + width);
 
@@ -709,7 +706,7 @@ function TermView() {
     startProgram();
 
     let c = isCoop;
-    console.log('c ' + c)
+    console.log("c " + c);
 
     if (c === "true") {
       if (prevFormat === "coop") {
@@ -721,19 +718,20 @@ function TermView() {
       setFormats("coop");
     }
     if (c === "false") {
-
+      console.log("in fault");
       setdisButtonNormal(false);
-      if (fetchData !== undefined) {
-        console.log(fetchData["study term"])
+      if (
+        fetchData["study term"] !== undefined &&
+        typeof fetchData["study term"] !== "undefined"
+      ) {
+        var tempArr: any[] = fetchData["study term"];
+        console.log(fetchData["study term"]);
         if (fetchData["study term"].length >= 4) {
           setdisButtonCoop(true);
-          
-        }else{
-          console.log('kkkk')
+        } else {
+          console.log("kkkk");
           setdisButtonCoop(false);
         }
-
-        
       }
       setFormats("normal");
     }
@@ -743,7 +741,6 @@ function TermView() {
     if (window.innerWidth <= 1300) setOpen(false);
     // console.log("this is height");
     // console.log(window.innerHeight);
-
   }, [columnNode, isCoop]);
 
   useEffect(() => {
@@ -754,7 +751,7 @@ function TermView() {
     if (insideNodeClicked) {
       getInSideNodeDetail(insideNode);
     }
-  }, [open, filter, f_name, insideNodeClicked]);
+  }, [open, filter, f_name, insideNodeClicked, fetchData]);
 
   function signOut() {
     axios.post("/api/signOut").finally(() => {
@@ -815,7 +812,7 @@ function TermView() {
       )}
       {/* Navbar */}
       {errorMessage === "" && (
-        <Stack>
+        <Stack sx={{ bgcolor: "#FDF5F4" }}>
           <Drawer variant="permanent" open={open}>
             <DrawerHeader sx={{}}>
               <IconButton onClick={handleDrawerClose}>
@@ -1043,24 +1040,29 @@ function TermView() {
                     minHeight: 48,
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
+                    bgcolor: "#EE6457",
+                    width: "96%",
+                    ml: 0,
+                    mr: 1,
+                    borderRadius: "0 0.6rem 0.6rem 0",
                   }}
                 >
                   <ListItemIcon
                     sx={{
                       minWidth: 0,
-                      mr: open ? 3 : "auto",
+                      mr: open ? 0 : "auto",
                       justifyContent: "center",
                     }}
                   >
                     {open === true ? (
-                      <AccountTreeIcon sx={{ opacity: 0 }} />
+                      <AccountTreeIcon sx={{ opacity: 1, color: 'white' }} />
                     ) : (
-                      <AccountTreeIcon sx={{ color: fontChange("term") }} />
+                      <AccountTreeIcon sx={{ color: 'white' }} />
                     )}
                   </ListItemIcon>
                   <ListItemText
                     primary={"Term View"}
-                    sx={{ opacity: open ? 1 : 0, color: fontChange("term") }}
+                    sx={{ opacity: open ? 1 : 0, color: "white",ml: open ? 3 : 0, }}
                   />
                 </ListItemButton>
               </ListItem>
@@ -1557,11 +1559,16 @@ function TermView() {
             </Stack>
 
             {/* Display Filter Status */}
-            <Stack direction={"row"} sx={{ columnGap: 1.4, alignItems: 'center' }}>
-              <Stack direction={"row"} sx={{ columnGap: 1.4,  }}>
+            <Stack
+              direction={"row"}
+              sx={{ columnGap: 1.4, alignItems: "center" }}
+            >
+              <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
                 {/* {isCoop === false && displayNormalPlan()}
                 {isCoop === true && displayCoopPlan()} */}
-                {isCoop === "true" ? displayCoopPlan(screen) : displayNormalPlan()}
+                {isCoop === "true"
+                  ? displayCoopPlan(screen)
+                  : displayNormalPlan()}
                 {checkedDone && displayDone()}
                 {checkedPreFilter && displayPre()}
                 {filterGE && displayGE(screen)}
@@ -1609,7 +1616,6 @@ function TermView() {
                     color: checkedPre ? "#EE6457" : "#9B9B9B",
                     [theme.breakpoints.only("md")]: {
                       fontSize: "0.68rem",
-                      
                     },
                   }}
                 >
@@ -1649,7 +1655,6 @@ function TermView() {
                   },
                   [theme.breakpoints.only("md")]: {
                     fontSize: "0.68rem",
-                    
                   },
                   [theme.breakpoints.between("sm", "md")]: {
                     fontSize: "0.7rem",
@@ -1702,7 +1707,6 @@ function TermView() {
                     <Typography
                       sx={{
                         alignSelf: "center",
-                        
                       }}
                     >
                       Filter
@@ -1716,7 +1720,6 @@ function TermView() {
                         height: "2vw",
                         marginLeft: "auto",
                         color: "black",
-                        
                       }}
                     >
                       <CloseRoundedIcon />
