@@ -431,7 +431,7 @@ function NuikitView() {
     NuikitData(urlNuikit);
   }, []);
 
-  useEffect(() => {}, [freeCID]);
+  // useEffect(() => {}, [freeCID]);
 
   function modalFreeElecNode() {
     var type = "free";
@@ -1263,7 +1263,7 @@ function NuikitView() {
                     onClick={async () => {
                       if (text !== "" || text !== null) {
                         var regex=/^[a-zA-Z]+$/;
-                        if (text.match(regex) || text.length > 6) {
+                        if (text.match(regex) || text.length > 6 || text.length < 6) {
                           setErrInp(true)
                           
                           console.log('this is text')

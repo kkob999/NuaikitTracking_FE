@@ -1263,7 +1263,7 @@ function TermView() {
                       // console.log(text)
                       if (text !== "" || text !== null) {
                         var regex=/^[a-zA-Z]+$/;
-                        if (text.match(regex) || text.length > 6) {
+                        if (text.match(regex) || text.length > 6 || text.length < 6) {
                           setErrInp(true)
                           setErrInpMessage("โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6 ตัว")
                           console.log('this is text')
