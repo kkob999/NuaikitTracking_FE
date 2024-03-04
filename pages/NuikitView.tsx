@@ -9,6 +9,8 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   FormControlLabel,
+  InputBase,
+  Paper,
 } from "@mui/material";
 
 import isSelected, {
@@ -30,6 +32,11 @@ import {
 } from "../constants/color";
 
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import SearchIcon from "@mui/icons-material/Search";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { red, green } from "@mui/material/colors";
 
 import axios, { AxiosError, AxiosResponse } from "axios";
 
@@ -39,7 +46,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 
 import jsonData from "../Model/NodeDB.json";
 import NuikitViewNode from "./View/Node/NuikitViewNode";
-import { DisplayNodeModal } from "./View/NodeModal";
+import { CheckIsFreeModal, DisplayNodeModal } from "./View/NodeModal";
 
 import Navbar from "./View/Navbar";
 import { theme } from "../constants/theme";
@@ -48,6 +55,7 @@ import { WhoAmIResponse } from "./api/whoAmI";
 import { useRouter } from "next/router";
 import {
   FetchCourse,
+  FetchIsFree,
   fetchCourseDescription,
   fetchFreeElective,
   fetchMajorElective,
@@ -120,6 +128,11 @@ function NuikitView() {
 
   const [insideNodeClicked, setInsideNodeClicked] = useState<boolean>(false);
   const [arrInsideNode, setInsideArrNode] = useState([]);
+
+  const [text, setText] = useState("");
+  const [freeClicked, setFreeClicked] = useState<boolean>(false);
+  const [isFree, setIsFree] = useState<boolean>(false);
+  const [searchBtn, setSearchBtn] = useState<boolean>(false);
 
   var tmp_major_reqCredit = 0;
   var tmp_major_reqCreditNeed = 0;
@@ -235,7 +248,7 @@ function NuikitView() {
         );
 
         tmp_gen_elecCredit += resp["geCategory"][i]["electiveCreditsGet"];
-        console.log( resp["geCategory"][i]["electiveCreditsGet"])
+        console.log(resp["geCategory"][i]["electiveCreditsGet"]);
         setgenElecCredit(tmp_gen_elecCredit);
 
         tmp_gen_elecCreditNeed += resp["geCategory"][i]["electiveCreditsNeed"];
@@ -372,7 +385,7 @@ function NuikitView() {
 
   useEffect(() => {
     const urlNuikit =
-      "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610727";
+      "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&mockData=mockData5";
     // &studentId=630610727
     // &mockData=mockData5
     NuikitData(urlNuikit);
@@ -497,8 +510,7 @@ function NuikitView() {
             width: "50.903vw",
             height: "33.796vh",
             bgcolor: "white",
-            borderRadius: '1rem 1rem 1rem 1rem',
-            
+            borderRadius: "1rem 1rem 1rem 1rem",
           }}
         >
           <Stack
@@ -508,7 +520,7 @@ function NuikitView() {
               bgcolor: "#F1485B",
               alignItems: "center",
               justifyContent: "center",
-              borderRadius: '1rem 1rem 0 0'
+              borderRadius: "1rem 1rem 0 0",
             }}
           >
             <Stack
@@ -519,7 +531,7 @@ function NuikitView() {
                 justifyContent: "flex-start",
                 position: "relative",
                 width: "100%",
-                
+
                 // bgcolor: 'wheat'
               }}
             >
@@ -547,7 +559,7 @@ function NuikitView() {
               // border: "1px solid black",
               alignSelf: "center",
               margin: "auto",
-              p: 2
+              p: 2,
             }}
           >
             <Typography sx={{ color: "#858382" }}>
@@ -561,7 +573,7 @@ function NuikitView() {
                 columnGap: "1.7vw",
                 rowGap: "1.2vh",
                 overflowY: "scroll",
-                mt: 1
+                mt: 1,
               }}
             >
               {modalFreeElecNode()}
@@ -724,21 +736,33 @@ function NuikitView() {
             // marginTop: "1.8vh",
           }}
         >
-          <NuikitViewNode
-            sub_no={"Free Elective"}
-            sub_name={"Free Elective"}
-            type="free"
-            isPass={false}
-            credit={3}
-          />
+          <Stack
+            onClick={() => {
+              setFreeClicked(true);
+            }}
+          >
+            <NuikitViewNode
+              sub_no={"Free Elective"}
+              sub_name={"Free Elective"}
+              type="free"
+              isPass={false}
+              credit={3}
+            />
+          </Stack>
 
-          <NuikitViewNode
-            sub_no={"Free Elective"}
-            sub_name={"Free Elective"}
-            type="free"
-            isPass={false}
-            credit={3}
-          />
+          <Stack
+            onClick={() => {
+              setFreeClicked(true);
+            }}
+          >
+            <NuikitViewNode
+              sub_no={"Free Elective"}
+              sub_name={"Free Elective"}
+              type="free"
+              isPass={false}
+              credit={3}
+            />
+          </Stack>
         </Stack>
       );
     } else {
@@ -965,7 +989,7 @@ function NuikitView() {
           setErrorMessage("Unknown error occurred. Please try again later");
         }
       });
-      console.log(gen_elecCredit)
+    console.log(gen_elecCredit);
   }, []);
   // console.log("free credits need" + free_CreditNeed);
 
@@ -1086,6 +1110,134 @@ function NuikitView() {
         </Stack>
 
         {/* Modal Part */}
+        {freeClicked && (
+          <Stack
+            sx={{
+              bgcolor: "rgba(0, 0, 0, 0.50)",
+              position: "fixed",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            }}
+          >
+            <Stack
+              sx={{
+                position: "fixed",
+                bgcolor: "white",
+                width: "50%",
+                height: "30%",
+                top: "32vh",
+                left: "28vw",
+                zIndex: "1",
+                // borderRadius: "1rem",
+                borderRadius: "1rem 1rem 1rem 1rem",
+              }}
+            >
+              <Stack
+                direction={"row"}
+                sx={{
+                  bgcolor: "#F1485B",
+                  pt: 1,
+                  pb: 1,
+                  borderRadius: "1rem 1rem 0 0",
+                }}
+              >
+                <Typography
+                  sx={{ color: "white", ml: "44%", mt: "auto", mb: "auto" }}
+                >
+                  Free Elective
+                </Typography>
+                <IconButton
+                  onClick={() => {
+                    setFreeClicked(false);
+                  }}
+                  sx={{
+                    width: "2.222vw",
+                    height: "2.222vw",
+                    marginLeft: "auto",
+                    marginRight: "2vw",
+                    color: "white",
+                  }}
+                >
+                  <CloseRoundedIcon />
+                </IconButton>
+              </Stack>
+
+              <Stack
+                sx={{
+                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "0 0 1rem 1rem",
+                }}
+              >
+                <Paper
+                  component="form"
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    width: "90%",
+                    justifyContent: "center",
+                    mt: 2,
+                  }}
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder="check if this course is free elective or not"
+                    inputProps={{ "aria-label": "checkFree" }}
+                    value={text}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      setText(event.target.value);
+                    }}
+                  />
+                  <IconButton
+                    type="button"
+                    sx={{ p: 1 }}
+                    aria-label="search"
+                    onClick={async () => {
+                      console.log(text);
+                      if (text !== "" || text !== null) {
+                        var resp: any = await FetchIsFree(text);
+                        if (resp !== null) {
+                          const group = resp["group"];
+                          if (group === "Free") setIsFree(true);
+
+                          setSearchBtn(true);
+                        }
+
+                        console.log(resp);
+                      }
+                    }}
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                </Paper>
+                <Stack sx={{ mt: 2 }}>
+                  {isFree && (
+                    <Typography variant="h6">
+                      {text} is Free Elective
+                    </Typography>
+                  )}
+                  {searchBtn && !isFree && (
+                    <Typography variant="h6">
+                      {text} is not Free Elective
+                    </Typography>
+                  )}
+                </Stack>
+                <Stack sx={{ mt: 1 }}>
+                  {isFree && (
+                    <CheckCircleIcon sx={{ fontSize: 44, color: green[500] }} />
+                  )}
+                  {searchBtn && !isFree && (
+                    <CancelIcon sx={{ fontSize: 44, color: red[500] }} />
+                  )}
+                </Stack>
+              </Stack>
+            </Stack>
+          </Stack>
+        )}
         {modal && DisplayModal(modalTopic)}
         {detailClicked &&
           DisplayNodeModal(

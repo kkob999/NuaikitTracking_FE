@@ -138,3 +138,28 @@ export async function FetchCourse(courseId: string) {
   let data: any = await fetchCourseDescription(courseId);
   return data;
 }
+
+export async function FetchIsFree(courseId: string) {
+  var url =
+    "http://localhost:8080/checkGroup?year=2563&curriculumProgram=CPE&isCOOP=false&courseNo="+courseId
+
+  return new Promise(function (resolve, reject) {
+    axios
+      .get(url, {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          mode: "no-cors",
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+}

@@ -5,13 +5,18 @@ import {
   Breakpoint,
   Backdrop,
   IconButton,
+  TextField,
+  Paper,
+  InputBase,
 } from "@mui/material";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import SearchIcon from "@mui/icons-material/Search";
 
 // import { fetchMajorElective } from "../Controller/Fetch";
 
 import { theme } from "../../constants/theme";
-import { fetchCourseDescription } from "../../Controller/Fetch";
+import { fetchCourseDescription, FetchIsFree } from "../../Controller/Fetch";
+import exp from "constants";
 
 export function DisplayNodeModal(
   isClicked: boolean,
@@ -25,8 +30,6 @@ export function DisplayNodeModal(
   var pre = "-";
   var enForceEN = "";
   var enForceTH = "";
-
-  
 
   if (courseDetail !== undefined) {
     TermArr.map((n: any) => {
@@ -61,8 +64,8 @@ export function DisplayNodeModal(
 
   // console.log(courseDetail)
   if (isClicked) {
-    console.log("in node modal")
-  console.log(TermArr)
+    console.log("in node modal");
+    console.log(TermArr);
     return (
       <Stack
         sx={{
@@ -85,7 +88,7 @@ export function DisplayNodeModal(
             left: "28vw",
             zIndex: "1",
             borderRadius: "1rem",
-            opacity: isInsideNode ? 2 : 1
+            opacity: isInsideNode ? 2 : 1,
           }}
         >
           <Stack
@@ -273,11 +276,10 @@ export function MajorEModal(
   setInsideNodeClicked: Function,
   setInsideNode: Function,
   NodeArr: any,
-  TermNode: any[],
-  
+  TermNode: any[]
 ) {
   function isCloseClicked() {
-    return true
+    return true;
   }
   if (isClicked) {
     var mjNode = NodeArr["courseLists"];
@@ -294,7 +296,6 @@ export function MajorEModal(
           zIndex: 1,
         }}
       >
-        
         <Stack
           sx={{
             position: "fixed",
@@ -380,9 +381,9 @@ export function MajorEModal(
                   // console.log(TermNode)
                   return (
                     <Stack
-                      onClick={()  => {
-                        setInsideNode(node.courseNo)
-                        setInsideNodeClicked(true)
+                      onClick={() => {
+                        setInsideNode(node.courseNo);
+                        setInsideNodeClicked(true);
                       }}
                       sx={{
                         m: 0,
@@ -403,7 +404,6 @@ export function MajorEModal(
                         },
                       }}
                     >
-                      
                       <Stack
                         sx={{
                           display: "flex",
@@ -562,10 +562,10 @@ export function GEModal(
                   // console.log(TermNode)
                   return (
                     <Stack
-                    onClick={()  => {
-                      setInsideNode(node.courseNo)
-                      setInsideNodeClicked(true)
-                    }}
+                      onClick={() => {
+                        setInsideNode(node.courseNo);
+                        setInsideNodeClicked(true);
+                      }}
                       sx={{
                         m: 0,
                         width: "6.466vw",
@@ -630,4 +630,112 @@ export function GEModal(
   } else {
     return null;
   }
+}
+
+export function CheckIsFreeModal(
+  setClicked: Function,
+  text: string,
+  setText: Function
+) {
+  
+  var isFree = false
+  return (
+    <Stack
+      sx={{
+        bgcolor: "rgba(0, 0, 0, 0.50)",
+        position: "fixed",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+      }}
+    >
+      <Stack
+        sx={{
+          position: "fixed",
+          bgcolor: "white",
+          width: "50%",
+          height: "30%",
+          top: "16vh",
+          left: "28vw",
+          zIndex: "1",
+          borderRadius: "1rem",
+        }}
+      >
+        <Stack
+          direction={"row"}
+          sx={{
+            bgcolor: "#F1485B",
+            pt: 1,
+            pb: 1,
+            borderRadius: "1rem 1rem 0 0",
+          }}
+        >
+          <Typography
+            sx={{ color: "white", ml: "44%", mt: "auto", mb: "auto" }}
+          >
+            Free Elective
+          </Typography>
+          <IconButton
+            onClick={() => {
+              setClicked(false);
+            }}
+            sx={{
+              width: "2.222vw",
+              height: "2.222vw",
+              marginLeft: "auto",
+              marginRight: "2vw",
+              color: "white",
+            }}
+          >
+            <CloseRoundedIcon />
+          </IconButton>
+        </Stack>
+
+        <Stack sx={{ alignContent: "center", width: "100%" }}>
+          <Paper
+            component="form"
+            sx={{
+              p: 1,
+              display: "flex",
+              width: "90%",
+              justifyContent: "center",
+            }}
+          >
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
+              placeholder="check if this course is free elective or not"
+              inputProps={{ "aria-label": "checkFree" }}
+              value={text}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setText(event.target.value);
+              }}
+            />
+            <IconButton
+              type="button"
+              sx={{ p: 1 }}
+              aria-label="search"
+              onClick={async() => {
+                console.log(text)
+                if (text !== "" || text !== null) {
+                  var resp : any = await FetchIsFree(text)
+                  if (resp !== null) {
+                    const group = resp["group"]
+                    isFree = true
+                  }
+                  
+                  console.log(resp)
+                }
+              }}
+            >
+              <SearchIcon />
+            </IconButton>
+          </Paper>
+          {isFree && text !== null && (<Typography>Goo</Typography>)}
+          
+        </Stack>
+      </Stack>
+    </Stack>
+  );
 }
