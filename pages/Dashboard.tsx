@@ -333,6 +333,60 @@ function DashBoard() {
   //   DatchBoardData();
   // });
 
+  
+
+  const bp = useMediaQuery(theme.breakpoints.down("lg"));
+
+  // var url =
+  //   "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610768";
+
+  var stdId = ""
+  async function cmuOauth(){
+    await axios
+    .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
+    .then((response) => {
+      if (response.data.ok) {
+        setFullName(response.data.firstName + " " + response.data.lastName);
+        setCmuAccount(response.data.cmuAccount);
+        setStudentId(response.data.studentId ?? "No Student Id");
+        stdId = response.data.studentId ?? "No Student Id"
+        console.log(studentId);
+        console.log("orgCode");
+        console.log(response.data.orgCode);
+        console.log(response.data.orgNameEN);
+      }
+    })
+    .catch((error: AxiosError<WhoAmIResponse>) => {
+      if (!error.response) {
+        setErrorMessage(
+          "Cannot connect to the network. Please try again later."
+        );
+      } else if (error.response.status === 401) {
+        setErrorMessage("Authentication failed");
+      } else if (error.response.data.ok === false) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Unknown error occurred. Please try again later");
+      }
+    });
+  }
+  // useEffect(() => {
+    
+    
+
+  //   fetchStdData();
+  // }, []);
+
+  async function fetchStdData() {
+    await cmuOauth()
+    var url =
+    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId="+stdId;
+  DatchBoardData(url);
+  }
+  React.useEffect(() => {
+    fetchStdData()
+  });
+
   React.useEffect(() => {
     setGEPercent(
       Math.floor(
@@ -368,56 +422,6 @@ function DashBoard() {
     allgetCreditCal,
     allneedCredit,
   ]);
-
-  const bp = useMediaQuery(theme.breakpoints.down("lg"));
-
-  // var url =
-  //   "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610768";
-
-  var stdId = ""
-  useEffect(() => {
-    async function cmuOauth(){
-      await axios
-      .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
-      .then((response) => {
-        if (response.data.ok) {
-          setFullName(response.data.firstName + " " + response.data.lastName);
-          setCmuAccount(response.data.cmuAccount);
-          setStudentId(response.data.studentId ?? "No Student Id");
-          stdId = response.data.studentId ?? "No Student Id"
-          console.log(studentId);
-          console.log("orgCode");
-          console.log(response.data.orgCode);
-          console.log(response.data.orgNameEN);
-        }
-      })
-      .catch((error: AxiosError<WhoAmIResponse>) => {
-        if (!error.response) {
-          setErrorMessage(
-            "Cannot connect to the network. Please try again later."
-          );
-        } else if (error.response.status === 401) {
-          setErrorMessage("Authentication failed");
-        } else if (error.response.data.ok === false) {
-          setErrorMessage(error.response.data.message);
-        } else {
-          setErrorMessage("Unknown error occurred. Please try again later");
-        }
-      });
-    }
-    
-
-    async function fetchStdData() {
-      await cmuOauth()
-      var url =
-      "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId="+stdId;
-    DatchBoardData(url);
-    }
-
-    
-
-    fetchStdData();
-  }, []);
 
   function signOut() {
     //Call sign out api without caring what is the result
