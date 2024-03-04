@@ -326,6 +326,8 @@ function TermView() {
   const [text, setText] = useState("");
   const [freeClicked, setFreeClicked] = useState<boolean>(false);
   const [isFree, setIsFree] = useState<boolean>(false);
+  const [errInp, setErrInp] = useState<boolean>(false);
+  const [errInpMessage, setErrInpMessage] = useState<string>("");
   const [searchBtn, setSearchBtn] = useState<boolean>(false);
 
   const [freePassClick, setFreePassClick] = useState<boolean>(false);
@@ -424,7 +426,7 @@ function TermView() {
       }
     } else {
       var tempFreeArr: any[] = [];
-      if (node.data["category"] === "free") {
+      if (node.data["category"] === "free" && node.data["sub_no"] !== "Free") {
         // console.log('click')
 
         termNode.map((n: any) => {
@@ -1211,6 +1213,7 @@ function TermView() {
                     setFreeClicked(false);
                     setText("");
                     setIsFree(false);
+                    setErrInp(false)
                   }}
                   sx={{
                     width: "2.222vw",
@@ -1257,17 +1260,27 @@ function TermView() {
                     sx={{ p: 1 }}
                     aria-label="search"
                     onClick={async () => {
-                      console.log(text);
+                      // console.log(text)
                       if (text !== "" || text !== null) {
-                        var resp: any = await FetchIsFree(text);
-                        if (resp !== null) {
-                          const group = resp["group"];
-                          if (group === "Free") setIsFree(true);
-
-                          setSearchBtn(true);
+                        var regex=/^[a-zA-Z]+$/;
+                        if (text.match(regex) || text.length > 6) {
+                          setErrInp(true)
+                          setErrInpMessage("โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6 ตัว")
+                          console.log('this is text')
                         }
+                        else{
+                          var resp: any = await FetchIsFree(text);
+                          if (resp !== null) {
+                            const group = resp["group"];
+                            if (group === "Free") setIsFree(true);
+  
+                            setSearchBtn(true);
+                          }
+                          setErrInp(false)
+                        }
+                        
 
-                        console.log(resp);
+                        // console.log(resp);
                       }
                     }}
                   >
@@ -1285,12 +1298,20 @@ function TermView() {
                       {text} is not Free Elective
                     </Typography>
                   )}
+                  {errInp && (
+                    <Typography variant="subtitle1">
+                      โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6 ตัว
+                    </Typography>
+                  )}
                 </Stack>
                 <Stack sx={{ mt: 1 }}>
                   {isFree && (
                     <CheckCircleIcon sx={{ fontSize: 44, color: green[500] }} />
                   )}
                   {searchBtn && !isFree && text !== "" && (
+                    <CancelIcon sx={{ fontSize: 44, color: red[500] }} />
+                  )}
+                  {errInp && (
                     <CancelIcon sx={{ fontSize: 44, color: red[500] }} />
                   )}
                 </Stack>

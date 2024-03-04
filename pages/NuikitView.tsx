@@ -145,6 +145,8 @@ function NuikitView() {
   const [freeCID, setFreeCID] = useState("");
   const [dfValue, setDFValue] = useState(3);
 
+  const [errInp, setErrInp] = useState<boolean>(false);
+
   const [warning, setWarning] = useState(true);
 
   var tmp_major_reqCredit = 0;
@@ -423,7 +425,7 @@ function NuikitView() {
 
   useEffect(() => {
     const urlNuikit =
-      "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610727";
+      "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&mockData=mockData5";
     // &studentId=630610727
     // &mockData=mockData5
     NuikitData(urlNuikit);
@@ -1211,6 +1213,9 @@ function NuikitView() {
                 <IconButton
                   onClick={() => {
                     setFreeClicked(false);
+                    setText("");
+                    setIsFree(false);
+                    setErrInp(false)
                   }}
                   sx={{
                     width: "2.222vw",
@@ -1256,19 +1261,29 @@ function NuikitView() {
                     sx={{ p: 1 }}
                     aria-label="search"
                     onClick={async () => {
-                      console.log(text);
                       if (text !== "" || text !== null) {
-                        var resp: any = await FetchIsFree(text);
-                        if (resp !== null) {
-                          const group = resp["group"];
-                          if (group === "Free") setIsFree(true);
-
-                          setSearchBtn(true);
+                        var regex=/^[a-zA-Z]+$/;
+                        if (text.match(regex) || text.length > 6) {
+                          setErrInp(true)
+                          
+                          console.log('this is text')
                         }
+                        else{
+                          var resp: any = await FetchIsFree(text);
+                          if (resp !== null) {
+                            const group = resp["group"];
+                            if (group === "Free") setIsFree(true);
+  
+                            setSearchBtn(true);
+                          }
+                          setErrInp(false)
+                        }
+                        
 
-                        console.log(resp);
+                        // console.log(resp);
                       }
-                    }}
+                    }
+                  }
                   >
                     <SearchIcon />
                   </IconButton>
@@ -1284,12 +1299,20 @@ function NuikitView() {
                       {text} is not Free Elective
                     </Typography>
                   )}
+                  {errInp && (
+                    <Typography variant="subtitle1">
+                      โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6 ตัว
+                    </Typography>
+                  )}
                 </Stack>
                 <Stack sx={{ mt: 1 }}>
                   {isFree && (
                     <CheckCircleIcon sx={{ fontSize: 44, color: green[500] }} />
                   )}
                   {searchBtn && !isFree && (
+                    <CancelIcon sx={{ fontSize: 44, color: red[500] }} />
+                  )}
+                  {errInp && (
                     <CancelIcon sx={{ fontSize: 44, color: red[500] }} />
                   )}
                 </Stack>

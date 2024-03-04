@@ -18,7 +18,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { WhoAmIResponse } from "./api/whoAmI";
 import { theme } from "../constants/theme";
-import { free_pass, ge_pass, majorCore_pass, major_pass } from "../constants/color";
+import {
+  free_pass,
+  ge_pass,
+  majorCore_pass,
+  major_pass,
+} from "../constants/color";
+import { warningIcon, warningModal } from "./View/NodeModal";
 
 function CircularProgressWithLabel(
   props: CircularProgressProps & { value: number }
@@ -188,6 +194,8 @@ function DashBoard() {
   var [gePercent, setGEPercent] = React.useState<number>(0);
 
   var [clock, setClock] = React.useState<number>(0);
+
+  const [warning, setWarning] = useState(true);
 
   var tmp_major_reqCredit = 0;
   var tmp_major_reqCreditNeed = 0;
@@ -377,9 +385,9 @@ function DashBoard() {
           setFullName(response.data.firstName + " " + response.data.lastName);
           setCmuAccount(response.data.cmuAccount);
           setStudentId(response.data.studentId ?? "No Student Id");
-          console.log("orgCode")
-          console.log(response.data.orgCode)
-          console.log(response.data.orgNameEN)
+          console.log("orgCode");
+          console.log(response.data.orgCode);
+          console.log(response.data.orgNameEN);
           // console.log(response.data.itAcc)
         }
       })
@@ -440,11 +448,11 @@ function DashBoard() {
               borderColor: "#F1485B",
               "&:hover": {
                 background: "#F1485B",
-                color: 'white',
+                color: "white",
                 borderColor: "#F1485B",
               },
             }}
-            onClick={()=>{
+            onClick={() => {
               axios.post("/").finally(() => {
                 router.push("/");
               });
@@ -483,7 +491,13 @@ function DashBoard() {
         >
           {/* Total Nuikit */}
           <Stack width={{ xs: "100%", sm: "100%", lg: "100%" }}>
-            <Typography marginBottom={"4px"}>Total Nuaikit</Typography>
+            <Stack direction={"row"} sx={{alignItems: 'center'}}>
+              <Typography variant="h6" marginBottom={"4px"}>
+                Total Nuaikit
+              </Typography>
+              {warningIcon(setWarning)}
+            </Stack>
+
             <Stack
               sx={{
                 border: "2px solid var(--Grey_2, #C2C2C2)",
@@ -492,6 +506,7 @@ function DashBoard() {
                 padding: "8px",
               }}
             >
+              {warning && warningModal(setWarning)}
               <Stack
                 sx={{
                   display: "flex",
@@ -540,7 +555,7 @@ function DashBoard() {
                         [`& .${circularProgressClasses.circle}`]: {
                           strokeLinecap: "round",
                         },
-                        color: '#F1485B'
+                        color: "#F1485B",
                       }}
                       size={180}
                       variant="determinate"
@@ -620,7 +635,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
-                            color: "#FF7D0F"
+                            color: "#FF7D0F",
                           }}
                           size={90}
                           variant="determinate"
@@ -684,7 +699,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
-                            color: '#FB5C95'
+                            color: "#FB5C95",
                           }}
                           size={90}
                           variant="determinate"
@@ -754,7 +769,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
-                            color: '#3366FF'
+                            color: "#3366FF",
                           }}
                           size={90}
                           variant="determinate"
@@ -822,7 +837,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
-                            color: '#46CD89'
+                            color: "#46CD89",
                           }}
                           size={90}
                           variant="determinate"
@@ -972,10 +987,7 @@ function DashBoard() {
                       justifyContent: "space-between",
                     }}
                   >
-                    <Typography
-                      variant="subtitle1"
-                      sx={{ color: ge_pass }}
-                    >
+                    <Typography variant="subtitle1" sx={{ color: ge_pass }}>
                       General Education
                     </Typography>
 
@@ -986,10 +998,7 @@ function DashBoard() {
                         alignItems: "baseline",
                       }}
                     >
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ color: ge_pass }}
-                      >
+                      <Typography variant="subtitle1" sx={{ color: ge_pass }}>
                         {gen_reqCredit + gen_elecCredit}
                       </Typography>
                       <Typography
@@ -1054,10 +1063,7 @@ function DashBoard() {
                             alignItems: "baseline",
                           }}
                         >
-                          <Typography
-                            variant="body2"
-                            sx={{ color: ge_pass }}
-                          >
+                          <Typography variant="body2" sx={{ color: ge_pass }}>
                             {gen_reqCredit}
                           </Typography>
                           <Typography
@@ -1092,10 +1098,7 @@ function DashBoard() {
                             alignItems: "baseline",
                           }}
                         >
-                          <Typography
-                            variant="body2"
-                            sx={{ color: ge_pass }}
-                          >
+                          <Typography variant="body2" sx={{ color: ge_pass }}>
                             {gen_elecCredit}
                           </Typography>
                           <Typography
@@ -1399,10 +1402,7 @@ function DashBoard() {
                       alignItems: "baseline",
                     }}
                   >
-                    <Typography
-                      variant="subtitle1"
-                      sx={{ color: free_pass }}
-                    >
+                    <Typography variant="subtitle1" sx={{ color: free_pass }}>
                       {free_Credit}
                     </Typography>
                     <Typography
