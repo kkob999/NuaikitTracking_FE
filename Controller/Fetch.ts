@@ -78,3 +78,63 @@ export function fetchCourseDescription(courseId : string) {
       });
   });
 }
+
+export function fetchFreeElective(groupName: string) {
+  const urlFree =
+    "http://localhost:8080/ge/elective?groupName=" +
+    groupName +
+    "&year=2563&curriculumProgram=CPE&isCOOP=false";
+  return new Promise(function (resolve, reject) {
+    axios
+      .get(urlFree, {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          mode: "no-cors",
+        },
+      })
+      .then((response) => {
+        console.log("fetch free elective data");
+        resolve(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+}
+
+
+
+export function fetchNuikitData(url: string) {
+  return new Promise(function (resolve, reject) {
+    axios
+      .get(url, {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          mode: "no-cors",
+        },
+      })
+      .then((response) => {
+        console.log("fetch nuikit data");
+        // console.log(response.data);
+        resolve(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        // handle errors
+        console.log(error);
+        reject(error);
+        // return testfail1
+      });
+  });
+}
+
+export async function FetchCourse(courseId: string) {
+  let data: any = await fetchCourseDescription(courseId);
+  return data;
+}

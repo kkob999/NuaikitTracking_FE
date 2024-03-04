@@ -9,6 +9,7 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { free_pass, ge_pass, majorCore_pass } from "../../constants/color";
 
 export default function isSelected(selected: boolean) {
   if (selected) return "#EE6457";
@@ -39,7 +40,7 @@ export function TogglePlan() {
 export const displayGE = () => {
   return(
     <Stack direction={"row"} sx={{bgcolor: 'white', pt: 0.5, pb: 0.5, pr: 1.4, pl: 1.4, alignItems: 'center', borderRadius: 5, border: '1px solid #EE6457'}}>
-      <Stack sx={{width: '0.8vw', height: '0.8vw', bgcolor: '#7C4DFF', mr: 1, borderRadius: 100}}></Stack>
+      <Stack sx={{width: '0.8vw', height: '0.8vw', bgcolor: ge_pass, mr: 1, borderRadius: 100}}></Stack>
       <Typography sx={{fontSize: '0.9rem', color: '#EE6457'}}>General Education</Typography>
     </Stack>
   );
@@ -48,7 +49,7 @@ export const displayGE = () => {
 export const displaySp = () => {
   return(
     <Stack direction={"row"} sx={{bgcolor: 'white', pt: 0.5, pb: 0.5, pr: 1.4, pl: 1.4, alignItems: 'center', borderRadius: 5, border: '1px solid #EE6457'}}>
-      <Stack sx={{width: '0.8vw', height: '0.8vw', bgcolor: '#FF7D0F', mr: 1, borderRadius: 100}}></Stack>
+      <Stack sx={{width: '0.8vw', height: '0.8vw', bgcolor: majorCore_pass, mr: 1, borderRadius: 100}}></Stack>
       <Typography sx={{fontSize: '0.9rem', color: '#EE6457'}}>Specification</Typography>
     </Stack>
   );
@@ -57,7 +58,7 @@ export const displaySp = () => {
 export const displayFree = () => {
   return(
     <Stack direction={"row"} sx={{bgcolor: 'white', pt: 0.5, pb: 0.5, pr: 1.4, pl: 1.4, alignItems: 'center', borderRadius: 5, border: '1px solid #EE6457'}}>
-      <Stack sx={{width: '0.8vw', height: '0.8vw', bgcolor: '#1976D2', mr: 1, borderRadius: 100}}></Stack>
+      <Stack sx={{width: '0.8vw', height: '0.8vw', bgcolor: free_pass, mr: 1, borderRadius: 100}}></Stack>
       <Typography sx={{fontSize: '0.9rem', color: '#EE6457'}}>Free Elective</Typography>
     </Stack>
   );

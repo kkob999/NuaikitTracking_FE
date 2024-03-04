@@ -237,7 +237,7 @@ function DashBoard() {
   async function DatchBoardData() {
     const resp: any = await FetchDashBoard();
     // console.log(resp["coreCategory"]);
-    console.log(resp);
+    // console.log(resp);
 
     setAllGetCredit(resp["summaryCredit"]);
     setAllNeedCredit(resp["requiredCredits"]);

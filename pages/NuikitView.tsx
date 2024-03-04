@@ -22,8 +22,12 @@ import isSelected, {
   displaySp,
 } from "./View/MUIFilter";
 
-import { free_pass, ge_pass, majorCore_pass, major_pass,} from "../constants/color";
-
+import {
+  free_pass,
+  ge_pass,
+  majorCore_pass,
+  major_pass,
+} from "../constants/color";
 
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
@@ -35,65 +39,21 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 
 import jsonData from "../Model/NodeDB.json";
 import NuikitViewNode from "./View/Node/NuikitViewNode";
+import { DisplayNodeModal } from "./View/NodeModal";
 
 import Navbar from "./View/Navbar";
 import { theme } from "../constants/theme";
 import { IOSSwitch } from "./View/SwitchMUI";
 import { WhoAmIResponse } from "./api/whoAmI";
 import { useRouter } from "next/router";
-
-function fetchNuikitData(url: string) {
-  return new Promise(function (resolve, reject) {
-    axios
-      .get(url, {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-          mode: "no-cors",
-        },
-      })
-      .then((response) => {
-        console.log("fetch nuikit data");
-        // console.log(response.data);
-        resolve(response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        // handle errors
-        console.log(error);
-        reject(error);
-        // return testfail1
-      });
-  });
-}
-
-function fetchFreeElective(groupName: string) {
-  const urlFree =
-    "http://localhost:8080/ge/elective?groupName=" +
-    groupName +
-    "&year=2563&curriculumProgram=CPE&isCOOP=false";
-  return new Promise(function (resolve, reject) {
-    axios
-      .get(urlFree, {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-          mode: "no-cors",
-        },
-      })
-      .then((response) => {
-        console.log("fetch free elective data");
-        resolve(response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-        reject(error);
-      });
-  });
-}
+import {
+  FetchCourse,
+  fetchCourseDescription,
+  fetchFreeElective,
+  fetchMajorElective,
+  fetchNuikitData,
+} from "../Controller/Fetch";
+import { ST } from "next/dist/shared/lib/utils";
 
 var mjreq: any = [];
 var mjelec: any = [];
@@ -154,6 +114,13 @@ function NuikitView() {
 
   const [saveBtn, setSaveBtn] = useState(false);
 
+  const [detailClicked, setDetailClicked] = useState<boolean>(false);
+  const [detail, setDetail] = useState([]);
+  const [arrNode, setArrNode] = useState([]);
+
+  const [insideNodeClicked, setInsideNodeClicked] = useState<boolean>(false);
+  const [arrInsideNode, setInsideArrNode] = useState([]);
+
   var tmp_major_reqCredit = 0;
   var tmp_major_reqCreditNeed = 0;
   var tmp_major_elecCredit = 0;
@@ -173,6 +140,7 @@ function NuikitView() {
 
   //free elective
   var [freeModalNode, setFreeModalNode] = useState<any>(null);
+  var [majorModalNode, setMajorModalNode] = useState<any>(null);
   var [notLearnGEArr, setnotLearnGE] = useState<any>(null);
   var [modalTopic, setModalTopic] = useState("");
   var tempArr: any = [];
@@ -235,7 +203,7 @@ function NuikitView() {
 
   async function NuikitData(url: string) {
     const resp: any = await fetchNuikitData(url);
-    console.log("test is Coop Coop");
+    // console.log(resp);
     if (resp["isCoop"] === "true") {
       setisCoop(true);
       setFormats("coop");
@@ -267,6 +235,7 @@ function NuikitView() {
         );
 
         tmp_gen_elecCredit += resp["geCategory"][i]["electiveCreditsGet"];
+        console.log( resp["geCategory"][i]["electiveCreditsGet"])
         setgenElecCredit(tmp_gen_elecCredit);
 
         tmp_gen_elecCreditNeed += resp["geCategory"][i]["electiveCreditsNeed"];
@@ -387,9 +356,17 @@ function NuikitView() {
   }
 
   async function handleNodeClick(groupName: string) {
-    const respFree: any = await fetchFreeElective(groupName);
-    setFreeModalNode(respFree["courseLists"]);
-    setModalTopic(groupName);
+    if (groupName === "Major Elective") {
+      var respFree: any = await fetchMajorElective();
+      console.log(respFree);
+      setFreeModalNode(respFree["courseLists"]);
+      setModalTopic("Major Elective");
+    } else {
+      var respFree: any = await fetchFreeElective(groupName);
+      setFreeModalNode(respFree["courseLists"]);
+      setModalTopic(groupName);
+    }
+    // setFreeModalNode(respFree["courseLists"]);
     toggleModal();
   }
 
@@ -406,39 +383,91 @@ function NuikitView() {
     var tmpArr: any = freeNode;
     var displayArr: any = [];
     if (
-      modalTopic == "Learner Person" ||
-      modalTopic == "Co-Creator" ||
-      modalTopic == "Elective"
+      modalTopic === "Learner Person" ||
+      modalTopic === "Co-Creator" ||
+      modalTopic === "Elective"
     ) {
       type = "gen";
       tmpArr = genElecNode;
-      // console.log("lalala");
-      // console.log(tmpArr);
+      console.log(tmpArr);
+    } else {
+      type = "spec_mj";
+      tempArr = majorENode;
+      if (tempArr === null || tempArr.length === 0) {
+        tempArr = [];
+      }
+      console.log(tmpArr);
     }
 
     freeModalNode.map((node: any) => {
-      let res = tmpArr.some((n: any) => n.courseNo == node.courseNo);
-      if (res) {
-        displayArr.push(
-          <NuikitViewNode
-            sub_no={node.courseNo}
-            sub_name={node.courseNo}
-            type={type}
-            isPass={true}
-            credit={node.credits}
-          />
-        );
+      if (tempArr.length !== 0) {
+        let res = tmpArr.some((n: any) => n.courseNo == node.courseNo);
+        if (res) {
+          displayArr.push(
+            <Stack
+              onClick={async () => {
+                setDetail(await FetchCourse(node.courseNo));
+                // console.log(genElecNode);
+                // setArrNode(genElecNode);
+                setInsideArrNode(genElecNode);
+                setInsideNodeClicked(true);
+                // setDetailClicked(true);
+              }}
+            >
+              <NuikitViewNode
+                sub_no={node.courseNo}
+                sub_name={node.courseNo}
+                type={type}
+                isPass={true}
+                credit={node.credits}
+              />
+            </Stack>
+          );
+        } else {
+          displayArr.push(
+            <Stack
+              onClick={async () => {
+                setDetail(await FetchCourse(node.courseNo));
+                // console.log(genElecNode);
+                // setArrNode(genElecNode);
+                setInsideArrNode(genElecNode);
+                setInsideNodeClicked(true);
+                // setDetailClicked(true);
+              }}
+            >
+              <NuikitViewNode
+                sub_no={node.courseNo}
+                sub_name={node.courseNo}
+                type={type}
+                isPass={false}
+                credit={node.credits}
+              />
+            </Stack>
+          );
+        }
       } else {
         displayArr.push(
-          <NuikitViewNode
-            sub_no={node.courseNo}
-            sub_name={node.courseNo}
-            type={type}
-            isPass={false}
-            credit={node.credits}
-          />
+          <Stack
+            onClick={async () => {
+              setDetail(await FetchCourse(node.courseNo));
+              // console.log(genElecNode);
+              // setArrNode(genElecNode);
+              setInsideArrNode(genElecNode);
+              setInsideNodeClicked(true);
+              // setDetailClicked(true);
+            }}
+          >
+            <NuikitViewNode
+              sub_no={node.courseNo}
+              sub_name={node.courseNo}
+              type={type}
+              isPass={false}
+              credit={node.credits}
+            />
+          </Stack>
         );
       }
+
       // console.log(res + node.courseNo)
     });
 
@@ -468,6 +497,8 @@ function NuikitView() {
             width: "50.903vw",
             height: "33.796vh",
             bgcolor: "white",
+            borderRadius: '1rem 1rem 1rem 1rem',
+            
           }}
         >
           <Stack
@@ -477,6 +508,7 @@ function NuikitView() {
               bgcolor: "#F1485B",
               alignItems: "center",
               justifyContent: "center",
+              borderRadius: '1rem 1rem 0 0'
             }}
           >
             <Stack
@@ -487,6 +519,7 @@ function NuikitView() {
                 justifyContent: "flex-start",
                 position: "relative",
                 width: "100%",
+                
                 // bgcolor: 'wheat'
               }}
             >
@@ -514,6 +547,7 @@ function NuikitView() {
               // border: "1px solid black",
               alignSelf: "center",
               margin: "auto",
+              p: 2
             }}
           >
             <Typography sx={{ color: "#858382" }}>
@@ -527,6 +561,7 @@ function NuikitView() {
                 columnGap: "1.7vw",
                 rowGap: "1.2vh",
                 overflowY: "scroll",
+                mt: 1
               }}
             >
               {modalFreeElecNode()}
@@ -558,6 +593,34 @@ function NuikitView() {
         return displayNode.map((node: any) => {
           if (node.isPass) {
             return (
+              <Stack
+                onClick={async () => {
+                  setDetail(await FetchCourse(node.courseNo));
+                  setArrNode(genReqNode);
+                  setDetailClicked(true);
+                }}
+              >
+                <NuikitViewNode
+                  sub_no={node.courseNo}
+                  sub_name={node.courseNo}
+                  type="gen"
+                  isPass={node["isPass"]}
+                  credit={node.credits}
+                />
+              </Stack>
+            );
+          }
+        });
+      } else {
+        return displayNode.map((node: any) => {
+          return (
+            <Stack
+              onClick={async () => {
+                setDetail(await FetchCourse(node.courseNo));
+                setArrNode(genReqNode);
+                setDetailClicked(true);
+              }}
+            >
               <NuikitViewNode
                 sub_no={node.courseNo}
                 sub_name={node.courseNo}
@@ -565,19 +628,7 @@ function NuikitView() {
                 isPass={node["isPass"]}
                 credit={node.credits}
               />
-            );
-          }
-        });
-      } else {
-        return displayNode.map((node: any) => {
-          return (
-            <NuikitViewNode
-              sub_no={node.courseNo}
-              sub_name={node.courseNo}
-              type="gen"
-              isPass={node["isPass"]}
-              credit={node.credits}
-            />
+            </Stack>
           );
         });
       }
@@ -616,15 +667,22 @@ function NuikitView() {
 
         genElecNode.map((node: any) => {
           freeGENodeArr.push(
-            // <Stack>
-            <NuikitViewNode
-              sub_no={node.courseNo}
-              sub_name={node.courseNo}
-              type="gen"
-              isPass={node["isPass"]}
-              credit={node.credits}
-            />
-            // {/* </Stack> */}
+            <Stack
+              onClick={async () => {
+                setDetail(await FetchCourse(node.courseNo));
+                // console.log(genElecNode);
+                setArrNode(genElecNode);
+                setDetailClicked(true);
+              }}
+            >
+              <NuikitViewNode
+                sub_no={node.courseNo}
+                sub_name={node.courseNo}
+                type="gen"
+                isPass={node["isPass"]}
+                credit={node.credits}
+              />
+            </Stack>
           );
         });
 
@@ -632,13 +690,22 @@ function NuikitView() {
       } else {
         return genElecNode.map((node: any) => {
           return (
-            <NuikitViewNode
-              sub_no={node.courseNo}
-              sub_name={node.courseNo}
-              type="gen"
-              isPass={node["isPass"]}
-              credit={node.credits}
-            />
+            <Stack
+              onClick={async () => {
+                setDetail(await FetchCourse(node.courseNo));
+                // console.log(genElecNode);
+                setArrNode(genElecNode);
+                setDetailClicked(true);
+              }}
+            >
+              <NuikitViewNode
+                sub_no={node.courseNo}
+                sub_name={node.courseNo}
+                type="gen"
+                isPass={node["isPass"]}
+                credit={node.credits}
+              />
+            </Stack>
           );
         });
       }
@@ -708,6 +775,32 @@ function NuikitView() {
         if (checkedDone && saveBtn) {
           if (node.isPass) {
             return (
+              <Stack
+                onClick={async () => {
+                  setDetail(await FetchCourse(node.courseNo));
+                  setArrNode(coreNode);
+                  setDetailClicked(true);
+                }}
+              >
+                <NuikitViewNode
+                  sub_no={node.courseNo}
+                  sub_name={node.courseNo}
+                  type="spec_core"
+                  isPass={node["isPass"]}
+                  credit={node.credits}
+                />
+              </Stack>
+            );
+          }
+        } else {
+          return (
+            <Stack
+              onClick={async () => {
+                setDetail(await FetchCourse(node.courseNo));
+                setArrNode(coreNode);
+                setDetailClicked(true);
+              }}
+            >
               <NuikitViewNode
                 sub_no={node.courseNo}
                 sub_name={node.courseNo}
@@ -715,17 +808,7 @@ function NuikitView() {
                 isPass={node["isPass"]}
                 credit={node.credits}
               />
-            );
-          }
-        } else {
-          return (
-            <NuikitViewNode
-              sub_no={node.courseNo}
-              sub_name={node.courseNo}
-              type="spec_core"
-              isPass={node["isPass"]}
-              credit={node.credits}
-            />
+            </Stack>
           );
         }
       });
@@ -752,6 +835,34 @@ function NuikitView() {
         return mjreqNode.map((node: any) => {
           if (node.isPass) {
             return (
+              <Stack
+                onClick={async () => {
+                  setDetail(await FetchCourse(node.courseNo));
+                  setArrNode(majorNode);
+                  setDetailClicked(true);
+                }}
+              >
+                <NuikitViewNode
+                  sub_no={node.courseNo}
+                  sub_name={node.courseNo}
+                  type="spec_mj"
+                  isPass={node["isPass"]}
+                  credit={node.credits}
+                />
+              </Stack>
+            );
+          }
+        });
+      } else {
+        return mjreqNode.map((node: any) => {
+          return (
+            <Stack
+              onClick={async () => {
+                setDetail(await FetchCourse(node.courseNo));
+                setArrNode(majorNode);
+                setDetailClicked(true);
+              }}
+            >
               <NuikitViewNode
                 sub_no={node.courseNo}
                 sub_name={node.courseNo}
@@ -759,19 +870,7 @@ function NuikitView() {
                 isPass={node["isPass"]}
                 credit={node.credits}
               />
-            );
-          }
-        });
-      } else {
-        return mjreqNode.map((node: any) => {
-          return (
-            <NuikitViewNode
-              sub_no={node.courseNo}
-              sub_name={node.courseNo}
-              type="spec_mj"
-              isPass={node["isPass"]}
-              credit={node.credits}
-            />
+            </Stack>
           );
         });
       }
@@ -784,13 +883,19 @@ function NuikitView() {
       // console.log("major E credit " + major_elecCreditNeed);
       for (let i = 0; i < (major_elecCreditNeed - major_elecCredit) / 3; i++) {
         majorEArr.push(
-          <NuikitViewNode
-            sub_no={"Major Elective"}
-            sub_name={"Major Elective"}
-            type="spec_mj"
-            isPass={false}
-            credit={3}
-          />
+          <Stack
+            onClick={() => {
+              handleNodeClick("Major Elective");
+            }}
+          >
+            <NuikitViewNode
+              sub_no={"Major Elective"}
+              sub_name={"Major Elective"}
+              type="spec_mj"
+              isPass={false}
+              credit={3}
+            />
+          </Stack>
         );
       }
       return majorEArr;
@@ -798,24 +903,38 @@ function NuikitView() {
       var majorEArr: any = [];
       for (let i = 0; i < (major_elecCreditNeed - major_elecCredit) / 3; i++) {
         majorEArr.push(
-          <NuikitViewNode
-            sub_no={"Major Elective"}
-            sub_name={"Major Elective"}
-            type="spec_mj"
-            isPass={false}
-            credit={3}
-          />
+          <Stack
+            onClick={() => {
+              handleNodeClick("Major Elective");
+            }}
+          >
+            <NuikitViewNode
+              sub_no={"Major Elective"}
+              sub_name={"Major Elective"}
+              type="spec_mj"
+              isPass={false}
+              credit={3}
+            />
+          </Stack>
         );
       }
       mjelectiveNode.map((node: any) => {
         majorEArr.push(
-          <NuikitViewNode
-            sub_no={node.courseNo}
-            sub_name={node.courseNo}
-            type="spec_mj"
-            isPass={node.isPass}
-            credit={node.credits}
-          />
+          <Stack
+            onClick={async () => {
+              setDetail(await FetchCourse(node.courseNo));
+              setArrNode(majorENode);
+              setDetailClicked(true);
+            }}
+          >
+            <NuikitViewNode
+              sub_no={node.courseNo}
+              sub_name={node.courseNo}
+              type="spec_mj"
+              isPass={node.isPass}
+              credit={node.credits}
+            />
+          </Stack>
         );
       });
 
@@ -846,6 +965,7 @@ function NuikitView() {
           setErrorMessage("Unknown error occurred. Please try again later");
         }
       });
+      console.log(gen_elecCredit)
   }, []);
   // console.log("free credits need" + free_CreditNeed);
 
@@ -898,7 +1018,6 @@ function NuikitView() {
       )}
       {errorMessage === "" && <Navbar />}
 
-      
       {/* Flow */}
       <Stack
         sx={{
@@ -926,7 +1045,7 @@ function NuikitView() {
             <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
               {isCoop && saveBtn ? displayCoopPlan() : displayNormalPlan()}
               {checkedDone && saveBtn && displayDone()}
-              {checkedPreFilter && displayPre()}
+              {/* {checkedPreFilter && displayPre()} */}
               {filterGE && saveBtn && displayGE()}
               {filterSp && saveBtn && displaySp()}
               {filterFree && saveBtn && displayFree()}
@@ -968,7 +1087,23 @@ function NuikitView() {
 
         {/* Modal Part */}
         {modal && DisplayModal(modalTopic)}
+        {detailClicked &&
+          DisplayNodeModal(
+            detailClicked,
+            setDetailClicked,
+            detail,
+            arrNode,
+            false
+          )}
 
+        {insideNodeClicked &&
+          DisplayNodeModal(
+            insideNodeClicked,
+            setInsideNodeClicked,
+            detail,
+            arrInsideNode,
+            true
+          )}
         {filter && (
           <Stack
             sx={{
@@ -1178,7 +1313,7 @@ function NuikitView() {
                 <Stack>
                   <Typography>Option</Typography>
                   {/* Prerequisite */}
-                  <Stack
+                  {/* <Stack
                     direction={"row"}
                     sx={{
                       justifyContent: "space-between",
@@ -1199,8 +1334,8 @@ function NuikitView() {
                       }
                       label=""
                     />
-                    {/* <SwitchMUI/> */}
-                  </Stack>
+                    
+                  </Stack> */}
                   {/* Done Course */}
                   <Stack
                     direction={"row"}

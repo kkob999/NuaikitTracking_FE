@@ -30,9 +30,17 @@ export const getSpecialPath = (
       // console.log(data.edPos)
     }
     
-    let x = (window.innerWidth * 106) / 1440
+    let x = (window.innerWidth * 96) / 1440
     
-    if( typeof(data.edPos) == 'number') return `M ${sourceX} ${sourceY} L ${data.edPos+x} ${sourceY} L ${data.edPos+x} ${targetY} L ${targetX} ${targetY}`;
+    if( typeof(data.edPos) == 'number') {
+      // if (sourceX - x < 20 ) {
+      //   // x = (window.innerWidth * 120) / 1440
+      //   return `M ${sourceX} ${sourceY} L ${data.edPos-x} ${sourceY} L ${data.edPos-x} ${targetY} L ${targetX} ${targetY}`;
+      // }else{
+        return `M ${sourceX} ${sourceY} L ${data.edPos+x} ${sourceY} L ${data.edPos+x} ${targetY} L ${targetX} ${targetY}`;
+      // }
+      
+    }
 
     return `M ${sourceX} ${sourceY} L ${breakPoint} ${sourceY} L ${breakPoint} ${targetY} L ${targetX} ${targetY}`;
 };

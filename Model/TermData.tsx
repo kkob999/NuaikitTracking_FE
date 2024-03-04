@@ -599,7 +599,7 @@ function fetchTermData(url: string) {
         // handle errors
         console.log(error);
         reject(error);
-        return "Network Error"
+        return "Network Error";
         // return testfail1
       });
   });
@@ -645,7 +645,7 @@ var arrTogglePrereq: any[] = [];
 async function processData(year: string, isCoop: string) {
   termNode = [];
   edArr = [];
-  creditArr = []
+  creditArr = [];
   startNode = [];
   spNode = [];
   havelab = [];
@@ -660,13 +660,13 @@ async function processData(year: string, isCoop: string) {
     year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop +
-    "&studentId=630610727";
+    "&mockData=mockData5";
   var nuikitURL =
     "http://localhost:8080/categoryView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop +
-    "&studentId=630610727";
+    "&mockData=mockData5";
 
   // &mockData=mockData5
   // &studentId=630610727
@@ -674,11 +674,7 @@ async function processData(year: string, isCoop: string) {
   // console.log(termURL);
 
   // console.log('in termdata.tsx '+window.innerWidth)
-  var currXPos = (window.innerWidth * 21) / 1440;
-  var currYPos = (window.innerHeight * 74) / 779;
 
-  var xpos = currXPos;
-  var ypos = currYPos;
   var subid = 1;
 
   var tempi = 0;
@@ -690,7 +686,7 @@ async function processData(year: string, isCoop: string) {
   fetchData = await fetchTermData(termURL);
   categoryData = await fetchNuikitData(nuikitURL);
 
-  console.log(fetchData)
+  console.log(fetchData);
 
   var major: any = [];
   var majorCredit: any = [];
@@ -884,6 +880,19 @@ async function processData(year: string, isCoop: string) {
   // console.log("this is test mobile width. Now width is " + window.innerWidth);
 
   // Config Position of Node
+  var currXPos = (window.innerWidth * 21) / 1440;
+  var currYPos = (window.innerHeight * 74) / 779;
+
+  if (window.innerWidth < 1300) {
+    currXPos = (window.innerWidth * 19) / 1024; //-3
+  }
+  if (window.innerWidth > 1300 && window.innerWidth < 1440) {
+    currXPos = (window.innerWidth * 17) / 1024; //-3
+  }
+
+  var xpos = currXPos;
+  var ypos = currYPos;
+
   var y = 58;
   var moveY = 74;
 
@@ -891,10 +900,11 @@ async function processData(year: string, isCoop: string) {
   var x_sum = 27.2;
   var xx = 27.5;
 
-  if (window.innerWidth == 1024) {
+  if (window.innerWidth === 1024) {
+    // console.log("jajfo");
     x = 133.5 + 30;
-    x_sum = 27.2 + 30;
-    xx = 27.5 + 30;
+    x_sum = 26.2 + 30;
+    xx = 22 + 30;
   }
   if (window.innerWidth > 600 && window.innerWidth < 900) {
     x = 133.5 + 40;
@@ -908,47 +918,80 @@ async function processData(year: string, isCoop: string) {
     xx = 27.5;
   }
 
-  var nextXPos = (window.innerWidth * x) / 1440;
+  var nextXPos = (window.innerWidth * (x - 1)) / 1440;
+
   // var nextXPos_nt = (window.innerWidth * 30) / 1440;
   var nextYPos = (window.innerHeight * y) / 779;
   var nextYPos_nt = (window.innerHeight * moveY) / 779;
 
   // Add array to credit array
   for (let i = 0; i < currData.length; i++) {
-    creditArr.push(0)
+    creditArr.push(0);
   }
+
+  var isSumYear1 = false;
+
+  
 
   for (let i = 0; i < currData.length; i++) {
     tempi++;
     //have summer
     if (summerArr.includes(2)) {
+
       //check is summer is in year 1
+      if (i === 0 && summerArr[i] === 1) {
+        isSumYear1 = true;
+        if (window.innerWidth < 1300) {
+          xpos - 2;
+        } else {
+          xpos += -29; //(window.innerWidth * (1)) / 1440
+        }
+      }
+      
       if (i === 3 && summerArr[i - 1] === 2) {
         xpos += (window.innerWidth * x_sum) / 1440;
       }
-      //check is summer is in more than year 1
-      if (summerArr[i] === 1 && i !== 3 && i !== 1 && i % 2 !== 0) {
-        xpos += (window.innerWidth * x_sum) / 1440;
-      } else if (i % 2 === 0 && summerArr[i] === 0 && summerArr[i - 1] === 2) {
-        xpos += (window.innerWidth * xx) / 1440;
-        
-      } else if (
-        i % 2 !== 0 &&
-        summerArr[i] === 0 &&
-        i !== 0 &&
-        summerArr[i - 1] !== 2
+
+      if (
+        summerArr[i] === 1 &&
+        summerArr[i + 2] === 2 &&
+        i !== summerArr.length - 3
       ) {
-        if(summerArr[i - 2] === 2){
-          xpos += (window.innerWidth * (xx - 27)) / 1440
-        }else{
-          xpos += (window.innerWidth * (xx+2)) / 1440
+        // console.log("i === 1 " + i); 
+        if (i <= 5) {
+          xpos += (window.innerWidth * 30) / 1440; //screen 1024 => 22
+        } else {
+          xpos += (window.innerWidth * 27) / 1440; //screen 1024 => 19
+        }
+      }
+      if (summerArr[i - 1] === 2) {
+        // console.log("i-1 == 2 " + i);
+        if (isSumYear1) {
+          xpos += (window.innerWidth * (x_sum - 28)) / 1440;
+        } else {
+          xpos += (window.innerWidth * x_sum) / 1440;
+        }
+      }
+
+      if (isSumYear1 && summerArr[i] === 0) {
+        if (summerArr[i - 1] === 0 && summerArr[i - 2] === 0 && i < summerArr.length-3) {
+          // console.log('xx ' + i)
+          console.log(summerArr.length)
+          xpos += (window.innerWidth * (xx)) / 1440;
         }
         
       }
+
+      //last term
+      if (i === summerArr.length-2) {
+        // console.log('last term ' + i)
+        xpos += (window.innerWidth * (xx)) / 1440;
+      }
+
+      
     }
     //normal term
     if (!summerArr.includes(2)) {
-      
       if (i != 0 && i % 2 == 0) xpos += (window.innerWidth * xx) / 1440;
     }
 
@@ -1067,15 +1110,17 @@ async function processData(year: string, isCoop: string) {
                       pre: tempId,
                       sub_data: fetchData["list of course"][currData[i][j]],
                       category: typeNode,
-                      credit: fetchData["list of course"][currData[i][j]]["credits"],
+                      credit:
+                        fetchData["list of course"][currData[i][j]]["credits"],
                       is_pass: isPass,
                     },
                     position: { x: xpos, y: ypos },
                     hidden: false,
                   };
 
-                  creditArr[i] += fetchData["list of course"][currData[i][j]]["credits"]
-                  // console.log(currData[i][j] + "  " + fetchData["list of course"][currData[i][j]]["credits"])
+          creditArr[i] +=
+            fetchData["list of course"][currData[i][j]]["credits"];
+          // console.log(currData[i][j] + "  " + fetchData["list of course"][currData[i][j]]["credits"])
         }
 
         if (currData[i][j] == "111111") {
@@ -1111,6 +1156,8 @@ async function processData(year: string, isCoop: string) {
             // console.log(edgepos);
             if (edgepos != -1) {
               if (termNode[pos]["id"] === "252281")
+                edArr[edgepos].data.edPos = xpos;
+              if (termNode[pos]["id"] === "261216")
                 edArr[edgepos].data.edPos = xpos;
             }
           }
@@ -1149,7 +1196,7 @@ async function processData(year: string, isCoop: string) {
             position: { x: xpos, y: ypos },
             hidden: false,
           };
-          creditArr[i] += 3
+          creditArr[i] += 3;
         }
 
         if (currData[i][j] == "Major Elective") {
@@ -1175,7 +1222,7 @@ async function processData(year: string, isCoop: string) {
             position: { x: xpos, y: ypos },
             hidden: false,
           };
-          creditArr[i] += 3
+          creditArr[i] += 3;
         }
 
         if (currData[i][j] == "Free") {
@@ -1201,7 +1248,7 @@ async function processData(year: string, isCoop: string) {
             position: { x: xpos, y: ypos },
             hidden: false,
           };
-          creditArr[i] += 3
+          creditArr[i] += 3;
         }
 
         if (tempi < 6) {
@@ -1377,5 +1424,5 @@ export {
   totalSubColumn,
   isCoop_api,
   arrTogglePrereq,
-  creditArr
+  creditArr,
 };

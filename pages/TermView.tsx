@@ -102,6 +102,7 @@ import { NormalTerm, summerTerm } from "./View/TermBlock";
 import { ifError } from "assert";
 import { WhoAmIResponse } from "./api/whoAmI";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { free_pass, ge_pass, majorCore_pass } from "../constants/color";
 
 const edgeTypes = {
   "custom-edge": CustomEdge,
@@ -173,8 +174,8 @@ function convertWidth(w: number) {
   return "" + w + "vw";
 }
 
-function ToggleButt(isDisable: boolean) {
-  if (isDisable) {
+function ToggleButtNormal(isDisableNormal: boolean) {
+  if (isDisableNormal) {
     return (
       <ToggleButton
         value="normal"
@@ -210,6 +211,43 @@ function ToggleButt(isDisable: boolean) {
   }
 }
 
+function ToggleButtCoop(isDisableCoop: boolean) {
+  if (isDisableCoop) {
+    return (
+      <ToggleButton
+        value="coop"
+        disabled
+        sx={{
+          width: "50%",
+          textTransform: "none",
+          "&.Mui-selected , &.Mui-selected:hover": {
+            bgcolor: "#EE6457",
+            color: "white",
+          },
+        }}
+      >
+        Cooperative Plan
+      </ToggleButton>
+    );
+  } else {
+    return (
+      <ToggleButton
+        value="coop"
+        sx={{
+          width: "50%",
+          textTransform: "none",
+          "&.Mui-selected , &.Mui-selected:hover": {
+            bgcolor: "#EE6457",
+            color: "white",
+          },
+        }}
+      >
+        Cooperative Plan
+      </ToggleButton>
+    );
+  }
+}
+
 function DisplayBackDrop(checked: boolean) {
   return (
     <Backdrop
@@ -236,16 +274,17 @@ function TermView() {
   const [isCoop, setisCoop] = useState("false");
   const [stdYear, setStdYear] = useState("2563");
   // filter
-  const [filterGE, setFilterGE] = useState(false);
-  const [filterSp, setFilterSp] = useState(false);
-  const [filterFree, setFilterFree] = useState(false);
+  const [filterGE, setFilterGE] = useState(true);
+  const [filterSp, setFilterSp] = useState(true);
+  const [filterFree, setFilterFree] = useState(true);
   const [checkedPre, setCheckedPre] = useState(false);
   const [checkedPreFilter, setCheckedPreFilter] = useState(false);
   const [checkedDone, setCheckedDone] = useState(false);
 
   const [formats, setFormats] = useState("normal");
   const [prevFormat, setPrevFormat] = useState<any>();
-  const [disButton, setDisButton] = useState(false);
+  const [disButtonNormal, setdisButtonNormal] = useState(false);
+  const [disButtonCoop, setdisButtonCoop] = useState(false);
 
   const [save, setSave] = useState(false);
 
@@ -376,9 +415,9 @@ function TermView() {
   };
 
   async function getInSideNodeDetail(insideNode: string) {
-    console.log("inside node "+ insideNode)
+    console.log("inside node " + insideNode);
     setInsideNodeArr(await FetchCourse(insideNode));
-  };
+  }
 
   function fontChange(nav: string) {
     if (url === "/dashboard" && nav === "dashboard") return "#EE6457";
@@ -554,14 +593,14 @@ function TermView() {
     if (filterGE) {
       termNode.map((nd) => {
         if (nd.data.category === "gen") nd.hidden = false;
-        else if (filterSp && nd.data.category === "sp") nd.hidden = false;
+        else if (filterSp && nd.data.category.includes("sp")) nd.hidden = false;
         else if (filterFree && nd.data.category === "free") nd.hidden = false;
         else nd.hidden = true;
         return nd;
       });
     } else if (filterSp) {
       termNode.map((nd) => {
-        if (nd.data.category === "sp") nd.hidden = false;
+        if (nd.data.category.includes("sp")) nd.hidden = false;
         else if (filterFree && nd.data.category === "free") nd.hidden = false;
         else nd.hidden = true;
         return nd;
@@ -599,9 +638,9 @@ function TermView() {
 
     if (c === "true") {
       if (prevFormat === "coop") {
-        setDisButton(false);
+        setdisButtonNormal(false);
       } else {
-        setDisButton(true);
+        setdisButtonNormal(true);
       }
 
       setFormats("coop");
@@ -609,7 +648,13 @@ function TermView() {
     if (c === "false") {
       console.log(prevFormat);
 
-      setDisButton(false);
+      setdisButtonNormal(false);
+      if (fetchData !== undefined) {
+        if (fetchData["study term"] >= 4) {
+          setdisButtonCoop(true);
+        }
+        setdisButtonCoop(true);
+      }
       setFormats("normal");
     }
 
@@ -1066,10 +1111,15 @@ function TermView() {
         {DisplayBackDrop(backdrop)}
         {/* Node Clicked */}
         {nodeClicked
-          ? DisplayNodeModal(nodeClicked, setNodeClicked, nodeArr, termNode, true)
+          ? DisplayNodeModal(
+              nodeClicked,
+              setNodeClicked,
+              nodeArr,
+              termNode,
+              true
+            )
           : null}
 
-          
         {insideNodeClicked
           ? DisplayNodeModal(
               insideNodeClicked,
@@ -1087,7 +1137,7 @@ function TermView() {
               setInsideNodeClicked,
               setInsideNode,
               nodeArr,
-              termNode,
+              termNode
             )
           : null}
         {GENodeClicked
@@ -1108,97 +1158,99 @@ function TermView() {
             sx={{
               mt: "2vh",
               justifyContent: "space-between",
+              // maxWidth: "98%",
+              // border: '1px solid black'
             }}
           >
-            <Typography
-              variant="h5"
-              sx={{ alignSelf: "baseline", mt: "auto", mb: "auto" }}
-            >
+            <Typography variant="h5" sx={{ alignSelf: "baseline" }}>
               Term View
             </Typography>
 
             {/* Display Filter Status */}
-            <Stack direction={"row"} sx={{ mr: "1vw", columnGap: 1.4 }}>
-              <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
-                {/* {isCoop === false && displayNormalPlan()}
+            <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
+            <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
+              {/* {isCoop === false && displayNormalPlan()}
                 {isCoop === true && displayCoopPlan()} */}
-                {isCoop === "true" ? displayCoopPlan() : displayNormalPlan()}
-                {checkedDone && displayDone()}
-                {checkedPreFilter && displayPre()}
-                {filterGE && displayGE()}
-                {filterSp && displaySp()}
-                {filterFree && displayFree()}
-              </Stack>
-
-              <Button
-                sx={{
-                  bgcolor: "white",
-                  pt: 0.5,
-                  pb: 0.5,
-                  pr: 1.4,
-                  pl: 1.4,
-                  alignItems: "center",
-                  borderRadius: 5,
-                  border: checkedPre
-                    ? "1px solid #EE6457"
-                    : "1px solid #9B9B9B",
-                  textTransform: "none",
-                }}
-                onClick={() => {
-                  setCheckedPre(!checkedPre);
-                  setEdges((eds) =>
-                    eds.map((edge) => {
-                      if (checkedPre) edge.hidden = false;
-                      else edge.hidden = true;
-                      return edge;
-                    })
-                  );
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "0.8rem",
-                    color: checkedPre ? "#EE6457" : "#9B9B9B",
-                  }}
-                >
-                  See Prerequisite Course
-                </Typography>
-              </Button>
-
-              {/* Filter */}
-              <Button
-                variant="outlined"
-                endIcon={<FilterListIcon />}
-                onClick={() => {
-                  setFilter(!filter);
-                  setSave(false);
-                }}
-                sx={{
-                  width: "8vw",
-                  position: "relative",
-                  // mr: "1.9vw",
-                  textTransform: "none",
-                  borderRadius: 5,
-                  color: filter ? "#EE6457" : "#9B9B9B",
-                  borderColor: filter ? "#EE6457" : "#9B9B9B",
-                  pt: 0.25,
-                  pb: 0,
-                  pr: 1.4,
-                  pl: 1.4,
-                  "&:hover": {
-                    color: "#EE6457",
-                    borderColor: "#EE6457",
-                    bgcolor: "white",
-                  },
-                  [theme.breakpoints.between("sm", "md")]: {
-                    width: "10vw",
-                  },
-                }}
-              >
-                Filter
-              </Button>
+              {isCoop === "true" ? displayCoopPlan() : displayNormalPlan()}
+              {checkedDone && displayDone()}
+              {checkedPreFilter && displayPre()}
+              {filterGE && displayGE()}
+              {filterSp && displaySp()}
+              {filterFree && displayFree()}
             </Stack>
+
+            {/* <Stack direction={"row"} sx={{columnGap: 1.4, justifyContent: 'flex-end'}}> */}
+            <Button
+              sx={{
+                bgcolor: "white",
+                pt: 0.5,
+                pb: 0.5,
+                pr: 1.4,
+                pl: 1.4,
+                alignItems: "center",
+                borderRadius: 5,
+                border: checkedPre ? "1px solid #EE6457" : "1px solid #9B9B9B",
+                textTransform: "none",
+                maxHeight: "4.2vh",
+                maxWidth: "20vw",
+              }}
+              onClick={() => {
+                setCheckedPre(!checkedPre);
+                setEdges((eds) =>
+                  eds.map((edge) => {
+                    if (checkedPre) edge.hidden = false;
+                    else edge.hidden = true;
+                    return edge;
+                  })
+                );
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "0.8rem",
+                  color: checkedPre ? "#EE6457" : "#9B9B9B",
+                }}
+              >
+                See Prerequisite Course
+              </Typography>
+            </Button>
+
+            {/* Filter */}
+            <Button
+              variant="outlined"
+              endIcon={<FilterListIcon />}
+              onClick={() => {
+                setFilter(!filter);
+                setSave(false);
+              }}
+              sx={{
+                width: "8vw",
+                maxHeight: "4vh",
+                position: "relatice",
+                // mr: "1.9vw",
+                textTransform: "none",
+                borderRadius: 5,
+                color: filter ? "#EE6457" : "#9B9B9B",
+                borderColor: filter ? "#EE6457" : "#9B9B9B",
+                pt: 0.25,
+                pb: 0,
+                pr: 1.4,
+                pl: 1.4,
+                "&:hover": {
+                  color: "#EE6457",
+                  borderColor: "#EE6457",
+                  bgcolor: "white",
+                },
+                [theme.breakpoints.between("sm", "md")]: {
+                  width: "10vw",
+                },
+              }}
+            >
+              Filter
+            </Button>
           </Stack>
+          </Stack>
+          {/* </Stack> */}
 
           {filter && (
             <Stack
@@ -1257,20 +1309,8 @@ function TermView() {
                     aria-label="text alignment"
                     sx={{ mt: "1vh", mb: "1vh", height: 36 }}
                   >
-                    {ToggleButt(disButton)}
-                    <ToggleButton
-                      value="coop"
-                      sx={{
-                        width: "50%",
-                        textTransform: "none",
-                        "&.Mui-selected , &.Mui-selected:hover": {
-                          bgcolor: "#EE6457",
-                          color: "white",
-                        },
-                      }}
-                    >
-                      Cooperative Plan
-                    </ToggleButton>
+                    {ToggleButtNormal(disButtonNormal)}
+                    {ToggleButtCoop(disButtonCoop)}
                   </ToggleButtonGroup>
 
                   {/* Category Section */}
@@ -1305,7 +1345,7 @@ function TermView() {
                           sx={{
                             height: "1em",
                             width: "1em",
-                            bgcolor: "#7C4DFF",
+                            bgcolor: ge_pass,
                             borderRadius: "100%",
                             mr: "0.3em",
                           }}
@@ -1346,7 +1386,7 @@ function TermView() {
                           sx={{
                             height: "1em",
                             width: "1em",
-                            bgcolor: "#FF7D0F",
+                            bgcolor: majorCore_pass,
                             borderRadius: "100%",
                             mr: "0.3em",
                           }}
@@ -1386,7 +1426,7 @@ function TermView() {
                           sx={{
                             height: "1em",
                             width: "1em",
-                            bgcolor: "#1976D2",
+                            bgcolor: free_pass,
                             borderRadius: "100%",
                             mr: "0.3em",
                           }}
@@ -1466,10 +1506,11 @@ function TermView() {
                       variant="outlined"
                       sx={{ color: "#000000", borderColor: "#000000" }}
                       onClick={() => {
-                        setFilterGE(false);
-                        setFilterSp(false);
-                        setFilterFree(false);
+                        setFilterGE(true);
+                        setFilterSp(true);
+                        setFilterFree(true);
                         setCheckedDone(false);
+                        setCheckedPreFilter(false);
                         setFormats("normal");
                         setisCoop("false");
                       }}
@@ -1488,32 +1529,24 @@ function TermView() {
                           nds.map((node) => {
                             // let value:any = Object.values(node.data);
                             let value: any = node.data;
-                            if (filterGE && value.category === "gen") {
-                              if (!value.is_pass && checkedDone === true) {
-                                node.hidden = true;
-                              } else {
-                                node.hidden = false;
-                              }
-                            } else if (filterSp && value.category === "sp") {
-                              if (!value.is_pass && checkedDone) {
-                                node.hidden = true;
-                              } else {
-                                node.hidden = false;
-                              }
+                            if (!filterGE && value.category === "gen") {
+                              node.hidden = true;
                             } else if (
-                              filterFree &&
+                              !filterSp &&
+                              value.category.includes("sp")
+                            ) {
+                              node.hidden = true;
+                            } else if (
+                              !filterFree &&
                               value.category === "free"
                             ) {
-                              if (!value.is_pass && checkedDone) {
-                                node.hidden = true;
-                              } else {
-                                node.hidden = false;
-                              }
-                            } else if (!filterFree || !filterSp || !filterGE) {
                               node.hidden = true;
                             }
+                            // else if (filterFree || filterSp || filterGE) {
+                            //   node.hidden = false;
+                            // }
 
-                            if (!filterFree && !filterSp && !filterGE) {
+                            if (filterFree && filterSp && filterGE) {
                               if (!value.is_pass && checkedDone) {
                                 node.hidden = true;
                               } else {
