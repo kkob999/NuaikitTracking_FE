@@ -428,12 +428,12 @@ export function MajorEModal(
                         [theme.breakpoints.between("sm", "md")]: {
                           height: "36px",
                           width: "9.466vw",
-                          bgcolor: "lavender",
+                          // bgcolor: "lavender",
                         },
                         [theme.breakpoints.only("md")]: {
                           height: "40px", //44-16
                           width: "6.966vw", //+0.32
-                          bgcolor: "pink",
+                          // bgcolor: "pink",
                         },
                       }}
                     >
@@ -613,12 +613,12 @@ export function GEModal(
                         [theme.breakpoints.between("sm", "md")]: {
                           height: "36px",
                           width: "9.466vw",
-                          bgcolor: "lavender",
+                          // bgcolor: "lavender",
                         },
                         [theme.breakpoints.only("md")]: {
                           height: "40px", //44-16
                           width: "6.966vw", //+0.32
-                          bgcolor: "pink",
+                          // bgcolor: "pink",
                         },
                       }}
                     >
