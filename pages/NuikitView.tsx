@@ -150,7 +150,7 @@ function NuikitView() {
 
   const [warning, setWarning] = useState(true);
 
-  const [screen, setScreen] = useState(1440)
+  const [screen, setScreen] = useState(1440);
 
   var tmp_major_reqCredit = 0;
   var tmp_major_reqCreditNeed = 0;
@@ -174,6 +174,8 @@ function NuikitView() {
   var [majorModalNode, setMajorModalNode] = useState<any>(null);
   var [notLearnGEArr, setnotLearnGE] = useState<any>(null);
   var [modalTopic, setModalTopic] = useState("");
+
+  const [year, setYear] = useState("2563")
   var tempArr: any = [];
 
   var studentId = "";
@@ -648,6 +650,7 @@ function NuikitView() {
                 onClick={async () => {
                   setDetail(await FetchCourse(node.courseNo));
                   setArrNode(genReqNode);
+                  
                   setDetailClicked(true);
                 }}
               >
@@ -668,7 +671,10 @@ function NuikitView() {
             <Stack
               onClick={async () => {
                 setDetail(await FetchCourse(node.courseNo));
+                console.log("gen gen gen")
+                
                 setArrNode(genReqNode);
+                // console.log(arrNode)
                 setDetailClicked(true);
               }}
             >
@@ -1028,6 +1034,9 @@ function NuikitView() {
         .then((response) => {
           if (response.data.ok) {
             studentId = response.data.studentId ?? "No Student Id";
+            console.log("student id "+studentId)
+            var tempYear = "25"+studentId.substring(0,2)
+            setYear(tempYear)
           }
         })
         .catch((error: AxiosError<WhoAmIResponse>) => {
@@ -1047,24 +1056,27 @@ function NuikitView() {
 
     async function fetchStdData() {
       await cmuOauth();
+
       const urlNuikit =
-        "http://localhost:8080/categoryView?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=" +
+        "http://localhost:8080/categoryView?year="+year+"&curriculumProgram=CPE&isCOOP=false&studentId=" +
         studentId;
       // &studentId=630610727
       // &mockData=mockData5
       NuikitData(urlNuikit);
     }
 
-    fetchStdData()
+    fetchStdData();
   }, []);
   // console.log("free credits need" + free_CreditNeed);
   function widthResizer() {
     var width = window.innerWidth;
     // if (window.innerWidth <= 1300) setOpen(false);
     console.log(width);
-    setScreen(width)
+    setScreen(width);
   }
-  useEffect(() => {}, []);
+  useEffect(() => {
+    widthResizer();
+  }, [screen]);
 
   return (
     <Stack
@@ -1143,12 +1155,12 @@ function NuikitView() {
 
           <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
             <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
-              {isCoop  ? displayCoopPlan(screen) : displayNormalPlan()}
-              {checkedDone  && displayDone()}
+              {isCoop ? displayCoopPlan(screen) : displayNormalPlan()}
+              {checkedDone && displayDone()}
               {/* {checkedPreFilter && displayPre()} */}
-              {filterGE  && displayGE(screen)}
-              {filterSp  && displaySp()}
-              {filterFree  && displayFree(screen)}
+              {filterGE && displayGE(screen)}
+              {filterSp && displaySp()}
+              {filterFree && displayFree(screen)}
             </Stack>
             {/* Filter */}
             <Button
@@ -1160,7 +1172,8 @@ function NuikitView() {
               }}
               sx={{
                 width: "8vw",
-                position: "relative",
+                maxHeight: "4vh",
+                position: "relatice",
                 // mr: "1.9vw",
                 textTransform: "none",
                 borderRadius: 5,
@@ -1170,13 +1183,23 @@ function NuikitView() {
                 pb: 0,
                 pr: 1.4,
                 pl: 1.4,
+                justifySelf: 'center',
                 "&:hover": {
                   color: "#EE6457",
                   borderColor: "#EE6457",
                   bgcolor: "white",
                 },
+                [theme.breakpoints.down("lg")]: {
+                  fontSize: "0.86rem",
+                  maxHeight: "3.6vh",
+                },
+                [theme.breakpoints.only("md")]: {
+                  fontSize: "0.68rem",
+                },
                 [theme.breakpoints.between("sm", "md")]: {
+                  fontSize: "0.7rem",
                   width: "10vw",
+                  maxHeight: "4vh",
                 },
               }}
             >
@@ -1424,7 +1447,12 @@ function NuikitView() {
                 >
                   {}
                   <InputBase
-                    sx={{ ml: 1, flex: 1, justifyContent: "center", textAlign: 'center' }}
+                    sx={{
+                      ml: 1,
+                      flex: 1,
+                      justifyContent: "center",
+                      textAlign: "center",
+                    }}
                     placeholder="3"
                     inputProps={{ "aria-label": "checkFree" }}
                     defaultValue={dfValue} //
@@ -1434,9 +1462,16 @@ function NuikitView() {
                   />
                   <Button
                     type="button"
-                    sx={{ p: 1, bgcolor: blue[500], height: '100%','&:hover': {
-                      bgcolor: green[500], color: 'white'
-                   }, }}
+                    sx={{
+                      p: 1,
+                      bgcolor: blue[500],
+                      color: 'white',
+                      height: "100%",
+                      "&:hover": {
+                        bgcolor: green[500],
+                        color: "white",
+                      },
+                    }}
                     aria-label="confirm"
                     onClick={async () => {
                       // console.log(freeNode);
@@ -1453,7 +1488,7 @@ function NuikitView() {
                           n.credit = +text;
 
                           if (Number(text) < dfValue) {
-                            free[index]["credits"] -= dfValue - Number(text) ;
+                            free[index]["credits"] -= dfValue - Number(text);
                           } else if (Number(text) > dfValue) {
                             free[index]["credits"] += Number(text) - dfValue;
                           }
@@ -1485,7 +1520,8 @@ function NuikitView() {
             setDetailClicked,
             detail,
             arrNode,
-            false
+            false,
+            "cat"
           )}
 
         {insideNodeClicked &&
@@ -1494,7 +1530,8 @@ function NuikitView() {
             setInsideNodeClicked,
             detail,
             arrInsideNode,
-            true
+            true,
+            "cat"
           )}
         {filter && (
           <Stack
@@ -1766,8 +1803,8 @@ function NuikitView() {
                       setFilterSp(true);
                       setFilterFree(true);
                       setCheckedDone(false);
-                      if(isCoop === false)setFormats("normal");
-                      
+                      if (isCoop === false) setFormats("normal");
+
                       setisCoop(false);
                     }}
                   >

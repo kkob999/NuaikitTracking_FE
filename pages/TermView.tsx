@@ -576,7 +576,8 @@ function TermView() {
   async function waitData() {
     SetBackdrop(true);
     if (studentId !== undefined || studentId !== "" || studentId !== null) {
-      setStdYear("25"+studentId.substring(0,2))
+      var tempYear = "25"+studentId.substring(0,2)
+      setStdYear(tempYear)
       // console.log(stdYear)
       await processData(stdYear, "" + isCoop);
     }
@@ -1515,7 +1516,8 @@ function TermView() {
               setNodeClicked,
               nodeArr,
               termNode,
-              true
+              true,
+              "term"
             )
           : null}
 
@@ -1525,7 +1527,8 @@ function TermView() {
               setInsideNodeClicked,
               insideNodeArr,
               termNode,
-              false
+              false,
+              "term"
             )
           : null}
 

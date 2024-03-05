@@ -55,7 +55,7 @@ export const displayGE = (screenWidth : number) => {
           maxHeight: "3.4vh",
         },
         [theme.breakpoints.between("sm", "md")]: {
-          maxHeight: "4vh",
+          maxHeight: "3vh",
         },
       }}
     >
@@ -121,7 +121,7 @@ export const displaySp = () => {
           maxHeight: "3.4vh",
         },
         [theme.breakpoints.between("sm", "md")]: {
-          maxHeight: "4vh",
+          maxHeight: "3vh",
         },
       }}
     >
@@ -170,7 +170,7 @@ export const displayFree = (screenWidth : number) => {
           maxHeight: "3.4vh",
         },
         [theme.breakpoints.between("sm", "md")]: {
-          maxHeight: "4vh",
+          maxHeight: "3vh",
         },
       }}
     >
@@ -237,7 +237,7 @@ export const displayNormalPlan = () => {
           maxHeight: "3.4vh",
         },
         [theme.breakpoints.between("sm", "md")]: {
-          maxHeight: "4vh",
+          maxHeight: "3vh",
         },
       }}
     >
@@ -277,7 +277,7 @@ export const displayCoopPlan = (screenWidth : number) => {
           maxHeight: "3.4vh",
         },
         [theme.breakpoints.between("sm", "md")]: {
-          maxHeight: "4vh",
+          maxHeight: "3vh",
         },
       }}
     >
@@ -353,7 +353,7 @@ export const displayDone = () => {
           maxHeight: "3.4vh",
         },
         [theme.breakpoints.between("sm", "md")]: {
-          maxHeight: "4vh",
+          maxHeight: "3vh",
         },
       }}
     >
@@ -393,7 +393,7 @@ export const displayPre = () => {
           maxHeight: "3.4vh",
         },
         [theme.breakpoints.between("sm", "md")]: {
-          maxHeight: "4vh",
+          maxHeight: "3vh",
         },
       }}
     >

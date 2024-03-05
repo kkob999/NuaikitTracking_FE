@@ -380,7 +380,7 @@ function DashBoard() {
   async function fetchStdData() {
     await cmuOauth()
     var url =
-    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId="+"630610725";
+    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId="+stdId;
   DatchBoardData(url);
   }
   React.useEffect(() => {
@@ -652,7 +652,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
-                            color: "#FF7D0F",
+                            color: ge_pass,
                           }}
                           size={90}
                           variant="determinate"
@@ -716,7 +716,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
-                            color: "#FB5C95",
+                            color: majorCore_pass,
                           }}
                           size={90}
                           variant="determinate"
@@ -786,7 +786,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
-                            color: "#3366FF",
+                            color: major_pass,
                           }}
                           size={90}
                           variant="determinate"
@@ -854,7 +854,7 @@ function DashBoard() {
                             [`& .${circularProgressClasses.circle}`]: {
                               strokeLinecap: "round",
                             },
-                            color: "#46CD89",
+                            color: free_pass,
                           }}
                           size={90}
                           variant="determinate"
