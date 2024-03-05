@@ -398,6 +398,7 @@ function TermView() {
   }
 
   const onNodeClick = async (event: React.MouseEvent, node: any) => {
+    console.log('check pre ' + checkedPre)
     if (checkedPre) {
       if (arrTogglePrereq.length !== 0) {
         let PreReqArr = arrTogglePrereq.map((arr: string[]) => {
@@ -574,17 +575,53 @@ function TermView() {
   }
 
   async function waitData() {
+    await axios
+      .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
+      .then((response) => {
+        if (response.data.ok) {
+          setFullName(response.data.firstName + " " + response.data.lastName);
+          setF_name(response.data.firstName);
+          setL_name(response.data.lastName);
+          // setCmuAccount(response.data.cmuAccount);
+          setStudentId(response.data.studentId ?? "No Student Id");
+          
+        }
+      })
+      .catch((error: AxiosError<WhoAmIResponse>) => {
+        if (!error.response) {
+          setErrorMessage(
+            "Cannot connect to the network. Please try again later."
+          );
+        } else if (error.response.status === 401) {
+          setErrorMessage("Authentication failed");
+        } else if (error.response.data.ok === false) {
+          setErrorMessage(error.response.data.message);
+        } else {
+          setErrorMessage("Unknown error occurred. Please try again later");
+        }
+      });
     SetBackdrop(true);
     if (studentId !== undefined || studentId !== "" || studentId !== null) {
-      var tempYear = "25"+studentId.substring(0,2)
-      setStdYear(tempYear)
-      // console.log(stdYear)
-      await processData(stdYear, "" + isCoop);
+      var tempYear = "25" + studentId.substring(0, 2);
+      setStdYear(tempYear);
+      var tempStdId = studentId
+      console.log(stdYear)
+      console.log(tempStdId)
+      if (typeof tempStdId !== 'undefined') {
+        await processData(stdYear, "" + isCoop, studentId);
+      }
+      
     }
 
     SetBackdrop(false);
     setNodes(termNode);
+    
+    // edArr.map((e:any)=>{
+    //   e["hidden"] = false
+    // })
+
     setEdges(edArr);
+
     setCredits(creditArr);
     setStartSubj(startNode);
     setTerm(fetchData["study term"]);
@@ -637,31 +674,7 @@ function TermView() {
     setEdges([]);
     setDFValue(3);
 
-    axios
-      .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
-      .then((response) => {
-        if (response.data.ok) {
-          setFullName(response.data.firstName + " " + response.data.lastName);
-          setF_name(response.data.firstName);
-          setL_name(response.data.lastName);
-          // setCmuAccount(response.data.cmuAccount);
-          setStudentId(response.data.studentId ?? "No Student Id");
-        }
-      })
-      .catch((error: AxiosError<WhoAmIResponse>) => {
-        if (!error.response) {
-          setErrorMessage(
-            "Cannot connect to the network. Please try again later."
-          );
-        } else if (error.response.status === 401) {
-          setErrorMessage("Authentication failed");
-        } else if (error.response.data.ok === false) {
-          setErrorMessage(error.response.data.message);
-        } else {
-          setErrorMessage("Unknown error occurred. Please try again later");
-        }
-      });
-
+    
     await waitData();
 
     if (filterGE) {
@@ -695,10 +708,10 @@ function TermView() {
       });
     }
 
-    if (!checkedPreFilter) {
+    if (checkedPreFilter) {
       edArr.map((nd) => {
         // console.log(nd.source)
-        if (showPre.has(nd.source)) nd.hidden = true;
+        if (showPre.has(nd.source)) nd.hidden = false;
         return nd;
       });
     }
@@ -1059,14 +1072,18 @@ function TermView() {
                     }}
                   >
                     {open === true ? (
-                      <AccountTreeIcon sx={{ opacity: 1, color: 'white' }} />
+                      <AccountTreeIcon sx={{ opacity: 1, color: "white" }} />
                     ) : (
-                      <AccountTreeIcon sx={{ color: 'white' }} />
+                      <AccountTreeIcon sx={{ color: "white" }} />
                     )}
                   </ListItemIcon>
                   <ListItemText
                     primary={"Term View"}
-                    sx={{ opacity: open ? 1 : 0, color: "white",ml: open ? 3 : 0, }}
+                    sx={{
+                      opacity: open ? 1 : 0,
+                      color: "white",
+                      ml: open ? 3 : 0,
+                    }}
                   />
                 </ListItemButton>
               </ListItem>
@@ -1440,7 +1457,12 @@ function TermView() {
                   }}
                 >
                   <InputBase
-                    sx={{ ml: 1, flex: 1, justifyContent: "center", textAlign: 'center' }}
+                    sx={{
+                      ml: 1,
+                      flex: 1,
+                      justifyContent: "center",
+                      textAlign: "center",
+                    }}
                     placeholder="3"
                     inputProps={{ "aria-label": "checkFree" }}
                     defaultValue={dfValue} //
@@ -1450,9 +1472,15 @@ function TermView() {
                   />
                   <Button
                     type="button"
-                    sx={{ p: 1, bgcolor: blue[500], height: '100%','&:hover': {
-                      bgcolor: green[500], color: 'white'
-                   }, }}
+                    sx={{
+                      p: 1,
+                      bgcolor: blue[500],
+                      height: "100%",
+                      "&:hover": {
+                        bgcolor: green[500],
+                        color: "white",
+                      },
+                    }}
                     aria-label="confirm"
                     onClick={async () => {
                       var tempArr: any = [];
@@ -1488,7 +1516,7 @@ function TermView() {
                               console.log(index);
                               console.log(credits[index]);
                               if (Number(text) < dfValue) {
-                                credits[index] -= dfValue - Number(text) ;
+                                credits[index] -= dfValue - Number(text);
                               } else if (Number(text) > dfValue) {
                                 credits[index] += Number(text) - dfValue;
                               }
@@ -1502,7 +1530,6 @@ function TermView() {
                   </Button>
                 </Paper>
                 {/* </Stack> */}
-                
               </Stack>
             </Stack>
           </Stack>

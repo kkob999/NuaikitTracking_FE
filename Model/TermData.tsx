@@ -645,7 +645,7 @@ var stdId = "";
 
 // var
 
-async function processData(year: string, isCoop: string) {
+async function processData(year: string, isCoop: string, stdId :string) {
   termNode = [];
   edArr = [];
   creditArr = [];
@@ -657,6 +657,7 @@ async function processData(year: string, isCoop: string) {
   labIndex = [];
 
   summerArr = [];
+  // console.log(edArr)
 
   await axios
     .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
@@ -668,7 +669,8 @@ async function processData(year: string, isCoop: string) {
         // setCmuAccount(response.data.cmuAccount);
         // setStudentId(response.data.studentId ?? "No Student Id");
         stdId = response.data.studentId ?? "No Student Id";
-        console.log("who am i");
+        year = "25"+response.data.studentId?.substring(0,2)
+        // console.log("who am i");
       }
     })
     .catch((error: AxiosError<WhoAmIResponse>) => {
@@ -677,19 +679,23 @@ async function processData(year: string, isCoop: string) {
 
   var termURL =
     "http://localhost:8080/termView?year=" +
-    "2563" +
+    year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop + 
-    "&studentId=630610725";
+    "&studentId="+stdId;
+
+    console.log(termURL)
     // "630610723";
   var nuikitURL =
     "http://localhost:8080/categoryView?year=" +
-    "2563" +
+    year +
     "&curriculumProgram=CPE&isCOOP=" +
     isCoop + 
-    // "&studentId=" + 
+    "&studentId="+stdId;
+
+    console.log(nuikitURL)
     // "63061072";
-    "&studentId=630610725";
+    // "&studentId=630610725";
     
 
   // &mockData=mockData5
@@ -854,7 +860,7 @@ async function processData(year: string, isCoop: string) {
           type: "custom-edge",
 
           data: { sp: false, edPos: {} },
-          hidden: true,
+          hidden: false,
         });
         showPre.add("" + subData[index].prerequisites);
         showPre.add("" + subData[index].courseNo);
@@ -873,7 +879,7 @@ async function processData(year: string, isCoop: string) {
           // },
           // sourceHandle: "a",
           data: { sp: false, edPos: {} },
-          hidden: true,
+          hidden: false,
         });
         edArr.push({
           id: "" + (index + 1) + "_2",
@@ -882,7 +888,7 @@ async function processData(year: string, isCoop: string) {
           type: "custom-edge",
           targetHandle: "b",
           data: { sp: false, edPos: {} },
-          hidden: true,
+          hidden: false,
         });
         have2pre.push({
           node: subData[index].courseNo,
@@ -905,6 +911,8 @@ async function processData(year: string, isCoop: string) {
       showPre.add("" + subData[index].corequisite);
     }
   }
+  console.log('bf ed')
+  console.log(edArr)
 
   // console.log("this is test mobile width. Now width is " + window.innerWidth);
 
@@ -1336,7 +1344,7 @@ async function processData(year: string, isCoop: string) {
         sourceHandle: "b",
 
         data: { sp: false, edPos: {} },
-        hidden: true,
+        hidden: false,
       });
     } else {
       // console.log(termNode[labIndex[i]])
@@ -1426,6 +1434,7 @@ async function processData(year: string, isCoop: string) {
   arrTogglePrereq = newPreReq;
 
   // console.log(termNode);
+  console.log(edArr)
   // console.log(creditArr)
 
   // termNode.push({

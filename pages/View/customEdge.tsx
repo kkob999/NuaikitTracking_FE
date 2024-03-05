@@ -31,6 +31,8 @@ export const getSpecialPath = (
     }
     
     let x = (window.innerWidth * 96) / 1440
+
+    if(window.innerWidth < 1299) x = (window.innerWidth * 120) / 1440
     
     if( typeof(data.edPos) == 'number') {
       // if (sourceX - x < 20 ) {
