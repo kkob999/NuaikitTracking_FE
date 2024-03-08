@@ -1,6 +1,17 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Paper, Popover, Stack, Typography } from "@mui/material";
 import { theme } from "../../../constants/theme";
-import { free_notpass, free_pass, ge_notpass, ge_pass, majorCore_notpass, majorCore_pass, major_notpass, major_pass,} from "../../../constants/color";
+import {
+  free_notpass,
+  free_pass,
+  ge_notpass,
+  ge_pass,
+  majorCore_notpass,
+  majorCore_pass,
+  major_notpass,
+  major_pass,
+} from "../../../constants/color";
+import { useState } from "react";
+import { amber, blue, grey } from "@mui/material/colors";
 // import { nodes } from "../../Model/InitialNode";
 // import {nodes}
 // import "./node.css";
@@ -14,6 +25,16 @@ interface node {
 }
 
 function NuikitViewNode(props: node) {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
   const node = props;
   let style = "1px solid ";
   let color = "";
@@ -26,9 +47,7 @@ function NuikitViewNode(props: node) {
       style += ge_notpass;
       color = ge_notpass;
     }
-  } 
-  else if (node.type == "spec_mj") {
-
+  } else if (node.type == "spec_mj") {
     if (node.isPass == true) {
       style += major_pass;
       color = major_pass;
@@ -48,7 +67,6 @@ function NuikitViewNode(props: node) {
     if (node.isPass == true) {
       style += free_pass;
       color = free_pass;
-
     } else {
       style += free_notpass;
       color = free_notpass;
@@ -163,9 +181,16 @@ function NuikitViewNode(props: node) {
       );
     }
   }
+  const open = Boolean(anchorEl);
 
   return (
-    <Stack>
+    <Stack
+      sx={{ cursor: "pointer" }}
+      aria-owns={open ? "mouse-over-popover" : undefined}
+      aria-haspopup="true"
+      onMouseEnter={handlePopoverOpen}
+      onMouseLeave={handlePopoverClose}
+    >
       <Box
         sx={{
           width: "6.146vw",
@@ -184,6 +209,28 @@ function NuikitViewNode(props: node) {
           },
         }}
       >
+        <Popover
+          id="mouse-over-popover"
+          sx={{
+            pointerEvents: "none",
+          }}
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          onClose={handlePopoverClose}
+          disableRestoreFocus
+        >
+          <Paper sx={{ backgroundColor: grey[200], p: 1 }}>
+            <Typography sx={{fontSize: '0.6rem'}}>คลิกเพื่อดูรายละเอียด</Typography>
+          </Paper>
+        </Popover>
         <Stack sx={{ height: "100%", justifyContent: "center" }}>
           <Stack
             sx={{

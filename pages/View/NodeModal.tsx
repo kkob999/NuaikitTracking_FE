@@ -164,61 +164,61 @@ export function DisplayNodeModal(
             }}
           >
             {/* Name */}
-            <Stack direction={"row"} spacing={2} sx={{}}>
-              <Typography>Name : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
+              <Typography fontWeight={800} variant="subtitle1">Name : </Typography>
               <Typography>
                 {courseDetail !== undefined && courseDetail[0]["courseNameEN"]}
               </Typography>
             </Stack>
             {/* ชื่อ */}
-            <Stack direction={"row"} spacing={2} sx={{}}>
-              <Typography>ชื่อ : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
+              <Typography fontWeight={800} variant="subtitle1">ชื่อ : </Typography>
               <Typography>
                 {courseDetail !== undefined && courseDetail[0]["courseNameTH"]}
               </Typography>
             </Stack>
             {/* CourseId */}
-            <Stack direction={"row"} spacing={2} sx={{}}>
-              <Typography>Course ID / รหัสกระบวนวิชา : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
+              <Typography fontWeight={800} variant="subtitle1">Course ID / รหัสกระบวนวิชา : </Typography>
               <Typography>
                 {courseDetail !== undefined && courseDetail[0]["courseNo"]}
               </Typography>
             </Stack>
             {/* Credit */}
-            <Stack direction={"row"} spacing={2} sx={{}}>
-              <Typography>Credit / หน่วยกิต : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
+              <Typography fontWeight={800} variant="subtitle1">Credit / หน่วยกิต : </Typography>
               <Typography>
                 {courseDetail !== undefined &&
                   courseDetail[0]["credits"]["credits"]}
               </Typography>
             </Stack>
             {/* Prerequisite */}
-            <Stack direction={"row"} spacing={2} sx={{}}>
-              <Typography>
+            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
+              <Typography fontWeight={800} variant="subtitle1">
                 Prerequisite / เงื่อนไขที่ต้องผ่านก่อนเรียน :{" "}
               </Typography>
               <Typography>{courseDetail !== undefined && pre}</Typography>
             </Stack>
             {/* Enforce since */}
-            <Stack direction={"row"} spacing={2} sx={{}}>
-              <Typography>Enforce since : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
+              <Typography fontWeight={800} variant="subtitle1">Enforce since : </Typography>
               <Typography>{courseDetail !== undefined && enForceEN}</Typography>
             </Stack>
             {/* มีผลบังคับใช้ */}
-            <Stack direction={"row"} spacing={2} sx={{}}>
-              <Typography>มีผลบังคับใช้ : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
+              <Typography fontWeight={800} variant="subtitle1">มีผลบังคับใช้ : </Typography>
               <Typography>{courseDetail !== undefined && enForceTH}</Typography>
             </Stack>
             {/* Description */}
             <Stack sx={{}}>
-              <Typography>Description : </Typography>
+              <Typography fontWeight={800} variant="subtitle1">Description : </Typography>
               <Typography sx={{ fontSize: "0.9rem" }}>
                 {courseDetail !== undefined && courseDetail[0]["detailEN"]}
               </Typography>
             </Stack>
             {/* คำอธิบายลักษณะกระบวนวิชา */}
             <Stack sx={{}}>
-              <Typography>คำอธิบายลักษณะกระบวนวิชา : </Typography>
+              <Typography fontWeight={800} variant="subtitle1">คำอธิบายลักษณะกระบวนวิชา : </Typography>
               <Typography sx={{ fontSize: "0.9rem" }}>
                 {courseDetail !== undefined && courseDetail[0]["detailTH"]}
               </Typography>
@@ -841,8 +841,9 @@ export function warningModal(setOpen: Function) {
           <Typography>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;เนื่องจากในขณะนี้ข้อมูลของหน่วยกิต
             หรือ credits ของวิชา Free Elective อาจมีความไม่ถูกต้อง
-            โปรดตรวจสอบความถูกต้องของข้อมูลหน่วยกิตก่อนทำการตัดสินใจวางแผนการเรียนในเทอมต่อไป
-            ท่านสามารถแก้ไขข้อมูลของหน่วยกิตเองได้ ด้วยกดกล่องที่วิชา Free
+            โปรดตรวจสอบความถูกต้องของข้อมูลหน่วยกิตก่อนทำการตัดสินใจวางแผนการเรียนในเทอมต่อไป 
+            โดยค่าเริ่มต้นเครดิตของทุกๆวิชา Free Elective จะมีค่าเป็น 3 credits
+            โดยท่านสามารถแก้ไขข้อมูลของหน่วยกิตเองได้ในหน้า Category View และ Term View ด้วยการกดที่กล่องวิชา Free
             Elective เพื่อทำการแก้ไขข้อมูล
             หลังจากกดยืนยันระบบจะทำการคำนวณจำนวนหน่วยกิตรวมให้ใหม่
           </Typography>

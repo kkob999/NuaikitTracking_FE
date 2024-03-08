@@ -645,7 +645,7 @@ var stdId = "";
 
 // var
 
-async function processData(year: string, isCoop: string, stdId :string) {
+async function processData(year: string, isCoop: string, stdId: string) {
   termNode = [];
   edArr = [];
   creditArr = [];
@@ -669,7 +669,7 @@ async function processData(year: string, isCoop: string, stdId :string) {
         // setCmuAccount(response.data.cmuAccount);
         // setStudentId(response.data.studentId ?? "No Student Id");
         stdId = response.data.studentId ?? "No Student Id";
-        year = "25"+response.data.studentId?.substring(0,2)
+        year = "25" + response.data.studentId?.substring(0, 2);
         // console.log("who am i");
       }
     })
@@ -681,22 +681,25 @@ async function processData(year: string, isCoop: string, stdId :string) {
     "http://localhost:8080/termView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
-    isCoop + 
-    "&studentId="+stdId;
+    // isCoop +
+    // "&studentId="+stdId;
+    "true&mockData=mockData13";
+  // "&studentId=630610760";
 
-    console.log(termURL)
-    // "630610723";
+  console.log(termURL);
+  // "630610723";
   var nuikitURL =
     "http://localhost:8080/categoryView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
-    isCoop + 
-    "&studentId="+stdId;
+    // isCoop +
+    // "&studentId="+stdId;
+    "true&mockData=mockData13";
+  // "&studentId=630610760";
 
-    console.log(nuikitURL)
-    // "63061072";
-    // "&studentId=630610725";
-    
+  console.log(nuikitURL);
+  // "63061072";
+  // "&studentId=630610725";
 
   // &mockData=mockData5
   // &studentId=630610727
@@ -732,19 +735,14 @@ async function processData(year: string, isCoop: string, stdId :string) {
   var gen: any = [];
   var genCredit: any = [];
 
-  // console.log(fetchData);
+  console.log(fetchData);
 
   var stdTerm = fetchData["study term"];
-
-  // console.log(stdTerm)
-  // console.log(fetchData["template"].length)
 
   allTerm = fetchData["template"].length;
 
   totalSubColumn = fetchData["template"][0].length;
 
-  // console.log('total subject column ' + totalSubColumn)
-  // console.log("is coop plan " + fetchData["isCoop"])
   isCoop_api = fetchData["isCoop"];
 
   for (let i = 0; i < fetchData["study term"].length; i++) {
@@ -767,8 +765,6 @@ async function processData(year: string, isCoop: string, stdId :string) {
     countTwo++;
   }
 
-  // console.log("term arr " + summerArr);
-
   //gen
   for (let i = 0; i < categoryData["geCategory"].length; i++) {
     if (categoryData["geCategory"][i]["requiredCreditsNeed"] > 0) {
@@ -778,9 +774,10 @@ async function processData(year: string, isCoop: string, stdId :string) {
       gen = gen.concat(categoryData["geCategory"][i]["electiveCourseList"]);
     }
   }
-
-  // console.log("console log gen")
-  // console.log(gen)
+  console.log("cat data");
+  console.log(categoryData);
+  console.log("console log gen");
+  console.log(gen);
 
   //major
   for (let i = 0; i < categoryData["majorCategory"].length; i++) {
@@ -911,8 +908,6 @@ async function processData(year: string, isCoop: string, stdId :string) {
       showPre.add("" + subData[index].corequisite);
     }
   }
-  console.log('bf ed')
-  console.log(edArr)
 
   // console.log("this is test mobile width. Now width is " + window.innerWidth);
 
@@ -991,10 +986,12 @@ async function processData(year: string, isCoop: string, stdId :string) {
         }
       }
 
-      if(summerArr[0] === 0 && summerArr[2]=== 0 && i === 2) xpos += (window.innerWidth * xx) / 1440;
-      if(summerArr[6] === 0 && summerArr[7]=== 0 && i === 7) xpos += (window.innerWidth * xx) / 1440;
+      if (summerArr[0] === 0 && summerArr[2] === 0 && i === 2)
+        xpos += (window.innerWidth * xx) / 1440;
+      if (summerArr[6] === 0 && summerArr[7] === 0 && i === 7)
+        xpos += (window.innerWidth * xx) / 1440;
 
-      if (i === 3 && summerArr[i - 1] === 2  ) {
+      if (i === 3 && summerArr[i - 1] === 2) {
         xpos += (window.innerWidth * x_sum) / 1440;
       }
 
@@ -1025,7 +1022,7 @@ async function processData(year: string, isCoop: string, stdId :string) {
           summerArr[i - 2] === 0 &&
           i < summerArr.length - 3
         ) {
-          console.log('xx ' + i)
+          console.log("xx " + i);
           console.log(summerArr.length);
           xpos += (window.innerWidth * xx) / 1440;
         }
@@ -1033,11 +1030,10 @@ async function processData(year: string, isCoop: string, stdId :string) {
 
       //last term
       if (i === summerArr.length - 2) {
-        console.log('last term ' + i)
+        console.log("last term " + i);
         if (!isSumYear1) xpos += (window.innerWidth * xx) / 1440;
-        else if (isSumYear1 && summerArr[7] === 2 && i === 8) xpos += (window.innerWidth * xx) / 1440;
-        
-        
+        else if (isSumYear1 && summerArr[7] === 2 && i === 8)
+          xpos += (window.innerWidth * xx) / 1440;
       }
     }
     //normal term
@@ -1144,6 +1140,7 @@ async function processData(year: string, isCoop: string, stdId :string) {
               )
                 if (
                   free.map((value: any) => {
+                    // console.log(value)
                     if (value["courseNo"] == strsubId) {
                       isPass = value["isPass"];
                       typeNode = "free";
@@ -1280,7 +1277,17 @@ async function processData(year: string, isCoop: string, stdId :string) {
             fetchData["template"].length / 2 >= stdTerm.length &&
             stdTerm.length >= 4
           )
-            isPass = true;
+            if (
+              fetchData["study term"][
+                Math.floor(fetchData["template"].length / 2) - 1
+              ] === 1
+            ) {
+              // console.log(Math.floor(fetchData["template"].length / 2))
+              isPass = false;
+            } else {
+              isPass = true;
+            }
+
           if (stdTerm.length < 4) {
             if (i < stdTerm.length * 2) isPass = true;
           }
@@ -1434,7 +1441,7 @@ async function processData(year: string, isCoop: string, stdId :string) {
   arrTogglePrereq = newPreReq;
 
   // console.log(termNode);
-  console.log(edArr)
+  console.log(edArr);
   // console.log(creditArr)
 
   // termNode.push({

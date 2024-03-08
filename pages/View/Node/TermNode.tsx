@@ -205,6 +205,8 @@ export default function TermNode({
           padding: "1vh 0",
           border: "1.5px solid" + color,
           borderRadius: "0.5rem",
+          cursor: 'pointer',
+          
           [theme.breakpoints.down("lg")]: {
             // height: "30px",
             // bgcolor: 'gainsboro'

@@ -830,7 +830,7 @@ function TermView() {
       {/* Navbar */}
       {errorMessage === "" && (
         <Stack sx={{ bgcolor: "#FDF5F4" }}>
-          <Drawer variant="permanent" open={open}>
+          <Drawer variant="permanent" PaperProps={{sx:{bgcolor: "#FDF5F4"}}} open={open} >
             <DrawerHeader sx={{}}>
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
@@ -1003,7 +1003,7 @@ function TermView() {
                   </ListItemIcon>
                   <ListItemText
                     primary={"View Board"}
-                    sx={{ opacity: open ? 1 : 0 }}
+                    sx={{ opacity: open ? 1 : 0, color: 'gray' }}
                   />
                 </ListItem>
               ) : // </ListItem>
@@ -1102,8 +1102,9 @@ function TermView() {
                       mr: "auto",
                     }}
                   >
-                    {f_name === undefined ? null : f_name[0]}
-                    {l_name === undefined ? null : l_name[0]}
+                    {/* {f_name === undefined ? null : f_name[0]}
+                    {l_name === undefined ? null : l_name[0]} */}
+                    M
                   </Avatar>
 
                   <IconButton
@@ -1147,7 +1148,8 @@ function TermView() {
                           fontSize: "1rem",
                         }}
                       >
-                        {studentId === undefined ? null : studentId}
+                        {/* {studentId === undefined ? null : studentId} */}
+                        Mock Data 13
                       </Typography>
                       <Stack direction={"row"} spacing={1}>
                         <Typography
@@ -1174,8 +1176,9 @@ function TermView() {
                     </Stack>
                     {/* Avatar */}
                     <Avatar sx={{ width: 44, height: 44 }}>
-                      {f_name === undefined ? null : f_name[0]}
-                      {l_name === undefined ? null : l_name[0]}
+                      {/* {f_name === undefined ? null : f_name[0]}
+                      {l_name === undefined ? null : l_name[0]} */}
+                      M
                     </Avatar>
                   </Stack>
                   <Button
@@ -1587,6 +1590,7 @@ function TermView() {
             sx={{
               mt: "2vh",
               justifyContent: "space-between",
+              
               // maxWidth: "98%",
               // border: '1px solid black'
             }}
@@ -1605,7 +1609,7 @@ function TermView() {
                 {/* {isCoop === false && displayNormalPlan()}
                 {isCoop === true && displayCoopPlan()} */}
                 {isCoop === "true"
-                  ? displayCoopPlan(screen)
+                  ? displayCoopPlan()
                   : displayNormalPlan()}
                 {checkedDone && displayDone()}
                 {checkedPreFilter && displayPre()}
@@ -1618,6 +1622,7 @@ function TermView() {
               <Button
                 sx={{
                   bgcolor: "white",
+                  boxShadow: 1,
                   pt: 0.5,
                   pb: 0.5,
                   pr: 1.4,
@@ -1652,12 +1657,13 @@ function TermView() {
                   sx={{
                     fontSize: "0.8rem",
                     color: checkedPre ? "#EE6457" : "#9B9B9B",
+                    
                     [theme.breakpoints.only("md")]: {
                       fontSize: "0.68rem",
                     },
                   }}
                 >
-                  See Prerequisite Course
+                  Select Prerequisite Course
                 </Typography>
               </Button>
 
@@ -1671,6 +1677,7 @@ function TermView() {
                 }}
                 sx={{
                   width: "8vw",
+                  boxShadow: 1,
                   maxHeight: "4vh",
                   position: "relatice",
                   // mr: "1.9vw",
@@ -2096,9 +2103,10 @@ function TermView() {
             preventScrolling={false}
             onNodeClick={onNodeClick}
             // fitView
-            // style={{backgroundColor: 'darksalmon'}}
+            
+            
           >
-            <Stack sx={{ paddingBottom: "4vh" }}>
+            <Stack sx={{ paddingBottom: "4vh",  }}>
               <Stack
                 sx={{
                   marginTop: "1vh",

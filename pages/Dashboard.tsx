@@ -333,67 +333,70 @@ function DashBoard() {
   //   DatchBoardData();
   // });
 
-  
-
   const bp = useMediaQuery(theme.breakpoints.down("lg"));
 
   // var url =
   //   "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610768";
 
-  var stdId = ""
-  async function cmuOauth(){
+  var stdId = "";
+  async function cmuOauth() {
     await axios
-    .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
-    .then((response) => {
-      if (response.data.ok) {
-        setFullName(response.data.firstName + " " + response.data.lastName);
-        setCmuAccount(response.data.cmuAccount);
-        setStudentId(response.data.studentId ?? "No Student Id");
-        stdId = response.data.studentId ?? "No Student Id"
-        console.log(studentId);
-        console.log("orgCode");
-        console.log(response.data.orgCode);
-        console.log(response.data.orgNameEN);
-      }
-    })
-    .catch((error: AxiosError<WhoAmIResponse>) => {
-      if (!error.response) {
-        setErrorMessage(
-          "Cannot connect to the network. Please try again later."
-        );
-      } else if (error.response.status === 401) {
-        setErrorMessage("Authentication failed");
-      } else if (error.response.data.ok === false) {
-        setErrorMessage(error.response.data.message);
-      } else {
-        setErrorMessage("Unknown error occurred. Please try again later");
-      }
-    });
+      .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
+      .then((response) => {
+        if (response.data.ok) {
+          setFullName(response.data.firstName + " " + response.data.lastName);
+          setCmuAccount(response.data.cmuAccount);
+          setStudentId(response.data.studentId ?? "No Student Id");
+          stdId = response.data.studentId ?? "No Student Id";
+          console.log(studentId);
+          console.log("orgCode");
+          console.log(response.data.orgCode);
+          console.log(response.data.orgNameEN);
+        }
+      })
+      .catch((error: AxiosError<WhoAmIResponse>) => {
+        if (!error.response) {
+          setErrorMessage(
+            "Cannot connect to the network. Please try again later."
+          );
+        } else if (error.response.status === 401) {
+          setErrorMessage("Authentication failed");
+        } else if (error.response.data.ok === false) {
+          setErrorMessage(error.response.data.message);
+        } else {
+          setErrorMessage("Unknown error occurred. Please try again later");
+        }
+      });
   }
-  // useEffect(() => {
-    
-    
-
-  //   fetchStdData();
-  // }, []);
 
   async function fetchStdData() {
-    await cmuOauth()
+    await cmuOauth();
     var url =
-    "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId="+stdId;
-  DatchBoardData(url);
+      "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=true"+
+      // +"&studentId=" + stdId;
+      "&mockData=mockData13"
+      // "630610727"
+    console.log(url);
+    DatchBoardData(url);
   }
   React.useEffect(() => {
-    fetchStdData()
+    fetchStdData();
   });
 
   React.useEffect(() => {
-    setGEPercent(
-      Math.floor(
-        ((gen_reqCredit + gen_elecCreditCal) * 100) /
-          (gen_reqCreditNeed + gen_elecCreditNeed)
-      )
-    );
+
+    if ((gen_reqCredit + gen_elecCredit) > (gen_reqCreditNeed + gen_elecCreditNeed)) {
+      setGEPercent(100)
+    }else{
+      setGEPercent(
+        Math.floor(
+          ((gen_reqCredit + gen_elecCredit) * 100) /
+            (gen_reqCreditNeed + gen_elecCreditNeed)
+        )
+      );
+    }
+
+    
 
     setCorePercent(Math.floor((core_Credit * 100) / core_CreditNeed));
 
@@ -405,7 +408,21 @@ function DashBoard() {
     );
 
     setFreePercent(Math.floor((free_CreditCal * 100) / free_CreditNeed));
-    setClock(Math.floor((allgetCreditCal * 100) / allneedCredit));
+    setAllGetCreditCal(
+      core_Credit +
+        +gen_reqCredit +
+        gen_elecCreditCal +
+        free_CreditCal +
+        major_elecCreditCal +
+        major_reqCredit
+    );
+
+    if (allgetCredit > allneedCredit ) {
+      setClock(100)
+    }else{
+      setClock(Math.floor((allgetCredit * 100) / allneedCredit));
+    }
+    
   }, [
     gen_reqCredit,
     gen_elecCreditCal,
@@ -509,9 +526,7 @@ function DashBoard() {
           {/* Total Nuikit */}
           <Stack width={{ xs: "100%", sm: "100%", lg: "100%" }}>
             <Stack direction={"row"} sx={{ alignItems: "center" }}>
-              <Typography variant="h6" marginBottom={"4px"}>
-                Total Nuaikit
-              </Typography>
+              <Typography variant="h6">Total Nuaikit</Typography>
               {warningIcon(setWarning)}
             </Stack>
 
@@ -644,7 +659,7 @@ function DashBoard() {
                             style={{ color: "#f5f5f5" }}
                             size={90}
                             variant="determinate"
-                            value={90}
+                            value={100}
                           />
                         </Box>
                         <CircularProgress
@@ -901,7 +916,9 @@ function DashBoard() {
                   height={"24px"}
                 ></Stack>
                 <Stack width={{ xs: "100%", sm: "100%", lg: "100%" }}>
-                  <Typography marginBottom={"4px"}>Profile</Typography>
+                  <Typography variant="h6" marginBottom={"4px"}>
+                    Profile
+                  </Typography>
                   <Stack
                     sx={{
                       padding: "16px",
@@ -975,7 +992,7 @@ function DashBoard() {
             }}
             height={{ lg: "520px" }}
           >
-            <Typography marginBottom={"4px"}>Your Nuaikit</Typography>
+            <Typography variant="h6">Your Nuaikit</Typography>
             {/* frame */}
             <Stack
               sx={{
@@ -1021,12 +1038,21 @@ function DashBoard() {
                       <Typography
                         variant="subtitle1"
                         sx={{
-                          fontSize: "0.9rem",
                           color: "black",
                           opacity: 0.5,
                         }}
                       >
-                        /{gen_reqCreditNeed + gen_elecCreditNeed}
+                        /
+                      </Typography>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          fontSize: "0.8rem",
+                          color: "black",
+                          opacity: 0.5,
+                        }}
+                      >
+                        {gen_reqCreditNeed + gen_elecCreditNeed}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -1086,12 +1112,21 @@ function DashBoard() {
                           <Typography
                             variant="body2"
                             sx={{
+                              color: "black",
+                              opacity: 0.5,
+                            }}
+                          >
+                            /
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{
                               fontSize: "0.8rem",
                               color: "black",
                               opacity: 0.5,
                             }}
                           >
-                            /{gen_reqCreditNeed}
+                            {gen_reqCreditNeed}
                           </Typography>
                         </Stack>
                       </Stack>
@@ -1121,12 +1156,21 @@ function DashBoard() {
                           <Typography
                             variant="body2"
                             sx={{
+                              color: "black",
+                              opacity: 0.5,
+                            }}
+                          >
+                            /
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{
                               fontSize: "0.8rem",
                               color: "black",
                               opacity: 0.5,
                             }}
                           >
-                            /{gen_elecCreditNeed}
+                            {gen_elecCreditNeed}
                           </Typography>
                         </Stack>
                       </Stack>
@@ -1478,7 +1522,7 @@ function DashBoard() {
 
         {bp && (
           <Stack width={"80%"}>
-            <Typography>Profile</Typography>
+            <Typography variant="h6">Profile</Typography>
             <Stack
               sx={{
                 padding: "16px",

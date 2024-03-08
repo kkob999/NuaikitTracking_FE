@@ -36,6 +36,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { WhoAmIResponse } from "../api/whoAmI";
+import { Background } from "reactflow";
 
 function Navbar() {
   const router = useRouter();
@@ -52,7 +53,7 @@ function Navbar() {
   let bg = "";
 
   const url = usePathname();
-  console.log(url);
+  // console.log(url);
 
   // const nevigate = useNavigate();
 
@@ -213,9 +214,9 @@ function Navbar() {
   }, []);
 
   return (
-    <Stack sx={{ bgcolor: "#FDF5F4" }}>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader sx={{}}>
+    <Stack sx={{  }}>
+      <Drawer variant="permanent" open={open} sx={{}} PaperProps={{sx:{bgcolor: "#FDF5F4"}}}>
+        <DrawerHeader >
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
@@ -236,6 +237,7 @@ function Navbar() {
               ml: "auto",
               mr: "auto",
               mb: "1.4vh",
+              
             }}
           >
             <Box sx={{ width: "1.7625rem", height: "1.7625rem" }}>
@@ -326,7 +328,7 @@ function Navbar() {
         )}
 
         <Divider />
-        <List>
+        <List sx={{}}>
           <ListItem
             disablePadding
             sx={{ display: "block" }}
@@ -386,7 +388,7 @@ function Navbar() {
 
         <Divider />
 
-        <List>
+        <List sx={{}}>
           {open == true ? (
             // <ListItem disablePadding sx={{ display: "block" }}>
             <ListItem
@@ -402,13 +404,14 @@ function Navbar() {
                   minWidth: 0,
                   mr: open ? 3 : "auto",
                   justifyContent: "center",
+                  color: 'gray'
                 }}
               >
                 <AssignmentIcon />
               </ListItemIcon>
               <ListItemText
                 primary={"View Board"}
-                sx={{ opacity: open ? 1 : 0 }}
+                sx={{ opacity: open ? 1 : 0,  color: 'gray' }}
               />
             </ListItem>
           ) : // </ListItem>
@@ -529,15 +532,16 @@ function Navbar() {
           </ListItem>
         </List>
 
-        <Stack sx={{ mt: "auto", mb: 6 }}>
+        <Stack sx={{ mt: "auto", mb: 6,}}>
           {!open ? (
-            <Stack sx={{}}>
+            <Stack sx={{bgcolor: "#FDF5F4"}}>
               {/* Avatar */}
               <Avatar
                 sx={{ width: 44, height: 44, mb: 2, ml: "auto", mr: "auto" }}
               >
-                {f_name === undefined ? null : f_name[0]}
-                {l_name === undefined ? null : l_name[0]}
+                {/* {f_name === undefined ? null : f_name[0]}
+                {l_name === undefined ? null : l_name[0]} */}
+                M
               </Avatar>
 
               <IconButton
@@ -581,7 +585,8 @@ function Navbar() {
                       fontSize: "1rem",
                     }}
                   >
-                    {studentId === undefined ? null : studentId}
+                    {/* {studentId === undefined ? null : studentId} */}
+                    Mock Data 13
                   </Typography>
                   <Stack direction={"row"} spacing={1}>
                     <Typography
@@ -608,8 +613,9 @@ function Navbar() {
                 </Stack>
                 {/* Avatar */}
                 <Avatar sx={{ width: 44, height: 44 }}>
-                  {f_name === undefined ? null : f_name[0]}
-                  {l_name === undefined ? null : l_name[0]}
+                  {/* {f_name === undefined ? null : f_name[0]}
+                  {l_name === undefined ? null : l_name[0]} */}
+                  M
                 </Avatar>
               </Stack>
               <Button

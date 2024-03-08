@@ -42,14 +42,17 @@ export const displayGE = (screenWidth : number) => {
     <Stack
       direction={"row"}
       sx={{
-        bgcolor: "white",
+        
+        // bgcolor: "white",
         pt: 0.5,
         pb: 0.5,
         pr: 1.4,
         pl: 1.4,
         alignItems: "center",
         borderRadius: 5,
-        border: "1px solid #EE6457",
+        // border: "1px solid #EE6457",
+        bgcolor: "#FDF5F4",
+        boxShadow: 0.7,
         maxHeight: "4.2vh",
         [theme.breakpoints.down("lg")]: {
           maxHeight: "3.4vh",
@@ -108,14 +111,16 @@ export const displaySp = () => {
     <Stack
       direction={"row"}
       sx={{
-        bgcolor: "white",
+        // bgcolor: "white",
+        bgcolor: "#FDF5F4",
+        boxShadow: 0.7,
         pt: 0.5,
         pb: 0.5,
         pr: 1.4,
         pl: 1.4,
         alignItems: "center",
         borderRadius: 5,
-        border: "1px solid #EE6457",
+        // border: "1px solid #EE6457",
         maxHeight: "4.2vh",
         [theme.breakpoints.down("lg")]: {
           maxHeight: "3.4vh",
@@ -157,14 +162,16 @@ export const displayFree = (screenWidth : number) => {
     <Stack
       direction={"row"}
       sx={{
-        bgcolor: "white",
+        // bgcolor: "white",
+        bgcolor: "#FDF5F4",
+        boxShadow: 0.7,
         pt: 0.5,
         pb: 0.5,
         pr: 1.4,
         pl: 1.4,
         alignItems: "center",
         borderRadius: 5,
-        border: "1px solid #EE6457",
+        // border: "1px solid #EE6457",
         maxHeight: "4.2vh",
         [theme.breakpoints.down("lg")]: {
           maxHeight: "3.4vh",
@@ -224,14 +231,16 @@ export const displayNormalPlan = () => {
     <Stack
       direction={"row"}
       sx={{
-        bgcolor: "white",
+        // bgcolor: "white",
+        bgcolor: "#FDF5F4",
+        boxShadow: 0.7,
         pt: 0.5,
         pb: 0.5,
         pr: 1.4,
         pl: 1.4,
         alignItems: "center",
         borderRadius: 5,
-        border: "1px solid #EE6457",
+        // border: "1px solid #EE6457",
         maxHeight: "4.2vh",
         [theme.breakpoints.down("lg")]: {
           maxHeight: "3.4vh",
@@ -259,19 +268,21 @@ export const displayNormalPlan = () => {
   );
 };
 
-export const displayCoopPlan = (screenWidth : number) => {
+export const displayCoopPlan = () => {
   return (
     <Stack
       direction={"row"}
       sx={{
-        bgcolor: "white",
+        // bgcolor: "white",
+        bgcolor: "#FDF5F4",
+        boxShadow: 0.7,
         pt: 0.5,
         pb: 0.5,
         pr: 1.4,
         pl: 1.4,
         alignItems: "center",
         borderRadius: 5,
-        border: "1px solid #EE6457",
+        // border: "1px solid #EE6457",
         maxHeight: "4.2vh",
         [theme.breakpoints.down("lg")]: {
           maxHeight: "3.4vh",
@@ -281,7 +292,7 @@ export const displayCoopPlan = (screenWidth : number) => {
         },
       }}
     >
-      {screenWidth < 1367 ? (
+      {/* {screenWidth < 1367 ? (
         <Typography
           sx={{
             fontSize: "0.9rem",
@@ -311,7 +322,22 @@ export const displayCoopPlan = (screenWidth : number) => {
         >
           Cooperative Plan
         </Typography>
-      )}
+      )} */}
+
+<Typography
+          sx={{
+            fontSize: "0.9rem",
+            color: "#EE6457",
+            [theme.breakpoints.down("lg")]: {
+              fontSize: "0.86rem",
+            },
+            [theme.breakpoints.between("sm", "md")]: {
+              fontSize: "0.7rem",
+            },
+          }}
+        >
+          Cooperative Plan
+        </Typography>
     </Stack>
   );
 };
@@ -340,14 +366,16 @@ export const displayDone = () => {
     <Stack
       direction={"row"}
       sx={{
-        bgcolor: "white",
+        // bgcolor: "white",
+        bgcolor: "#FDF5F4",
+        boxShadow: 0.7,
         pt: 0.5,
         pb: 0.5,
         pr: 1.4,
         pl: 1.4,
         alignItems: "center",
         borderRadius: 5,
-        border: "1px solid #EE6457",
+        // border: "1px solid #EE6457",
         maxHeight: "4.2vh",
         [theme.breakpoints.down("lg")]: {
           maxHeight: "3.4vh",
@@ -380,14 +408,16 @@ export const displayPre = () => {
     <Stack
       direction={"row"}
       sx={{
-        bgcolor: "white",
+        // bgcolor: "white",
+        bgcolor: "#FDF5F4",
+        boxShadow: 0.7,
         pt: 0.5,
         pb: 0.5,
         pr: 1.4,
         pl: 1.4,
         alignItems: "center",
         borderRadius: 5,
-        border: "1px solid #EE6457",
+        // border: "1px solid #EE6457",
         maxHeight: "4.2vh",
         [theme.breakpoints.down("lg")]: {
           maxHeight: "3.4vh",
