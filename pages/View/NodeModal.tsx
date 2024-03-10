@@ -66,13 +66,9 @@ export function DisplayNodeModal(
         // console.log(n);
         if (n["courseNo"] === courseDetail[0]["courseNo"]) {
           if (n["prerequisites"].length !== 0) {
-            if (n["prerequisites"].length === 1)
-              pre = n["prerequisites"][0];
+            if (n["prerequisites"].length === 1) pre = n["prerequisites"][0];
             else if (n["prerequisites"].length === 2)
-              pre =
-                n["prerequisites"][0] +
-                " or " +
-                n["prerequisites"][1];
+              pre = n["prerequisites"][0] + " or " + n["prerequisites"][1];
           }
         }
       });
@@ -111,15 +107,17 @@ export function DisplayNodeModal(
       >
         <Stack
           sx={{
-            position: "fixed",
+            // position: "fixed",
             bgcolor: "white",
             width: "50%",
-            height: "70%",
-            top: "16vh",
-            left: "28vw",
-            zIndex: "1",
+            height: "auto",
+            top: "50%",
+            // top: "16vh",
+            // left: "28vw",
+            zIndex: 2,
             borderRadius: "1rem",
             opacity: isInsideNode ? 2 : 1,
+            m: "auto",
           }}
         >
           <Stack
@@ -131,7 +129,23 @@ export function DisplayNodeModal(
               borderRadius: "1rem 1rem 0 0",
             }}
           >
-            <Typography sx={{ color: "white", ml: "auto", mr: "auto" }}>
+            <IconButton
+              disabled
+              sx={{
+                width: "2.222vw",
+                height: "2.222vw",
+                marginRight: "auto",
+                marginLeft: "2vw",
+                color: "white",
+                cursor: "none",
+                opacity: 0,
+              }}
+            >
+              <CloseRoundedIcon />
+            </IconButton>
+            <Typography
+              sx={{ color: "white", m: 'auto' }}
+            >
               Description
             </Typography>
             <IconButton
@@ -141,10 +155,9 @@ export function DisplayNodeModal(
               sx={{
                 width: "2.222vw",
                 height: "2.222vw",
-                marginLeft: "46vw",
-                // marginRight: "2vw",
+                marginLeft: "auto",
+                marginRight: "2vw",
                 color: "white",
-                position: "absolute",
               }}
             >
               <CloseRoundedIcon />
@@ -164,61 +177,77 @@ export function DisplayNodeModal(
             }}
           >
             {/* Name */}
-            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
-              <Typography fontWeight={800} variant="subtitle1">Name : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{ alignItems: "center" }}>
+              <Typography fontWeight={800} variant="subtitle1">
+                Name :{" "}
+              </Typography>
               <Typography>
                 {courseDetail !== undefined && courseDetail[0]["courseNameEN"]}
               </Typography>
             </Stack>
             {/* ชื่อ */}
-            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
-              <Typography fontWeight={800} variant="subtitle1">ชื่อ : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{ alignItems: "center" }}>
+              <Typography fontWeight={800} variant="subtitle1">
+                ชื่อ :{" "}
+              </Typography>
               <Typography>
                 {courseDetail !== undefined && courseDetail[0]["courseNameTH"]}
               </Typography>
             </Stack>
             {/* CourseId */}
-            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
-              <Typography fontWeight={800} variant="subtitle1">Course ID / รหัสกระบวนวิชา : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{ alignItems: "center" }}>
+              <Typography fontWeight={800} variant="subtitle1">
+                Course ID / รหัสกระบวนวิชา :{" "}
+              </Typography>
               <Typography>
                 {courseDetail !== undefined && courseDetail[0]["courseNo"]}
               </Typography>
             </Stack>
             {/* Credit */}
-            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
-              <Typography fontWeight={800} variant="subtitle1">Credit / หน่วยกิต : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{ alignItems: "center" }}>
+              <Typography fontWeight={800} variant="subtitle1">
+                Credit / หน่วยกิต :{" "}
+              </Typography>
               <Typography>
                 {courseDetail !== undefined &&
                   courseDetail[0]["credits"]["credits"]}
               </Typography>
             </Stack>
             {/* Prerequisite */}
-            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
+            <Stack direction={"row"} spacing={2} sx={{ alignItems: "center" }}>
               <Typography fontWeight={800} variant="subtitle1">
                 Prerequisite / เงื่อนไขที่ต้องผ่านก่อนเรียน :{" "}
               </Typography>
               <Typography>{courseDetail !== undefined && pre}</Typography>
             </Stack>
             {/* Enforce since */}
-            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
-              <Typography fontWeight={800} variant="subtitle1">Enforce since : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{ alignItems: "center" }}>
+              <Typography fontWeight={800} variant="subtitle1">
+                Enforce since :{" "}
+              </Typography>
               <Typography>{courseDetail !== undefined && enForceEN}</Typography>
             </Stack>
             {/* มีผลบังคับใช้ */}
-            <Stack direction={"row"} spacing={2} sx={{alignItems: 'center'}}>
-              <Typography fontWeight={800} variant="subtitle1">มีผลบังคับใช้ : </Typography>
+            <Stack direction={"row"} spacing={2} sx={{ alignItems: "center" }}>
+              <Typography fontWeight={800} variant="subtitle1">
+                มีผลบังคับใช้ :{" "}
+              </Typography>
               <Typography>{courseDetail !== undefined && enForceTH}</Typography>
             </Stack>
             {/* Description */}
             <Stack sx={{}}>
-              <Typography fontWeight={800} variant="subtitle1">Description : </Typography>
+              <Typography fontWeight={800} variant="subtitle1">
+                Description :{" "}
+              </Typography>
               <Typography sx={{ fontSize: "0.9rem" }}>
                 {courseDetail !== undefined && courseDetail[0]["detailEN"]}
               </Typography>
             </Stack>
             {/* คำอธิบายลักษณะกระบวนวิชา */}
             <Stack sx={{}}>
-              <Typography fontWeight={800} variant="subtitle1">คำอธิบายลักษณะกระบวนวิชา : </Typography>
+              <Typography fontWeight={800} variant="subtitle1">
+                คำอธิบายลักษณะกระบวนวิชา :{" "}
+              </Typography>
               <Typography sx={{ fontSize: "0.9rem" }}>
                 {courseDetail !== undefined && courseDetail[0]["detailTH"]}
               </Typography>
@@ -792,16 +821,18 @@ export function warningModal(setOpen: Function) {
     >
       <Stack
         sx={{
-          position: "fixed",
+          // position: "fixed",
           bgcolor: "white",
           width: "50%",
           // height: "30%",
-          top: "50%",
-          left: "50%",
-          mt: "-100px",
-          ml: "-250px",
-          zIndex: "1",
+          bottom: "50%",
+          // left: "50%",
+
+          // mt: "-100px",
+          // ml: "-250px",
+          zIndex: 2,
           borderRadius: "1rem",
+          m: "auto",
         }}
       >
         <Stack
@@ -841,10 +872,10 @@ export function warningModal(setOpen: Function) {
           <Typography>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;เนื่องจากในขณะนี้ข้อมูลของหน่วยกิต
             หรือ credits ของวิชา Free Elective อาจมีความไม่ถูกต้อง
-            โปรดตรวจสอบความถูกต้องของข้อมูลหน่วยกิตก่อนทำการตัดสินใจวางแผนการเรียนในเทอมต่อไป 
+            โปรดตรวจสอบความถูกต้องของข้อมูลหน่วยกิตก่อนทำการตัดสินใจวางแผนการเรียนในเทอมต่อไป
             โดยค่าเริ่มต้นเครดิตของทุกๆวิชา Free Elective จะมีค่าเป็น 3 credits
-            โดยท่านสามารถแก้ไขข้อมูลของหน่วยกิตเองได้ในหน้า Category View และ Term View ด้วยการกดที่กล่องวิชา Free
-            Elective เพื่อทำการแก้ไขข้อมูล
+            โดยท่านสามารถแก้ไขข้อมูลของหน่วยกิตเองได้ในหน้า Category View และ
+            Term View ด้วยการกดที่กล่องวิชา Free Elective เพื่อทำการแก้ไขข้อมูล
             หลังจากกดยืนยันระบบจะทำการคำนวณจำนวนหน่วยกิตรวมให้ใหม่
           </Typography>
         </Stack>
@@ -860,6 +891,7 @@ export function warningIcon(setOpen: Function) {
       onClick={() => {
         setOpen(true);
       }}
+      size="small"
     >
       <InfoIcon sx={{ color: amber[500] }} />
     </IconButton>

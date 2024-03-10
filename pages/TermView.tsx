@@ -29,6 +29,7 @@ import {
   Alert,
   AlertTitle,
   useMediaQuery,
+  Popover,
 } from "@mui/material";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
@@ -56,12 +57,13 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 import SearchIcon from "@mui/icons-material/Search";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckIcon from "@mui/icons-material/Check";
-import { red, green, blue } from "@mui/material/colors";
+import { red, green, blue, grey } from "@mui/material/colors";
 
 //Smart Edge
 // import { SmartStepEdge, SmartBezierEdge } from "@tisoap/react-flow-smart-edge";
@@ -73,7 +75,6 @@ import {
   // currData,
   edArr,
   processData,
-  mockjSon,
   fetchData,
   startNode,
   // allTerm,
@@ -121,6 +122,8 @@ import { ifError } from "assert";
 import { WhoAmIResponse } from "./api/whoAmI";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { free_pass, ge_pass, majorCore_pass } from "../constants/color";
+
+import { useSearchParams } from "next/navigation";
 
 const edgeTypes = {
   "custom-edge": CustomEdge,
@@ -283,6 +286,7 @@ function DisplayBackDrop(checked: boolean) {
 
 function TermView() {
   const router = useRouter();
+
   const [fullName, setFullName] = useState("");
   const [f_name, setF_name] = useState("");
   const [l_name, setL_name] = useState("");
@@ -325,6 +329,7 @@ function TermView() {
   const [credits, setCredits] = useState<number[]>([]);
 
   const [text, setText] = useState("");
+  const [tmpText, setTmpText] = useState("");
   const [freeClicked, setFreeClicked] = useState<boolean>(false);
   const [isFree, setIsFree] = useState<boolean>(false);
   const [errInp, setErrInp] = useState<boolean>(false);
@@ -373,6 +378,27 @@ function TermView() {
 
   const [screen, setScreen] = useState(1440);
 
+  //popover
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [anchorElQ, setAnchorElQ] = useState<HTMLElement | null>(null);
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+  const handlePopoverOpenQ = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElQ(event.currentTarget);
+  };
+  const handlePopoverCloseQ = () => {
+    setAnchorElQ(null);
+  };
+
+  const openPopover = Boolean(anchorEl);
+  const openPopoverQ = Boolean(anchorElQ);
+
+  
+
   const bp = useMediaQuery(theme.breakpoints.down("lg"));
 
   const handleDrawerClose = () => {
@@ -398,7 +424,7 @@ function TermView() {
   }
 
   const onNodeClick = async (event: React.MouseEvent, node: any) => {
-    console.log('check pre ' + checkedPre)
+    console.log("check pre " + checkedPre);
     if (checkedPre) {
       if (arrTogglePrereq.length !== 0) {
         let PreReqArr = arrTogglePrereq.map((arr: string[]) => {
@@ -516,8 +542,8 @@ function TermView() {
     var compTerm: any[] = [];
     let j = 0;
 
-    // console.log("term log");
-    // console.log(term);
+    console.log("term log");
+    console.log(term);
 
     term.forEach((i, index) => {
       // console.log(i + " " + j);
@@ -532,7 +558,7 @@ function TermView() {
           )
         );
         j += 2;
-        // console.log('normal ' + j + ' ' + (j+1))
+        console.log("normal " + j + " " + (j + 1));
       }
       //91.14784
       else {
@@ -552,19 +578,16 @@ function TermView() {
     });
 
     var sp = 1.845;
-    var sp_str = "" + sp + "vw";
+    var sp_str: string = "1.845vw";
 
     if (typeof window !== "undefined") {
       if (window.innerWidth > 600 && window.innerWidth < 900) {
         sp = 4.355;
-        sp_str = "" + sp + "vw";
+        sp_str = "4.35vw";
       }
-      // if (window.innerWidth > 1000 && window.innerWidth < 1400) {
-      //   sp = 3.355;
-      //   sp_str = "" + sp + "vw";
-      // }
     }
 
+    console.log(sp_str);
     return (
       <Stack>
         <Stack direction={"row"} spacing={sp_str}>
@@ -584,7 +607,6 @@ function TermView() {
           setL_name(response.data.lastName);
           // setCmuAccount(response.data.cmuAccount);
           setStudentId(response.data.studentId ?? "No Student Id");
-          
         }
       })
       .catch((error: AxiosError<WhoAmIResponse>) => {
@@ -604,18 +626,17 @@ function TermView() {
     if (studentId !== undefined || studentId !== "" || studentId !== null) {
       var tempYear = "25" + studentId.substring(0, 2);
       setStdYear(tempYear);
-      var tempStdId = studentId
-      console.log(stdYear)
-      console.log(tempStdId)
-      if (typeof tempStdId !== 'undefined') {
+      var tempStdId = studentId;
+      console.log(stdYear);
+      console.log(tempStdId);
+      if (typeof tempStdId !== "undefined") {
         await processData(stdYear, "" + isCoop, studentId);
       }
-      
     }
 
     SetBackdrop(false);
     setNodes(termNode);
-    
+
     // edArr.map((e:any)=>{
     //   e["hidden"] = false
     // })
@@ -655,9 +676,17 @@ function TermView() {
 
     var plus_w = 0;
 
-    if (window.innerWidth > 600 && window.innerWidth < 900) plus_w = 17 + 15;
+    if (window.innerWidth > 600 && window.innerWidth < 900) plus_w = 17 + 58;
     if (window.innerWidth > 900 && window.innerWidth < 1000) plus_w = 0 - 2;
-    if (window.innerWidth > 1000 && window.innerWidth < 1400) plus_w = 2;
+    if (window.innerWidth > 1200 && window.innerWidth < 1300) plus_w = 0 - 11;
+    if (window.innerWidth > 1300 && window.innerWidth < 1400) plus_w = 0 - 2; //2
+    if (window.innerWidth === 1440) plus_w = 0;
+    if (window.innerWidth > 2000) {
+      plus_w = 0 - 6;
+    }
+    // if (window.innerWidth === 1024) {
+    //   plus_w = 10;
+    // }
     // if (window.innerWidth > 1000 && window.innerWidth < 1300) plus_w = 0-3;
 
     width += (y - 1) * 1.875 + 20.623 + plus_w;
@@ -674,7 +703,6 @@ function TermView() {
     setEdges([]);
     setDFValue(3);
 
-    
     await waitData();
 
     if (filterGE) {
@@ -745,7 +773,7 @@ function TermView() {
         if (fetchData["study term"].length >= 4) {
           setdisButtonCoop(true);
         } else {
-          console.log("kkkk");
+          // console.log("kkkk");
           setdisButtonCoop(false);
         }
       }
@@ -830,7 +858,11 @@ function TermView() {
       {/* Navbar */}
       {errorMessage === "" && (
         <Stack sx={{ bgcolor: "#FDF5F4" }}>
-          <Drawer variant="permanent" PaperProps={{sx:{bgcolor: "#FDF5F4"}}} open={open} >
+          <Drawer
+            variant="permanent"
+            PaperProps={{ sx: { bgcolor: "#FDF5F4" } }}
+            open={open}
+          >
             <DrawerHeader sx={{}}>
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
@@ -1003,7 +1035,7 @@ function TermView() {
                   </ListItemIcon>
                   <ListItemText
                     primary={"View Board"}
-                    sx={{ opacity: open ? 1 : 0, color: 'gray' }}
+                    sx={{ opacity: open ? 1 : 0, color: "gray" }}
                   />
                 </ListItem>
               ) : // </ListItem>
@@ -1263,6 +1295,7 @@ function TermView() {
                     setText("");
                     setIsFree(false);
                     setErrInp(false);
+                    setSearchBtn(false);
                   }}
                   sx={{
                     width: "2.222vw",
@@ -1301,7 +1334,6 @@ function TermView() {
                     value={text}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                       setText(event.target.value);
-                      setSearchBtn(false);
                     }}
                   />
                   <IconButton
@@ -1318,17 +1350,20 @@ function TermView() {
                           text.length < 6
                         ) {
                           setErrInp(true);
-                          setErrInpMessage(
-                            "โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6 ตัว"
-                          );
-                          console.log("this is text");
+                          // setIsFree(false)
+                          setSearchBtn(true);
                         } else {
                           var resp: any = await FetchIsFree(text);
                           if (resp !== null) {
+                            console.log(resp);
                             const group = resp["group"];
+
                             if (group === "Free") setIsFree(true);
+                            else setIsFree(false);
 
                             setSearchBtn(true);
+                            setTmpText(text);
+                            console.log("test free click " + text);
                           }
                           setErrInp(false);
                         }
@@ -1341,17 +1376,17 @@ function TermView() {
                   </IconButton>
                 </Paper>
                 <Stack sx={{ mt: 2 }}>
-                  {isFree && (
+                  {isFree && searchBtn && (
                     <Typography variant="h6">
-                      {text} is Free Elective
+                      {tmpText} is Free Elective
                     </Typography>
                   )}
-                  {searchBtn && !isFree && text !== "" && (
+                  {searchBtn && !isFree && !errInp && (
                     <Typography variant="h6">
-                      {text} is not Free Elective
+                      {tmpText} is not Free Elective
                     </Typography>
                   )}
-                  {errInp && (
+                  {errInp && searchBtn && (
                     <Typography variant="subtitle1">
                       โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6
                       ตัว
@@ -1359,13 +1394,13 @@ function TermView() {
                   )}
                 </Stack>
                 <Stack sx={{ mt: 1 }}>
-                  {isFree && (
+                  {isFree && searchBtn && (
                     <CheckCircleIcon sx={{ fontSize: 44, color: green[500] }} />
                   )}
-                  {searchBtn && !isFree && text !== "" && (
+                  {searchBtn && !isFree && !errInp && (
                     <CancelIcon sx={{ fontSize: 44, color: red[500] }} />
                   )}
-                  {errInp && (
+                  {errInp && searchBtn && (
                     <CancelIcon sx={{ fontSize: 44, color: red[500] }} />
                   )}
                 </Stack>
@@ -1388,15 +1423,18 @@ function TermView() {
           >
             <Stack
               sx={{
-                position: "fixed",
+                // position: "fixed",
                 bgcolor: "white",
                 width: "50%",
+                top: "50%",
+                left: "50%",
                 // height: "30%",
-                top: "32vh",
-                left: "28vw",
-                zIndex: "1",
+                // top: "32vh",
+                // left: "28vw",
+                zIndex: 2,
                 // borderRadius: "1rem",
                 borderRadius: "1rem 1rem 1rem 1rem",
+                m: "auto",
               }}
             >
               <Stack
@@ -1408,11 +1446,24 @@ function TermView() {
                   borderRadius: "1rem 1rem 0 0",
                 }}
               >
-                <Typography
-                  sx={{ color: "white", ml: "32%", mt: "auto", mb: "auto" }}
+                <IconButton
+                  disabled
+                  sx={{
+                    width: "2.222vw",
+                    height: "2.222vw",
+                    marginRight: "auto",
+                    marginLeft: "2vw",
+                    color: "white",
+                    cursor: "none",
+                    opacity: 0,
+                  }}
                 >
+                  <CloseRoundedIcon />
+                </IconButton>
+                <Typography sx={{ color: "white", m: "auto" }}>
                   Free Elective Credits Config
                 </Typography>
+
                 <IconButton
                   onClick={() => {
                     setFreePassClick(false);
@@ -1423,6 +1474,9 @@ function TermView() {
                     marginLeft: "auto",
                     marginRight: "2vw",
                     color: "white",
+                    // position: 'absolute',
+                    // top: '43.2%',
+                    // right: '24.7%'
                   }}
                 >
                   <CloseRoundedIcon />
@@ -1590,129 +1644,194 @@ function TermView() {
             sx={{
               mt: "2vh",
               justifyContent: "space-between",
-              
+
               // maxWidth: "98%",
               // border: '1px solid black'
             }}
           >
-            <Stack direction={"row"} sx={{ alignItems: "center" }}>
-              <Typography variant="h5">Term View</Typography>
-              <Stack>{warningIcon(setWarning)}</Stack>
+            <Stack sx={{ alignContent: "start" }}>
+              <Stack direction={"row"} sx={{ alignItems: "center" }}>
+                <Typography variant="h5">Term View</Typography>
+                <Stack>{warningIcon(setWarning)}</Stack>
+              </Stack>
             </Stack>
 
-            {/* Display Filter Status */}
             <Stack
               direction={"row"}
-              sx={{ columnGap: 1.4, alignItems: "center" }}
+              sx={{
+                columnGap: 1.4,
+              }}
             >
-              <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
-                {/* {isCoop === false && displayNormalPlan()}
-                {isCoop === true && displayCoopPlan()} */}
-                {isCoop === "true"
-                  ? displayCoopPlan()
-                  : displayNormalPlan()}
-                {checkedDone && displayDone()}
-                {checkedPreFilter && displayPre()}
-                {filterGE && displayGE(screen)}
-                {filterSp && displaySp()}
-                {filterFree && displayFree(screen)}
-              </Stack>
-
-              {/* <Stack direction={"row"} sx={{columnGap: 1.4, justifyContent: 'flex-end'}}> */}
-              <Button
+              {/* Display Filter Status */}
+              <Stack
+                direction={"row"}
                 sx={{
-                  bgcolor: "white",
-                  boxShadow: 1,
-                  pt: 0.5,
-                  pb: 0.5,
-                  pr: 1.4,
-                  pl: 1.4,
+                  columnGap: 1.4,
                   alignItems: "center",
-                  borderRadius: 5,
-                  border: checkedPre
-                    ? "1px solid #EE6457"
-                    : "1px solid #9B9B9B",
-                  textTransform: "none",
-                  maxHeight: "4.2vh",
-                  maxWidth: "20vw",
-                  [theme.breakpoints.down("lg")]: {
-                    maxHeight: "3.4vh",
-                  },
-                  [theme.breakpoints.between("sm", "md")]: {
-                    maxHeight: "4vh",
-                  },
-                }}
-                onClick={() => {
-                  setCheckedPre(!checkedPre);
-                  setEdges((eds) =>
-                    eds.map((edge) => {
-                      if (checkedPre) edge.hidden = false;
-                      else edge.hidden = true;
-                      return edge;
-                    })
-                  );
                 }}
               >
-                <Typography
+                <Stack
+                  direction={"row"}
                   sx={{
-                    fontSize: "0.8rem",
-                    color: checkedPre ? "#EE6457" : "#9B9B9B",
-                    
-                    [theme.breakpoints.only("md")]: {
-                      fontSize: "0.68rem",
+                    columnGap: 1.4,
+                    rowGap: 1,
+                    width: "40vw",
+                    flexWrap: "wrap",
+                    justifyContent: "flex-end",
+                    [theme.breakpoints.between("sm", "md")]: {
+                      width: "56vw",
                     },
                   }}
                 >
-                  Select Prerequisite Course
-                </Typography>
-              </Button>
+                  {/* {isCoop === false && displayNormalPlan()}
+                {isCoop === true && displayCoopPlan()} */}
+                  {isCoop === "true" ? displayCoopPlan() : displayNormalPlan()}
+                  {checkedDone && displayDone()}
+                  {checkedPreFilter && displayPre()}
+                  {filterGE && displayGE(screen)}
+                  {filterSp && displaySp()}
+                  {filterFree && displayFree(screen)}
+                </Stack>
 
-              {/* Filter */}
-              <Button
-                variant="outlined"
-                endIcon={<FilterListIcon />}
-                onClick={() => {
-                  setFilter(!filter);
-                  setSave(false);
-                }}
-                sx={{
-                  width: "8vw",
-                  boxShadow: 1,
-                  maxHeight: "4vh",
-                  position: "relatice",
-                  // mr: "1.9vw",
-                  textTransform: "none",
-                  borderRadius: 5,
-                  color: filter ? "#EE6457" : "#9B9B9B",
-                  borderColor: filter ? "#EE6457" : "#9B9B9B",
-                  pt: 0.25,
-                  pb: 0,
-                  pr: 1.4,
-                  pl: 1.4,
-                  "&:hover": {
-                    color: "#EE6457",
-                    borderColor: "#EE6457",
-                    bgcolor: "white",
-                  },
-                  [theme.breakpoints.down("lg")]: {
-                    fontSize: "0.86rem",
-                    maxHeight: "3.4vh",
-                  },
-                  [theme.breakpoints.only("md")]: {
-                    fontSize: "0.68rem",
-                  },
-                  [theme.breakpoints.between("sm", "md")]: {
-                    fontSize: "0.7rem",
-                    width: "10vw",
-                    maxHeight: "4vh",
-                  },
-                }}
+                {/* <Stack direction={"row"} sx={{columnGap: 1.4, justifyContent: 'flex-end'}}> */}
+              </Stack>
+
+              <Stack
+                direction={"row"}
+                sx={{ alignContent: "start", columnGap: 1.4 }}
               >
-                Filter
-              </Button>
+                <Stack>
+                  <Button
+                    aria-owns={openPopover ? "mouse-over-popover" : undefined}
+                    aria-haspopup="true"
+                    onMouseEnter={handlePopoverOpen}
+                    onMouseLeave={handlePopoverClose}
+                    sx={{
+                      bgcolor: "white",
+                      boxShadow: 1,
+                      pt: 0.5,
+                      pb: 0.5,
+                      pr: 1.4,
+                      pl: 1.4,
+                      alignItems: "center",
+                      borderRadius: 5,
+                      border: checkedPre
+                        ? "1px solid #EE6457"
+                        : "1px solid #9B9B9B",
+                      textTransform: "none",
+                      maxHeight: "4.2vh",
+                      maxWidth: "20vw",
+                      [theme.breakpoints.down("lg")]: {
+                        maxHeight: "3.4vh",
+                      },
+                      [theme.breakpoints.between("sm", "md")]: {
+                        maxHeight: "4vh",
+                      },
+                    }}
+                    onClick={() => {
+                      setCheckedPre(!checkedPre);
+                      setEdges((eds) =>
+                        eds.map((edge) => {
+                          if (checkedPre) edge.hidden = false;
+                          else edge.hidden = true;
+                          return edge;
+                        })
+                      );
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: "0.8rem",
+                        color: checkedPre ? "#EE6457" : "#9B9B9B",
+
+                        [theme.breakpoints.only("md")]: {
+                          fontSize: "0.68rem",
+                          wordBreak: "break-word",
+                        },
+                      }}
+                    >
+                      {typeof window !== "undefined" && window.innerWidth < 750
+                        ? "Select PreReq"
+                        : "Select Prerequisite Course"}
+                    </Typography>
+                  </Button>
+                  {/* Popover */}
+                  <Popover
+                    id="mouse-over-popover"
+                    sx={{
+                      pointerEvents: "none",
+                    }}
+                    open={openPopover}
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    onClose={handlePopoverClose}
+                    disableRestoreFocus
+                  >
+                    <Paper sx={{ backgroundColor: grey[200], p: 1 }}>
+                      <Typography sx={{ fontSize: "0.6rem" }}>
+                        หากกดปุ่มนี้เส้นแสดงตัวต่อทั้งหมดจะหายไป<br></br>
+                        และคุณจะสามารถกดเช็คดูได้ว่าวิชาไหนมีตัวต่อ<br></br>
+                        แต่หากกดปิดปุ่มนี้เส้นแสดงตัวต่อทั้งหมดจะแสดง<br></br>
+                        และท่านจะสามารถกดที่กล่องวิชา เพื่อเช็คราย<br></br>
+                        ละเอียดของแต่ละวิชาได้
+                      </Typography>
+                    </Paper>
+                  </Popover>
+                </Stack>
+
+                {/* Filter */}
+                <Button
+                  variant="outlined"
+                  endIcon={<FilterListIcon />}
+                  onClick={() => {
+                    setFilter(!filter);
+                    setSave(false);
+                  }}
+                  sx={{
+                    width: "8vw",
+                    boxShadow: 1,
+                    maxHeight: "4vh",
+                    position: "relatice",
+                    // mr: "1.9vw",
+                    textTransform: "none",
+                    borderRadius: 5,
+                    color: filter ? "#EE6457" : "#9B9B9B",
+                    borderColor: filter ? "#EE6457" : "#9B9B9B",
+                    pt: 0.25,
+                    pb: 0,
+                    pr: 1.4,
+                    pl: 1.4,
+                    "&:hover": {
+                      color: "#EE6457",
+                      borderColor: "#EE6457",
+                      bgcolor: "white",
+                    },
+                    [theme.breakpoints.down("lg")]: {
+                      fontSize: "0.86rem",
+                      maxHeight: "3.4vh",
+                    },
+                    [theme.breakpoints.only("md")]: {
+                      fontSize: "0.68rem",
+                    },
+                    [theme.breakpoints.between("sm", "md")]: {
+                      fontSize: "0.7rem",
+                      width: "10vw",
+                      maxHeight: "4vh",
+                    },
+                  }}
+                >
+                  Filter
+                </Button>
+              </Stack>
             </Stack>
           </Stack>
-          {/* </Stack> */}
 
           {filter && (
             <Stack
@@ -1926,7 +2045,54 @@ function TermView() {
                       }}
                     >
                       <Stack>
-                        <Typography>Prerequisite</Typography>
+                        <Stack
+                          direction={"row"}
+                          spacing={1}
+                          sx={{ alignItems: "center" }}
+                        >
+                          <Typography>Prerequisite</Typography>
+                          <Stack>
+                            <Stack
+                              aria-owns={
+                                openPopoverQ ? "mouse-over-popover-q" : undefined
+                              }
+                              aria-haspopup="true"
+                              onMouseEnter={handlePopoverOpenQ}
+                              onMouseLeave={handlePopoverCloseQ}
+                            >
+                              <HelpOutlineIcon
+                                fontSize="small"
+                                sx={{ color: blue[500] }}
+                              />
+                            </Stack>
+
+                            <Popover
+                              id="mouse-over-popover-q"
+                              sx={{
+                                pointerEvents: "none",
+                              }}
+                              open={openPopoverQ}
+                              anchorEl={anchorElQ}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                              }}
+                              onClose={handlePopoverCloseQ}
+                              disableRestoreFocus
+                            >
+                              <Paper sx={{ backgroundColor: grey[200], p: 1 }}>
+                                <Typography sx={{ fontSize: "0.6rem" }}>
+                                  Filter ตัวนี้จะทำการเปิด และปิดเส้นแสดงตัวต่อทั้งหมด<br></br>หากปุ่ม see prerequisite course มีสถานะ<br></br>เปิดใช้งานอยู่การทำงานของ Filter ตัวนี้จะไม่เห็นผล
+                                </Typography>
+                              </Paper>
+                            </Popover>
+                          </Stack>
+                        </Stack>
+
                         <Typography>Show prerequisite of all course</Typography>
                       </Stack>
                       <FormControlLabel
@@ -2103,10 +2269,8 @@ function TermView() {
             preventScrolling={false}
             onNodeClick={onNodeClick}
             // fitView
-            
-            
           >
-            <Stack sx={{ paddingBottom: "4vh",  }}>
+            <Stack sx={{ paddingBottom: "4vh" }}>
               <Stack
                 sx={{
                   marginTop: "1vh",

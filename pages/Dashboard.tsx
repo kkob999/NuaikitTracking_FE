@@ -15,6 +15,7 @@ import Navbar from "./View/Navbar";
 
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "next/router";
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from "react";
 import { WhoAmIResponse } from "./api/whoAmI";
 import { theme } from "../constants/theme";
@@ -77,93 +78,24 @@ function CircularWithValueLabel(allgetCredit: number, allneedCredit: number) {
   return progress;
 }
 
-let totalReqGenCredit = 0;
-let totalReqGenCreditNeed = 0;
-let totalElectiveGenCredit = 0;
-let totalElectiveGenCreditNeed = 0;
 
-for (let i = 0; i < jsonData.geCategory.length; i++) {
-  if (jsonData.geCategory[i].requiredCreditsNeed > 0) {
-    totalReqGenCredit += jsonData.geCategory[i].requiredCreditsGet;
-    totalReqGenCreditNeed += jsonData.geCategory[i].requiredCreditsNeed;
-  }
-  if (jsonData.geCategory[i].electiveCreditsNeed > 0) {
-    totalElectiveGenCredit += jsonData.geCategory[i].electiveCreditsGet;
-    totalElectiveGenCreditNeed += jsonData.geCategory[i].electiveCreditsNeed;
-  }
-}
-const totalGenGet = totalReqGenCredit + totalElectiveGenCredit;
-const totalGenNeed = totalReqGenCreditNeed + totalElectiveGenCreditNeed;
-
-// Free Credit
-let totalReqFree = 0,
-  totalReqFreeNeed = 0,
-  totalElectiveFree = 0,
-  totalElectiveFreeNeed = 0;
-
-for (let i = 0; i < jsonData.freeCategory.length; i++) {
-  if (jsonData.freeCategory[i].requiredCreditsNeed > 0) {
-    totalReqFree += jsonData.freeCategory[i].requiredCreditsGet;
-    totalReqFreeNeed += jsonData.freeCategory[i].requiredCreditsNeed;
-  }
-  if (jsonData.freeCategory[i].electiveCreditsNeed > 0) {
-    totalElectiveFree += jsonData.freeCategory[i].electiveCreditsGet;
-    totalElectiveFreeNeed += jsonData.freeCategory[i].electiveCreditsNeed;
-  }
-}
-
-const totalFreeGet = totalReqFree + totalElectiveFree;
-const totalFreeNeed = totalReqFreeNeed + totalElectiveFreeNeed;
-
-// Specific Credit
-// core
-let totalReqCoreCredit = 0,
-  totalReqCoreCreditNeed = 0,
-  totalElectiveCore = 0,
-  totalElectiveCoreNeed = 0;
-for (let i = 0; i < jsonData.coreCategory.length; i++) {
-  if (jsonData.coreCategory[i].requiredCreditsNeed > 0) {
-    totalReqCoreCredit += jsonData.coreCategory[i].requiredCreditsGet;
-    totalReqCoreCreditNeed += jsonData.coreCategory[i].requiredCreditsNeed;
-  }
-  if (jsonData.coreCategory[i].electiveCreditsNeed > 0) {
-    totalElectiveCore += jsonData.coreCategory[i].electiveCreditsGet;
-    totalElectiveCoreNeed += jsonData.coreCategory[i].electiveCreditsNeed;
-  }
-}
-
-//Major
-let totalMajorReqCredit = 0,
-  totalMajorReqCreditNeed = 0,
-  totalMajorECredit = 0,
-  totalMajorECreditNeed = 0;
-for (let i = 0; i < jsonData.majorCategory.length; i++) {
-  if (jsonData.majorCategory[i].requiredCreditsNeed > 0) {
-    totalMajorReqCredit += jsonData.majorCategory[i].requiredCreditsGet;
-    totalMajorReqCreditNeed += jsonData.majorCategory[i].requiredCreditsNeed;
-  }
-  if (jsonData.majorCategory[i].electiveCreditsNeed > 0) {
-    totalMajorECredit += jsonData.majorCategory[i].electiveCreditsGet;
-    totalMajorECreditNeed += jsonData.majorCategory[i].electiveCreditsNeed;
-  }
-}
-
-const totalCoreGet = totalReqCoreCredit + totalElectiveCore;
-const totalCoreNeed = totalReqCoreCreditNeed + totalElectiveCoreNeed;
-
-const totalMajorGet = totalMajorReqCredit + totalMajorECredit;
-const totalMajorNeed = totalMajorReqCreditNeed + totalMajorECreditNeed;
-
-const totalSpGet = totalCoreGet + totalMajorGet;
-const totalSpNeed = totalCoreNeed + totalMajorNeed;
 
 function DashBoard() {
   //Login
   const router = useRouter();
+
+  const searchParams = useSearchParams()
+  const search = searchParams.has('mockData')
+  const qryValue = searchParams.get('mockData')
+  console.log('is mockData link ' + search)
+  console.log(qryValue)
+
   const [fullName, setFullName] = useState("");
   const [cmuAccount, setCmuAccount] = useState("");
   const [studentId, setStudentId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  
 
   var [allgetCredit, setAllGetCredit] = React.useState<number>(0);
   var [allgetCreditCal, setAllGetCreditCal] = React.useState<number>(0);
@@ -215,6 +147,7 @@ function DashBoard() {
   var tmp_gen_elecCreditNeed = 0;
 
   async function FetchDashBoard(url: string) {
+    
     return new Promise(function (resolve, reject) {
       axios
         .get(url, {
@@ -242,7 +175,7 @@ function DashBoard() {
   async function DatchBoardData(url: string) {
     const resp: any = await FetchDashBoard(url);
     // console.log(resp["coreCategory"]);
-    // console.log(resp);
+    console.log(resp);
 
     setAllGetCredit(resp["summaryCredit"]);
     setAllNeedCredit(resp["requiredCredits"]);
@@ -286,6 +219,8 @@ function DashBoard() {
       }
     }
 
+    console.log('genReqCredit ' + gen_reqCredit)
+
     setgenElecCreditCal(free_Credit);
     if (gen_elecCredit > gen_elecCreditNeed) {
       setgenElecCreditCal(gen_elecCreditNeed);
@@ -327,6 +262,50 @@ function DashBoard() {
         major_elecCreditCal +
         major_reqCredit
     );
+
+
+
+
+    if (
+      gen_reqCredit + gen_elecCredit >
+      gen_reqCreditNeed + gen_elecCreditNeed
+    ) {
+      setGEPercent(100);
+    } else {
+      setGEPercent(
+        Math.floor(
+          ((gen_reqCredit + gen_elecCredit) * 100) /
+            (gen_reqCreditNeed + gen_elecCreditNeed)
+        )
+      );
+    }
+    
+    
+
+    setCorePercent(Math.floor((core_Credit * 100) / core_CreditNeed));
+
+    setMajorPercent(
+      Math.floor(
+        ((major_reqCredit + major_elecCreditCal) * 100) /
+          (major_reqCreditNeed + major_elecCreditNeed)
+      )
+    );
+
+    setFreePercent(Math.floor((free_CreditCal * 100) / free_CreditNeed));
+    setAllGetCreditCal(
+      core_Credit +
+        +gen_reqCredit +
+        gen_elecCreditCal +
+        free_CreditCal +
+        major_elecCreditCal +
+        major_reqCredit
+    );
+
+    if (allgetCredit > allneedCredit) {
+      setClock(100);
+    } else {
+      setClock(Math.floor((allgetCredit * 100) / allneedCredit));
+    }
   }
 
   // React.useEffect(() => {
@@ -371,83 +350,42 @@ function DashBoard() {
 
   async function fetchStdData() {
     await cmuOauth();
+
     var url =
-      "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=true"+
-      // +"&studentId=" + stdId;
-      "&mockData=mockData13"
-      // "630610727"
+      "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE"
+
+    if (!search) {
+      url += "&isCOOP=false&studentId=" + stdId;
+    }else{
+      // is mockdata
+      if (qryValue === null || qryValue === "") {
+        console.log('error')
+        setErrorMessage('Please fill number of mockData')
+      }else{
+        url += "&isCOOP=false&mockData=mockData" + qryValue
+      }
+      
+    }
+    
+    // var url =
+    //   "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false" +
+      // "&studentId=" + stdId;
+      // "&mockData=mockData2";
+    // "630610727"
     console.log(url);
-    DatchBoardData(url);
-  }
-  React.useEffect(() => {
-    fetchStdData();
-  });
-
-  React.useEffect(() => {
-
-    if ((gen_reqCredit + gen_elecCredit) > (gen_reqCreditNeed + gen_elecCreditNeed)) {
-      setGEPercent(100)
-    }else{
-      setGEPercent(
-        Math.floor(
-          ((gen_reqCredit + gen_elecCredit) * 100) /
-            (gen_reqCreditNeed + gen_elecCreditNeed)
-        )
-      );
-    }
-
+    await DatchBoardData(url);
     
-
-    setCorePercent(Math.floor((core_Credit * 100) / core_CreditNeed));
-
-    setMajorPercent(
-      Math.floor(
-        ((major_reqCredit + major_elecCreditCal) * 100) /
-          (major_reqCreditNeed + major_elecCreditNeed)
-      )
-    );
-
-    setFreePercent(Math.floor((free_CreditCal * 100) / free_CreditNeed));
-    setAllGetCreditCal(
-      core_Credit +
-        +gen_reqCredit +
-        gen_elecCreditCal +
-        free_CreditCal +
-        major_elecCreditCal +
-        major_reqCredit
-    );
-
-    if (allgetCredit > allneedCredit ) {
-      setClock(100)
-    }else{
-      setClock(Math.floor((allgetCredit * 100) / allneedCredit));
-    }
-    
-  }, [
-    gen_reqCredit,
-    gen_elecCreditCal,
-    gen_reqCreditNeed,
-    gen_elecCreditNeed,
-    core_Credit,
-    core_CreditNeed,
-    major_reqCredit,
-    major_elecCreditCal,
-    major_reqCreditNeed,
-    major_elecCreditNeed,
-    free_CreditCal,
-    free_CreditNeed,
-    allgetCreditCal,
-    allneedCredit,
-  ]);
-
-  function signOut() {
-    //Call sign out api without caring what is the result
-    //It will fail only in case of client cannot connect to server
-    //This is left as an exercise for you. Good luck.
-    axios.post("/api/signOut").finally(() => {
-      router.push("/");
-    });
   }
+
+  async function calData() {
+    await fetchStdData();
+    console.log('fetchstddata')
+    
+  }
+
+  React.useEffect(() => {
+    calData();
+  }, [clock]);
 
   return (
     <Stack
@@ -1570,30 +1508,7 @@ function DashBoard() {
     </Stack>
   );
 }
-export {
-  totalGenGet,
-  totalGenNeed,
-  totalReqGenCredit,
-  totalReqGenCreditNeed,
-  totalElectiveGenCredit,
-  totalElectiveGenCreditNeed,
-  totalFreeGet,
-  totalFreeNeed,
-  totalReqCoreCredit,
-  totalReqCoreCreditNeed,
-  totalElectiveCore,
-  totalElectiveCoreNeed,
-  totalMajorReqCredit,
-  totalMajorReqCreditNeed,
-  totalMajorECredit,
-  totalMajorECreditNeed,
-  totalCoreGet,
-  totalCoreNeed,
-  totalMajorGet,
-  totalMajorNeed,
-  totalSpGet,
-  totalSpNeed,
-};
+
 export default DashBoard;
 
 // {/* Content */}

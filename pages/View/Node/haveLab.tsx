@@ -1,4 +1,6 @@
 import { Box, Stack, Typography, Theme, Breakpoint } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import React, { memo } from "react";
 import { Handle, Position, Node, NodeProps } from "reactflow";
 import { theme } from "../../../constants/theme";
@@ -52,15 +54,56 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
   function checkisPass(isPass: boolean) {
     if (isPass) {
       return (
-        <Stack
+        // <Stack
+        //   sx={{
+        //     border: "1px solid #34C759",
+        //     borderRadius: "100%",
+        //     height: "0.9rem",
+        //     width: "0.9rem",
+        //     justifyContent: "center",
+        //     alignItems: "center",
+        //     backgroundColor: "#34C759",
+        //     [theme.breakpoints.between("sm", "md")]: {
+        //       height: "0.68em",
+        //       width: "0.68em",
+        //     },
+        //     [theme.breakpoints.only("md")]: {
+        //       height: "0.7em",
+        //       width: "0.7em",
+        //     },
+        //     [theme.breakpoints.between(1200,1439)]: {
+        //       height: "0.78em",
+        //       width: "0.78em",
+        //     },
+        //   }}
+        // >
+        //   <svg
+        //     xmlns="http://www.w3.org/2000/svg"
+        //     width="8"
+        //     height="8"
+        //     viewBox="0 0 12 10"
+        //     fill="none"
+        //   >
+        //     <path
+        //       d="M11 0.830078L4.125 8.69448L1 5.11975"
+        //       stroke="white"
+        //       stroke-width="2"
+        //       stroke-linecap="round"
+        //       stroke-linejoin="round"
+        //     />
+        //   </svg>
+        // </Stack>
+        <CheckCircleIcon
           sx={{
-            border: "1px solid #34C759",
-            borderRadius: "100%",
-            height: "0.9rem",
-            width: "0.9rem",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#34C759",
+            color: "#34C759",
+            [theme.breakpoints.up(2000)]: {
+              height: "1.2em",
+              width: "1.2em",
+            },
+            [theme.breakpoints.between(1200, 1439)]: {
+              height: "0.78em",
+              width: "0.78em",
+            },
             [theme.breakpoints.between("sm", "md")]: {
               height: "0.68em",
               width: "0.68em",
@@ -69,28 +112,12 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
               height: "0.7em",
               width: "0.7em",
             },
-            [theme.breakpoints.between(1200,1439)]: {
-              height: "0.78em",
-              width: "0.78em",
+            [theme.breakpoints.only("lg")]: {
+              height: "0.7em",
+              width: "0.7em",
             },
           }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="8"
-            height="8"
-            viewBox="0 0 12 10"
-            fill="none"
-          >
-            <path
-              d="M11 0.830078L4.125 8.69448L1 5.11975"
-              stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </Stack>
+        />
       );
     } else {
       return (
@@ -111,6 +138,10 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
             [theme.breakpoints.between(1200,1439)]: {
               height: "0.78em",
               width: "0.78em",
+            },
+            [theme.breakpoints.only("lg")]: {
+              height: "0.7em",
+              width: "0.7em",
             },
           }}
         ></Box>
@@ -149,10 +180,19 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
           border: "1.5px solid" + color,
           padding: "1vh 0",
           borderRadius: "0.5rem",
-          [theme.breakpoints.between("sm","md")]: {
-            // height: "16px",
-            width: "9.146vw",
-            // bgcolor: 'lavender',
+          [theme.breakpoints.up("xl")]: {
+            border: "2.5px solid" + color,
+            // bgcolor: 'gainsboro'
+          },
+          [theme.breakpoints.only("lg")]: {
+            width: "6.146vw",
+            height: "5.3704vh",
+            // bgcolor: "gainsboro",
+          },
+          [theme.breakpoints.between("sm", "md")]: {
+            height: "40px",
+            width: "70px",
+            bgcolor: 'lavender',
           },
           [theme.breakpoints.only("md")]: {
             // height: "22px",
@@ -175,6 +215,12 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
             sx={{
               width: "50%",
               fontSize: "0.9em",
+              [theme.breakpoints.up("xl")]: {
+                fontSize: "1.1em",
+              },
+              [theme.breakpoints.only("lg")]: {
+                fontSize: "0.8em",
+              },
               [theme.breakpoints.between("sm", "md")]: {
                 fontSize: "0.68em",
               },

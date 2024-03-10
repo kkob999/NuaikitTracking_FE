@@ -32,7 +32,7 @@ export const NormalTerm = (
 
   return (
     <Stack
-    direction={'column'}
+      direction={"column"}
       sx={{
         height: height, //dynamic 136.77vh 190.77vh
         width: "18.438vw",
@@ -40,17 +40,25 @@ export const NormalTerm = (
         marginTop: "0.9259vh",
         borderRadius: "0.5rem",
         [theme.breakpoints.between("sm", "md")]: {
-          width: "24vw",
+          width: "32vw",
+          // bgcolor: 'khaki'
         },
         [theme.breakpoints.only("md")]: {
           width: "19.938vw",
         },
         pb: 4,
-        
       }}
     >
-      <Stack >
-        <Typography sx={{ textAlign: "center", color: "#EE6457" }}>
+      <Stack>
+        <Typography
+          sx={{
+            textAlign: "center",
+            color: "#EE6457",
+            [theme.breakpoints.up(2000)]: {
+              fontSize: "1.2em",
+            },
+          }}
+        >
           {year} year
         </Typography>
         <Stack sx={{ display: "flex", flexDirection: "row" }}>
@@ -61,10 +69,18 @@ export const NormalTerm = (
               height: halfline, //dynamic 132.77
               borderRight: "0.5px solid #9B9B9B",
               alignItems: "center",
-              opacity: 0.25
+              opacity: 0.25,
             }}
           >
-            <Typography>1st sem</Typography>
+            <Typography
+              sx={{
+                [theme.breakpoints.up(2000)]: {
+                  fontSize: "1.2em",
+                },
+              }}
+            >
+              1st sem
+            </Typography>
           </Stack>
 
           {/* 2nd sem */}
@@ -74,10 +90,18 @@ export const NormalTerm = (
               height: halfline, //dynamic
               borderLeft: "0.5px solid #9B9B9B",
               alignItems: "center",
-              opacity: 0.25
+              opacity: 0.25,
             }}
           >
-            <Typography>2nd sem</Typography>
+            <Typography
+              sx={{
+                [theme.breakpoints.up(2000)]: {
+                  fontSize: "1.2em",
+                },
+              }}
+            >
+              2nd sem
+            </Typography>
           </Stack>
           {/* End 2nd sem */}
         </Stack>
@@ -85,16 +109,64 @@ export const NormalTerm = (
 
       <Stack
         direction={"row"}
-        sx={{ width: "100%",  position: "relative", mt: 0.5, pb: 2 }}
+        sx={{
+          width: "100%",
+          position: "relative",
+          mt: 0.5,
+          pb: 2,
+          [theme.breakpoints.up(2000)]: {
+            mt: 3,
+          },
+        }}
       >
-         <Stack direction={"row"} spacing={1} sx={{ width: "50%", justifyContent: 'center' }}>
-          <Typography sx={{}}>{credit1}</Typography>
-          <Typography sx={{}}>credits</Typography>
+        <Stack
+          direction={"row"}
+          spacing={1}
+          sx={{ width: "50%", justifyContent: "center" }}
+        >
+          <Typography
+            sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
+            }}
+          >
+            {credit1}
+          </Typography>
+          <Typography
+            sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
+            }}
+          >
+            credits
+          </Typography>
         </Stack>
-        <Stack direction={"row"} spacing={1} sx={{ width: "50%", justifyContent: 'center' }}>
-          <Typography sx={{}}>{credit2}</Typography>
-          <Typography sx={{}}>credits</Typography>
-        </Stack> 
+        <Stack
+          direction={"row"}
+          spacing={1}
+          sx={{ width: "50%", justifyContent: "center" }}
+        >
+          <Typography
+            sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
+            }}
+          >
+            {credit2}
+          </Typography>
+          <Typography
+            sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
+            }}
+          >
+            credits
+          </Typography>
+        </Stack>
       </Stack>
     </Stack>
   );
@@ -131,7 +203,15 @@ export const summerTerm = (
         pb: 4,
       }}
     >
-      <Typography sx={{ textAlign: "center", color: "#EE6457" }}>
+      <Typography
+        sx={{
+          textAlign: "center",
+          color: "#EE6457",
+          [theme.breakpoints.up(2000)]: {
+            fontSize: "1.2em",
+          },
+        }}
+      >
         {year} year
       </Typography>
       <Stack sx={{ display: "flex", flexDirection: "row" }}>
@@ -148,11 +228,14 @@ export const summerTerm = (
             [theme.breakpoints.only("md")]: {
               width: "9.87vw",
             },
-            opacity: 0.25
+            opacity: 0.25,
           }}
         >
           <Typography
             sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
               [theme.breakpoints.between("sm", "lg")]: {
                 fontSize: "0.98em",
               },
@@ -176,11 +259,14 @@ export const summerTerm = (
             [theme.breakpoints.only("md")]: {
               width: "9.87vw",
             },
-            opacity: 0.25
+            opacity: 0.25,
           }}
         >
           <Typography
             sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
               [theme.breakpoints.between("sm", "lg")]: {
                 fontSize: "0.98em",
               },
@@ -204,11 +290,14 @@ export const summerTerm = (
             [theme.breakpoints.only("md")]: {
               width: "9.87vw",
             },
-            opacity: 0.25
+            opacity: 0.25,
           }}
         >
           <Typography
             sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
               [theme.breakpoints.between("sm", "lg")]: {
                 fontSize: "0.88em",
               },
@@ -222,19 +311,76 @@ export const summerTerm = (
       {/* credit */}
       <Stack
         direction={"row"}
-        sx={{ width: "100%", justifyContent: "space-around",position: "relative", mt: 0.5, pb: 2  }}
+        sx={{
+          width: "100%",
+          justifyContent: "space-around",
+          position: "relative",
+          mt: 0.5,
+          pb: 2,
+          [theme.breakpoints.up(2000)]: {
+            mt: 3,
+          },
+        }}
       >
         <Stack direction={"row"} spacing={1} sx={{}}>
-          <Typography sx={{}}>{credit1}</Typography>
-          <Typography sx={{}}>credits</Typography>
+          <Typography
+            sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
+            }}
+          >
+            {credit1}
+          </Typography>
+          <Typography
+            sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
+            }}
+          >
+            credits
+          </Typography>
         </Stack>
         <Stack direction={"row"} spacing={1} sx={{}}>
-          <Typography sx={{}}>{credit2}</Typography>
-          <Typography sx={{}}>credits</Typography>
+          <Typography
+            sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
+            }}
+          >
+            {credit2}
+          </Typography>
+          <Typography
+            sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
+            }}
+          >
+            credits
+          </Typography>
         </Stack>
         <Stack direction={"row"} spacing={1} sx={{}}>
-          <Typography sx={{}}>{creditSummer}</Typography>
-          <Typography sx={{}}>credits</Typography>
+          <Typography
+            sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
+            }}
+          >
+            {creditSummer}
+          </Typography>
+          <Typography
+            sx={{
+              [theme.breakpoints.up(2000)]: {
+                fontSize: "1.2em",
+              },
+            }}
+          >
+            credits
+          </Typography>
         </Stack>
       </Stack>
     </Stack>

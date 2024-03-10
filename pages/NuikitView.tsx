@@ -117,6 +117,7 @@ function NuikitView() {
 
   const [filterGE, setFilterGE] = useState(true);
   const [filterSp, setFilterSp] = useState(true);
+  const [clickSp, setClickSp] = useState(true);
   const [filterFree, setFilterFree] = useState(true);
 
   const [checkedPreFilter, setCheckedPreFilter] = useState(true);
@@ -138,6 +139,7 @@ function NuikitView() {
   const [arrInsideNode, setInsideArrNode] = useState([]);
 
   const [text, setText] = useState("");
+  const [tmpText, setTmpText] = useState("");
   const [freeClicked, setFreeClicked] = useState<boolean>(false);
   const [isFree, setIsFree] = useState<boolean>(false);
   const [searchBtn, setSearchBtn] = useState<boolean>(false);
@@ -258,19 +260,21 @@ function NuikitView() {
         </ToggleButton>
       );
     } else {
-      <ToggleButton
-        value="coop"
-        sx={{
-          width: "50%",
-          textTransform: "none",
-          "&.Mui-selected , &.Mui-selected:hover": {
-            bgcolor: "#EE6457",
-            color: "white",
-          },
-        }}
-      >
-        Cooperative Plan
-      </ToggleButton>;
+      return (
+        <ToggleButton
+          value="coop"
+          sx={{
+            width: "50%",
+            textTransform: "none",
+            "&.Mui-selected , &.Mui-selected:hover": {
+              bgcolor: "#EE6457",
+              color: "white",
+            },
+          }}
+        >
+          Cooperative Plan
+        </ToggleButton>
+      );
     }
   }
 
@@ -280,14 +284,23 @@ function NuikitView() {
     if (resp["isCoop"] === "true") {
       setisCoop(true);
       setFormats("coop");
-      setDisNormalButton(true);
+      console.log("jjj");
+      if (resp["number of term"].length >= 4) {
+        setDisNormalButton(true);
+      } else {
+        setDisNormalButton(false);
+      }
 
-      console.log(isCoop);
+      // console.log(isCoop);
     } else {
       setisCoop(false);
       setFormats("normal");
-      setDisCoopButton(true);
-      console.log(isCoop);
+      console.log("pppp");
+      if (resp["number of term"].length >= 4) {
+        setDisCoopButton(true);
+      } else {
+        setDisCoopButton(false);
+      }
     }
 
     gen_req = [];
@@ -435,16 +448,16 @@ function NuikitView() {
 
   async function handleNodeClick(groupName: string) {
     if (groupName === "Major Elective") {
-      var respFree: any = await fetchMajorElective();
-      console.log(respFree);
-      setFreeModalNode(respFree["courseLists"]);
+      var respmjE: any = await fetchMajorElective();
+      console.log(respmjE);
+      setFreeModalNode(respmjE["courseLists"]);
       setModalTopic("Major Elective");
     } else {
       var respFree: any = await fetchFreeElective(groupName);
       setFreeModalNode(respFree["courseLists"]);
       setModalTopic(groupName);
     }
-    // setFreeModalNode(respFree["courseLists"]);
+
     toggleModal();
   }
 
@@ -454,6 +467,7 @@ function NuikitView() {
     var type = "free";
     var tmpArr: any = freeNode;
     var displayArr: any = [];
+    var checkLearn: any[] = [];
     if (
       modalTopic === "Learner Person" ||
       modalTopic === "Co-Creator" ||
@@ -461,29 +475,31 @@ function NuikitView() {
     ) {
       type = "gen";
       tmpArr = genElecNode;
-      console.log(tmpArr);
+      // console.log(tmpArr);
     } else {
       type = "spec_mj";
-      tempArr = majorENode;
-      if (tempArr === null || tempArr.length === 0) {
-        tempArr = [];
+      tmpArr = mjelectiveNode;
+
+      if (tmpArr === null || tmpArr.length === 0) {
+        tmpArr = [];
       }
       // console.log(tmpArr);
     }
-
+    console.log(tmpArr);
+    checkLearn = genElecNode;
     freeModalNode.map((node: any) => {
-      if (tempArr.length !== 0) {
+      if (tmpArr.length !== 0) {
         let res = tmpArr.some((n: any) => n.courseNo == node.courseNo);
+        // console.log('log res ')
+
         if (res) {
           displayArr.push(
             <Stack
               onClick={async () => {
                 setDetail(await FetchCourse(node.courseNo));
-                // console.log(genElecNode);
-                // setArrNode(genElecNode);
+
                 setInsideArrNode(genElecNode);
                 setInsideNodeClicked(true);
-                // setDetailClicked(true);
               }}
             >
               <NuikitViewNode
@@ -500,11 +516,9 @@ function NuikitView() {
             <Stack
               onClick={async () => {
                 setDetail(await FetchCourse(node.courseNo));
-                // console.log(genElecNode);
-                // setArrNode(genElecNode);
+
                 setInsideArrNode(genElecNode);
                 setInsideNodeClicked(true);
-                // setDetailClicked(true);
               }}
             >
               <NuikitViewNode
@@ -518,6 +532,17 @@ function NuikitView() {
           );
         }
       } else {
+        // console.log(node)
+        checkLearn = mjelectiveNode;
+        // console.log(checkLearn)
+        console.log(
+          checkLearn.some((n: any) => {
+            n.courseNo === node.courseNo;
+          })
+        );
+
+        // console.log(node.courseNo)
+
         displayArr.push(
           <Stack
             onClick={async () => {
@@ -701,16 +726,17 @@ function NuikitView() {
       if (clickDoned) {
         return total;
       } else {
-        console.log(notLearnGEArr);
-
+        // console.log(notLearnGEArr);
         if (notLearnGEArr !== null) {
           if (notLearnGEArr.length > 0) {
+            
             for (let i = 0; i < notLearnGEArr.length; i++) {
               for (
                 let j = 0;
                 j < Math.ceil(notLearnGEArr[i]["remainedCredits"] / 3);
                 j++
               ) {
+                console.log(notLearnGEArr[i]["remainedCredits"])
                 total.push(
                   <Stack
                     onClick={() => {
@@ -728,6 +754,8 @@ function NuikitView() {
                 );
               }
             }
+            return total;
+
           }
         }
       }
@@ -1071,7 +1099,6 @@ function NuikitView() {
         console.log("ppppp");
         mjelec.map((node: any) => {
           if (node["isPass"]) {
-            console.log(node);
             total.push(
               <Stack
                 onClick={async () => {
@@ -1091,11 +1118,7 @@ function NuikitView() {
             );
           }
         });
-
-        // console.log("tota; mjelec");
-        // console.log(total);
       } else {
-        // console.log("not done");
         // console.log(mjelec)
         mjelec.map((node: any) => {
           if (node["isPass"]) {
@@ -1116,33 +1139,35 @@ function NuikitView() {
                 />
               </Stack>
             );
-            total = isPassArr
-          } else {
-            console.log("minus " + (major_elecCreditNeed - major_elecCredit))
-            for (
-              let i = 0;
-              i < (major_elecCreditNeed - major_elecCredit) / 3;
-              i++
-            ) {
-              notPassArr.push(
-                <Stack
-                  onClick={() => {
-                    handleNodeClick("Major Elective");
-                  }}
-                >
-                  <NuikitViewNode
-                    sub_no={"Major Elective"}
-                    sub_name={"Major Elective"}
-                    type="spec_mj"
-                    isPass={false}
-                    credit={3}
-                  />
-                </Stack>
-              );
-            }
-            total = notPassArr.concat(isPassArr);
+            total = isPassArr;
           }
         });
+
+        if (major_elecCreditNeed - major_elecCredit > 0) {
+          for (
+            let i = 0;
+            i < (major_elecCreditNeed - major_elecCredit) / 3;
+            i++
+          ) {
+            notPassArr.push(
+              <Stack
+                onClick={() => {
+                  handleNodeClick("Major Elective");
+                }}
+              >
+                <NuikitViewNode
+                  sub_no={"Major Elective"}
+                  sub_name={"Major Elective"}
+                  type="spec_mj"
+                  isPass={false}
+                  credit={3}
+                />
+              </Stack>
+            );
+          }
+
+          total = notPassArr.concat(isPassArr);
+        }
       }
     }
     return total;
@@ -1177,15 +1202,35 @@ function NuikitView() {
   async function fetchStdData() {
     await cmuOauth();
 
-    const urlNuikit =
+    const searchParams = new URLSearchParams(window.location.search);
+    var search = searchParams.has("mockData");
+    var qryValue = searchParams.get("mockData");
+
+    var urlNuikit =
       "http://localhost:8080/categoryView?year=" +
       year +
-      "&curriculumProgram=CPE&isCOOP=true" +
-      // "&studentId=" +
-      // studentId;
-      // "630610761";
-      // &studentId=630610727
-      "&mockData=mockData13";
+      "&curriculumProgram=CPE&isCOOP=" +
+      isCoop;
+
+    if (search) {
+      console.log("have mock");
+      urlNuikit += "&mockData=mockData" + qryValue;
+    } else {
+      console.log("not mock");
+      urlNuikit += "&studentId=" + studentId;
+    }
+
+    // var urlNuikit =
+    //   "http://localhost:8080/categoryView?year=" +
+    //   year +
+    //   "&curriculumProgram=CPE&isCOOP=false" +
+    // "&studentId=" +
+    // studentId;
+    // "630610761";
+    // &studentId=630610727
+    // "&mockData=mockData5";
+
+    console.log(urlNuikit);
     NuikitData(urlNuikit);
   }
 
@@ -1265,19 +1310,31 @@ function NuikitView() {
             marginTop: "3.4074vh",
             justifyContent: "space-between",
             mb: 1,
-            alignItems: 'center'
+            alignItems: "center",
+            [theme.breakpoints.between("sm", "md")]: {
+              alignItems: "start",
+            },
           }}
         >
           {/* Topic section */}
-          <Stack direction={"row"} sx={{ alignItems: "center" }}>
-            <Typography variant="h6" sx={{}}>
+          <Stack direction={"row"} sx={{ alignItems: "center", mt: 0 }}>
+            <Typography variant="h6" sx={{ mt: 0 }}>
               Category View
             </Typography>
             {warningIcon(setWarning)}
           </Stack>
 
           <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
-            <Stack direction={"row"} sx={{ columnGap: 1.4 }}>
+            <Stack
+              direction={"row"}
+              sx={{
+                columnGap: 1.4,
+                rowGap: 1,
+                width: "50vw",
+                flexWrap: "wrap",
+                justifyContent: "flex-end",
+              }}
+            >
               {isCoop ? displayCoopPlan() : displayNormalPlan()}
               {checkedDone && saveBtn && displayDone()}
               {/* {checkedPreFilter && displayPre()} */}
@@ -1378,6 +1435,7 @@ function NuikitView() {
                     setText("");
                     setIsFree(false);
                     setErrInp(false);
+                    setSearchBtn(false);
                   }}
                   sx={{
                     width: "2.222vw",
@@ -1423,6 +1481,7 @@ function NuikitView() {
                     sx={{ p: 1 }}
                     aria-label="search"
                     onClick={async () => {
+                      // console.log(text)
                       if (text !== "" || text !== null) {
                         var regex = /^[a-zA-Z]+$/;
                         if (
@@ -1431,15 +1490,20 @@ function NuikitView() {
                           text.length < 6
                         ) {
                           setErrInp(true);
-
-                          console.log("this is text");
+                          // setIsFree(false)
+                          setSearchBtn(true);
                         } else {
                           var resp: any = await FetchIsFree(text);
                           if (resp !== null) {
+                            console.log(resp);
                             const group = resp["group"];
+
                             if (group === "Free") setIsFree(true);
+                            else setIsFree(false);
 
                             setSearchBtn(true);
+                            setTmpText(text);
+                            console.log("test free click " + text);
                           }
                           setErrInp(false);
                         }
@@ -1452,17 +1516,17 @@ function NuikitView() {
                   </IconButton>
                 </Paper>
                 <Stack sx={{ mt: 2 }}>
-                  {isFree && (
+                  {isFree && searchBtn && (
                     <Typography variant="h6">
-                      {text} is Free Elective
+                      {tmpText} is Free Elective
                     </Typography>
                   )}
-                  {searchBtn && !isFree && (
+                  {searchBtn && !isFree && !errInp && (
                     <Typography variant="h6">
-                      {text} is not Free Elective
+                      {tmpText} is not Free Elective
                     </Typography>
                   )}
-                  {errInp && (
+                  {errInp && searchBtn && (
                     <Typography variant="subtitle1">
                       โปรดกรอกรหัสวิชาที่ถูกต้อง โดยรหัสวิชามีรูปแบบเป็นเลข 6
                       ตัว
@@ -1470,13 +1534,13 @@ function NuikitView() {
                   )}
                 </Stack>
                 <Stack sx={{ mt: 1 }}>
-                  {isFree && (
+                  {isFree && searchBtn && (
                     <CheckCircleIcon sx={{ fontSize: 44, color: green[500] }} />
                   )}
-                  {searchBtn && !isFree && (
+                  {searchBtn && !isFree && !errInp && (
                     <CancelIcon sx={{ fontSize: 44, color: red[500] }} />
                   )}
-                  {errInp && (
+                  {errInp && searchBtn && (
                     <CancelIcon sx={{ fontSize: 44, color: red[500] }} />
                   )}
                 </Stack>
@@ -1691,16 +1755,19 @@ function NuikitView() {
                   direction={"row"}
                   sx={{ justifyContent: "space-between" }}
                 >
-                  <Typography sx={{ alignSelf: "center" }} variant="h6" fontWeight={600}>Filter</Typography>
+                  <Typography
+                    sx={{ alignSelf: "center" }}
+                    variant="h6"
+                    fontWeight={600}
+                  >
+                    Filter
+                  </Typography>
                   <IconButton
                     onClick={() => {
-                      // if (!saveBtn) {
-                      //   if (checkedDone) {
-                      //     setCheckedDone(false);
-                      //   } else {
-                      //     setCheckedDone(true);
-                      //   }
-                      // }
+                      if (!saveBtn) {
+                        setCheckedDone(clickDoned);
+                        console.log("click sp " + clickSp);
+                      }
                       setFilter(!filter);
                     }}
                     sx={{
@@ -1727,7 +1794,9 @@ function NuikitView() {
 
                 {/* Category Section */}
                 <Stack>
-                  <Typography variant="subtitle1" fontWeight={600}>Category</Typography>
+                  <Typography variant="subtitle1" fontWeight={600}>
+                    Category
+                  </Typography>
                   <Stack
                     direction={"row"}
                     spacing={1}
@@ -1778,7 +1847,6 @@ function NuikitView() {
                       variant="outlined"
                       sx={{
                         borderColor: isSelected(filterSp),
-
                         display: "flex",
                         padding: 0.8,
                         borderRadius: 5,
@@ -1793,6 +1861,7 @@ function NuikitView() {
                       }}
                       onClick={() => {
                         setFilterSp(!filterSp);
+                        setClickSp(filterSp);
                       }}
                     >
                       <Stack
@@ -1860,7 +1929,9 @@ function NuikitView() {
 
                 {/* Option */}
                 <Stack>
-                  <Typography variant="subtitle1" fontWeight={600}>Option</Typography>
+                  <Typography variant="subtitle1" fontWeight={600}>
+                    Option
+                  </Typography>
 
                   {/* Done Course */}
                   <Stack
@@ -1871,8 +1942,12 @@ function NuikitView() {
                     }}
                   >
                     <Stack>
-                      <Typography variant="subtitle1" fontWeight={500}>Done Course</Typography>
-                      <Typography variant="body2">Show all course that done</Typography>
+                      <Typography variant="subtitle1" fontWeight={500}>
+                        Done Course
+                      </Typography>
+                      <Typography variant="body2">
+                        Show all course that done
+                      </Typography>
                     </Stack>
                     <FormControlLabel
                       control={
@@ -1952,7 +2027,7 @@ function NuikitView() {
                 justifyContent: "space-between",
               }}
             >
-              <Typography variant="subtitle1"  sx={{ color: ge_pass }}>
+              <Typography variant="subtitle1" sx={{ color: ge_pass }}>
                 General Education
               </Typography>
 
@@ -2059,7 +2134,11 @@ function NuikitView() {
                     mt: 1,
                   }}
                 >
-                  <Typography variant="subtitle2" fontWeight={550} sx={{ marginBottom: "0.6vh" }}>
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={550}
+                    sx={{ marginBottom: "0.6vh" }}
+                  >
                     Required Course
                   </Typography>
                   {/* <Typography variant="body2" >Required Course</Typography> */}
@@ -2133,7 +2212,11 @@ function NuikitView() {
                     flexDirection: "row",
                   }}
                 >
-                  <Typography variant="subtitle2" fontWeight={550} sx={{ marginBottom: "0.6vh" }}>
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={550}
+                    sx={{ marginBottom: "0.6vh" }}
+                  >
                     Elective
                   </Typography>
                   {/* <Typography variant="body2" >Elective</Typography> */}
@@ -2300,7 +2383,11 @@ function NuikitView() {
                   justifyContent: "space-between",
                 }}
               >
-                <Typography variant="subtitle2" fontWeight={550} sx={{ marginBottom: "0.6vh" }}>
+                <Typography
+                  variant="subtitle2"
+                  fontWeight={550}
+                  sx={{ marginBottom: "0.6vh" }}
+                >
                   Core Course
                 </Typography>
                 <Stack
@@ -2369,7 +2456,9 @@ function NuikitView() {
                   justifyContent: "space-between",
                 }}
               >
-                <Typography variant="subtitle2" fontWeight={550}>Major Course</Typography>
+                <Typography variant="subtitle2" fontWeight={550}>
+                  Major Course
+                </Typography>
 
                 <Stack
                   sx={{

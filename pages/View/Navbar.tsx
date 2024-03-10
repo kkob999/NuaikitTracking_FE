@@ -31,7 +31,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
 // import { useNavigate, Link } from "react-router-dom";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import Link from "next/link";
 import axios, { AxiosError, AxiosResponse } from "axios";
@@ -168,6 +168,12 @@ function Navbar() {
   const [studentId, setStudentId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const searchParams = useSearchParams();
+  const search = searchParams.has("mockData");
+  const qryValue = searchParams.get("mockData");
+  // console.log("is mockData link " + search);
+  // console.log(qryValue);
+
   useEffect(() => {
     axios
       .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
@@ -214,9 +220,14 @@ function Navbar() {
   }, []);
 
   return (
-    <Stack sx={{  }}>
-      <Drawer variant="permanent" open={open} sx={{}} PaperProps={{sx:{bgcolor: "#FDF5F4"}}}>
-        <DrawerHeader >
+    <Stack sx={{}}>
+      <Drawer
+        variant="permanent"
+        open={open}
+        sx={{}}
+        PaperProps={{ sx: { bgcolor: "#FDF5F4" } }}
+      >
+        <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
@@ -237,7 +248,6 @@ function Navbar() {
               ml: "auto",
               mr: "auto",
               mb: "1.4vh",
-              
             }}
           >
             <Box sx={{ width: "1.7625rem", height: "1.7625rem" }}>
@@ -404,14 +414,14 @@ function Navbar() {
                   minWidth: 0,
                   mr: open ? 3 : "auto",
                   justifyContent: "center",
-                  color: 'gray'
+                  color: "gray",
                 }}
               >
                 <AssignmentIcon />
               </ListItemIcon>
               <ListItemText
                 primary={"View Board"}
-                sx={{ opacity: open ? 1 : 0,  color: 'gray' }}
+                sx={{ opacity: open ? 1 : 0, color: "gray" }}
               />
             </ListItem>
           ) : // </ListItem>
@@ -435,7 +445,6 @@ function Navbar() {
                 ml: 0,
                 mr: 1,
                 borderRadius: "0 0.6rem 0.6rem 0",
-                
               }}
             >
               <ListItemIcon
@@ -532,17 +541,25 @@ function Navbar() {
           </ListItem>
         </List>
 
-        <Stack sx={{ mt: "auto", mb: 6,}}>
+        <Stack sx={{ mt: "auto", mb: 6 }}>
           {!open ? (
-            <Stack sx={{bgcolor: "#FDF5F4"}}>
+            <Stack sx={{ bgcolor: "#FDF5F4" }}>
               {/* Avatar */}
-              <Avatar
-                sx={{ width: 44, height: 44, mb: 2, ml: "auto", mr: "auto" }}
-              >
-                {/* {f_name === undefined ? null : f_name[0]}
-                {l_name === undefined ? null : l_name[0]} */}
-                M
-              </Avatar>
+              {search ? (
+                <Avatar
+                  sx={{ width: 44, height: 44, mb: 2, ml: "auto", mr: "auto" }}
+                >
+                  M
+                </Avatar>
+              ) : (
+                <Avatar
+                  sx={{ width: 44, height: 44, mb: 2, ml: "auto", mr: "auto" }}
+                >
+                  {f_name === undefined ? null : f_name[0]}
+                  {l_name === undefined ? null : l_name[0]}
+                  {/* M */}
+                </Avatar>
+              )}
 
               <IconButton
                 onClick={signOut}
@@ -578,16 +595,28 @@ function Navbar() {
               >
                 {/* Name */}
                 <Stack>
-                  <Typography
-                    sx={{
-                      color: "#EE6457",
-                      fontWeight: "bold",
-                      fontSize: "1rem",
-                    }}
-                  >
-                    {/* {studentId === undefined ? null : studentId} */}
-                    Mock Data 13
-                  </Typography>
+                  {search ? (
+                    <Typography
+                      sx={{
+                        color: "#EE6457",
+                        fontWeight: "bold",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      Mock Data {qryValue}
+                    </Typography>
+                  ) : (
+                    <Typography
+                      sx={{
+                        color: "#EE6457",
+                        fontWeight: "bold",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      {studentId === undefined ? null : studentId}
+                    </Typography>
+                  )}
+
                   <Stack direction={"row"} spacing={1}>
                     <Typography
                       sx={{
@@ -613,9 +642,9 @@ function Navbar() {
                 </Stack>
                 {/* Avatar */}
                 <Avatar sx={{ width: 44, height: 44 }}>
-                  {/* {f_name === undefined ? null : f_name[0]}
-                  {l_name === undefined ? null : l_name[0]} */}
-                  M
+                  {f_name === undefined ? null : f_name[0]}
+                  {l_name === undefined ? null : l_name[0]}
+                  {/* M */}
                 </Avatar>
               </Stack>
               <Button

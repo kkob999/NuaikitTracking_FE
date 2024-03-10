@@ -5,577 +5,10 @@ import { fetchNuikitData, mjelec } from "../pages/NuikitView";
 import { start } from "repl";
 import { Set } from "typescript";
 import { WhoAmIResponse } from "../pages/api/whoAmI";
+import { useSearchParams } from 'next/navigation'
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-const mockjSon = {
-  "list of course": {
-    "001101": {
-      courseNo: "001101",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "001102": {
-      courseNo: "001102",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["001101"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "001201": {
-      courseNo: "001201",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["001102"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "001225": {
-      courseNo: "001225",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["001102"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "011100": {
-      courseNo: "011100",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "Elective",
-    },
-    "140104": {
-      courseNo: "140104",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "203100": {
-      courseNo: "203100",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "Elective",
-    },
-    "206161": {
-      courseNo: "206161",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "206162": {
-      courseNo: "206162",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["206161"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "206261": {
-      courseNo: "206261",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["206162"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "207105": {
-      courseNo: "207105",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "207106": {
-      courseNo: "207106",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["207105"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "207115": {
-      courseNo: "207115",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 1,
-      GroupName: "",
-    },
-    "207116": {
-      courseNo: "207116",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["207115"],
-      corequisite: "",
-      credits: 1,
-      GroupName: "",
-    },
-    "252281": {
-      courseNo: "252281",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "259104": {
-      courseNo: "259104",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "259106": {
-      courseNo: "259106",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 1,
-      GroupName: "",
-    },
-    "259191": {
-      courseNo: "259191",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 1,
-      GroupName: "",
-    },
-    "259192": {
-      courseNo: "259192",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 1,
-      GroupName: "",
-    },
-    "261102": {
-      courseNo: "261102",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261103": {
-      courseNo: "261103",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261200": {
-      courseNo: "261200",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261102"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261207": {
-      courseNo: "261207",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261103"],
-      corequisite: "",
-      credits: 2,
-      GroupName: "",
-    },
-    "261208": {
-      courseNo: "261208",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["206261"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261210": {
-      courseNo: "261210",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["207106"],
-      corequisite: "261212",
-      credits: 3,
-      GroupName: "",
-    },
-    "261212": {
-      courseNo: "261212",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "261210",
-      credits: 1,
-      GroupName: "",
-    },
-    "261214": {
-      courseNo: "261214",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261210", "252281"],
-      corequisite: "261215",
-      credits: 3,
-      GroupName: "",
-    },
-    "261215": {
-      courseNo: "261215",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "261214",
-      credits: 1,
-      GroupName: "",
-    },
-    "261216": {
-      courseNo: "261216",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261217": {
-      courseNo: "261217",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261102"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261218": {
-      courseNo: "261218",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261217", "261216"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261304": {
-      courseNo: "261304",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261214"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261305": {
-      courseNo: "261305",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261304"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261306": {
-      courseNo: "261306",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["206261"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261332": {
-      courseNo: "261332",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["207106"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261335": {
-      courseNo: "261335",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261332"],
-      corequisite: "261336",
-      credits: 3,
-      GroupName: "",
-    },
-    "261336": {
-      courseNo: "261336",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "261335",
-      credits: 1,
-      GroupName: "",
-    },
-    "261342": {
-      courseNo: "261342",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261218"],
-      corequisite: "261343",
-      credits: 3,
-      GroupName: "",
-    },
-    "261343": {
-      courseNo: "261343",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "261342",
-      credits: 1,
-      GroupName: "",
-    },
-    "261361": {
-      courseNo: "261361",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261200"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261405": {
-      courseNo: "261405",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261361"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-    "261491": {
-      courseNo: "261491",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: [],
-      corequisite: "",
-      credits: 1,
-      GroupName: "",
-    },
-    "261492": {
-      courseNo: "261492",
-      recommendSemester: 0,
-      recommendYear: 0,
-      prerequisites: ["261491"],
-      corequisite: "",
-      credits: 3,
-      GroupName: "",
-    },
-  },
-  "study term": [2, 2],
-  template: [
-    [
-      "000000",
-      "206161",
-      "000000",
-      "000000",
-      "207105",
-      "000000",
-      "000000",
-      "207115",
-      "259104",
-      "000000",
-      "259106",
-      "000000",
-      "261103",
-      "000000",
-      "001101",
-      "140104",
-      "259191",
-      "000000",
-      "000000",
-      "000000",
-    ],
-    [
-      "000000",
-      "206162",
-      "000000",
-      "000000",
-      "207106",
-      "000000",
-      "252281",
-      "207116",
-      "000000",
-      "000000",
-      "261102",
-      "000000",
-      "111111",
-      "000000",
-      "001102",
-      "000000",
-      "000000",
-      "203100",
-      "Elective",
-      "000000",
-    ],
-    [
-      "000000",
-      "206261",
-      "111111",
-      "000000",
-      "261210",
-      "261212",
-      "111111",
-      "000000",
-      "000000",
-      "111111",
-      "261217",
-      "261216",
-      "261207",
-      "111111",
-      "001201",
-      "000000",
-      "000000",
-      "011100",
-      "Elective",
-      "000000",
-    ],
-    [
-      "111111",
-      "261208",
-      "261332",
-      "000000",
-      "261214",
-      "261215",
-      "000000",
-      "000000",
-      "000000",
-      "261200",
-      "261218",
-      "000000",
-      "000000",
-      "001225",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-    ],
-    [
-      "111111",
-      "000000",
-      "261335",
-      "261336",
-      "261304",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "111111",
-      "261342",
-      "261343",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "Co-Creator",
-      "Major Elective",
-      "000000",
-    ],
-    [
-      "261306",
-      "000000",
-      "000000",
-      "000000",
-      "261305",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "261361",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "Learner Person",
-      "Elective",
-      "Major Elective",
-    ],
-    [
-      "261491",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "111111",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "Major Elective",
-      "Major Elective",
-      "Major Elective",
-    ],
-    [
-      "261492",
-      "259192",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "261405",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "000000",
-      "Major Elective",
-      "000000",
-      "000000",
-    ],
-  ],
-};
 
 // const urlTerm =
 //   "http://localhost:8080/termView?year=2563&curriculumProgram=CPE&isCOOP=false&mockData=mockData2";
@@ -645,7 +78,15 @@ var stdId = "";
 
 // var
 
+
+
+
 async function processData(year: string, isCoop: string, stdId: string) {
+
+  const searchParams = new URLSearchParams(window.location.search);
+  var search = searchParams.has('mockData')
+  var qryValue = searchParams.get('mockData')
+
   termNode = [];
   edArr = [];
   creditArr = [];
@@ -681,10 +122,16 @@ async function processData(year: string, isCoop: string, stdId: string) {
     "http://localhost:8080/termView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
-    // isCoop +
-    // "&studentId="+stdId;
-    "true&mockData=mockData13";
-  // "&studentId=630610760";
+    isCoop 
+    // + "&studentId="+stdId;
+    // "true&mockData=mockData12";
+  // "&studentId=630610727";
+
+  if (search) {
+    termURL += "&mockData=mockData"+qryValue
+  }else{
+    termURL += "&studentId="+stdId;
+  }
 
   console.log(termURL);
   // "630610723";
@@ -692,10 +139,16 @@ async function processData(year: string, isCoop: string, stdId: string) {
     "http://localhost:8080/categoryView?year=" +
     year +
     "&curriculumProgram=CPE&isCOOP=" +
-    // isCoop +
-    // "&studentId="+stdId;
-    "true&mockData=mockData13";
-  // "&studentId=630610760";
+    isCoop 
+    // +"&studentId="+stdId;
+    // "true&mockData=mockData12";
+  // "&studentId=630610727";
+
+  if (search) {
+    nuikitURL += "&mockData=mockData"+qryValue
+  }else{
+    nuikitURL += "&studentId="+stdId;
+  }
 
   console.log(nuikitURL);
   // "63061072";
@@ -918,8 +371,38 @@ async function processData(year: string, isCoop: string, stdId: string) {
   if (window.innerWidth < 1300) {
     currXPos = (window.innerWidth * 19) / 1024; //-3
   }
+  if (window.innerWidth > 1700 && window.innerWidth < 1900) {
+    currXPos = (window.innerWidth * 23) / 1920;
+  }
+
+  if (window.innerWidth > 1900 && window.innerWidth < 2100) {
+    currXPos = (window.innerWidth * 19) / 1920;
+  }
+
   if (window.innerWidth > 1300 && window.innerWidth < 1440) {
     currXPos = (window.innerWidth * 17) / 1024; //-3
+  }
+  if (window.innerWidth > 1200 && window.innerWidth < 1300) {
+    currXPos = 13 //-3
+  }
+  if (window.innerWidth > 1100 && window.innerWidth < 1200) {
+    currXPos = 20 //-3
+  }
+  if (window.innerWidth > 600 && window.innerWidth < 900) {
+    currXPos = (window.innerWidth * 13) / 604;
+  }
+  
+  if (window.innerWidth > 800 && window.innerWidth < 900) {
+    currXPos = 32;
+  }
+
+  
+
+  if (window.innerWidth === 768) {
+    currXPos = 26;
+  }
+  if (window.innerWidth === 2560) {
+    currXPos = 16;
   }
 
   var xpos = currXPos;
@@ -932,25 +415,10 @@ async function processData(year: string, isCoop: string, stdId: string) {
   var x_sum = 27.2;
   var xx = 27.5;
 
-  if (window.innerWidth === 1024) {
-    // if (summerArr.includes(2)) {
-    //   console.log("have summer");
-    //   x = 133.5 + 30;
-    //   x_sum = 26.2 + 30;
-    //   xx = 22 + 30;
-    // } else {
-    //   x = 133.5 + 30;
-    //   x_sum = 26.2 + 30;
-    //   xx = 22 + 30;
-    // }
-    x = 133.5 + 30;
-    x_sum = 26.2 + 30;
-    xx = 22 + 30;
-  }
   if (window.innerWidth > 600 && window.innerWidth < 900) {
-    x = 133.5 + 40;
-    x_sum = 27.2 + 40;
-    xx = 27.5 + 40;
+    x = 133.5 + 97.4;
+    x_sum = 27.2 + 37;
+    xx = 27.5 + 37;
   }
 
   if (window.innerWidth > 900 && window.innerWidth < 1200) {
@@ -958,6 +426,16 @@ async function processData(year: string, isCoop: string, stdId: string) {
     x_sum = 27.2;
     xx = 27.5;
   }
+  if (window.innerWidth === 1024) {
+    x = 133.5 + 8;
+    x_sum = 26.2;
+    xx = 22 + 46;
+  }
+  // if (window.innerWidth === 1440) {
+  //   var x = 133.5;
+  //   var x_sum = 27.2 + 19;
+  //   var xx = 27.5+ 26;
+  // }
 
   var nextXPos = (window.innerWidth * (x - 1)) / 1440;
 
@@ -990,6 +468,10 @@ async function processData(year: string, isCoop: string, stdId: string) {
         xpos += (window.innerWidth * xx) / 1440;
       if (summerArr[6] === 0 && summerArr[7] === 0 && i === 7)
         xpos += (window.innerWidth * xx) / 1440;
+      
+      // if (i === 9) {
+      //   xpos += (window.innerWidth * xx) / 1440;
+      // }
 
       if (i === 3 && summerArr[i - 1] === 2) {
         xpos += (window.innerWidth * x_sum) / 1440;
@@ -1024,8 +506,13 @@ async function processData(year: string, isCoop: string, stdId: string) {
         ) {
           console.log("xx " + i);
           console.log(summerArr.length);
-          xpos += (window.innerWidth * xx) / 1440;
+          if (i === 6 ) {
+            xpos += (window.innerWidth * xx) / 1440;
+          } 
+
+          if( i === 5 ) xpos += (window.innerWidth * xx) / 1440;
         }
+        
       }
 
       //last term
@@ -1034,6 +521,7 @@ async function processData(year: string, isCoop: string, stdId: string) {
         if (!isSumYear1) xpos += (window.innerWidth * xx) / 1440;
         else if (isSumYear1 && summerArr[7] === 2 && i === 8)
           xpos += (window.innerWidth * xx) / 1440;
+        else if (isSumYear1 && summerArr[8] === 0 && i === 9 ) xpos += (window.innerWidth * xx) / 1440;
       }
     }
     //normal term
@@ -1473,7 +961,6 @@ export {
   // currData,
   edArr,
   processData,
-  mockjSon,
   fetchData,
   allTerm,
   allyear,

@@ -1,4 +1,6 @@
 import { Box, Stack, Typography, Breakpoint } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import React, { memo } from "react";
 import { Handle, Position, Node, NodeProps } from "reactflow";
 import { theme } from "../../../constants/theme";
@@ -50,17 +52,15 @@ export default function TermNode({
   } else if (data.category == "sp_major") {
     if (!data.is_pass) {
       color = major_notpass;
-    }else{
+    } else {
       color = major_pass;
     }
-    
   } else {
-    if (!data.is_pass){
+    if (!data.is_pass) {
       color = free_notpass;
-    }else{
+    } else {
       color = free_pass;
     }
-    
   }
 
   function checkSubNo(sub_no: string) {
@@ -76,6 +76,9 @@ export default function TermNode({
           variant="caption"
           sx={{
             fontSize: "0.7em",
+            [theme.breakpoints.up("xl")]: {
+              fontSize: "0.9em",
+            },
             [theme.breakpoints.between("sm", "lg")]: {
               fontSize: "0.58em",
             },
@@ -90,6 +93,12 @@ export default function TermNode({
           variant="body2"
           sx={{
             fontSize: "0.9em",
+            [theme.breakpoints.up("xl")]: {
+              fontSize: "1.1em",
+            },
+            [theme.breakpoints.only("lg")]: {
+              fontSize: "0.8em",
+            },
             [theme.breakpoints.between(1200, 1439)]: {
               fontSize: "0.78em",
             },
@@ -99,7 +108,6 @@ export default function TermNode({
             [theme.breakpoints.only("md")]: {
               fontSize: "0.7em",
             },
-            
           }}
         >
           {data.sub_no}
@@ -110,16 +118,19 @@ export default function TermNode({
 
   function checkisPass(isPass: boolean) {
     if (isPass) {
+      console.log(window.innerWidth);
       return (
-        <Stack
+        <CheckCircleIcon
           sx={{
-            border: "1px solid #34C759",
-            borderRadius: "100%",
-            height: "0.9rem",
-            width: "0.9rem",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#34C759",
+            color: "#34C759",
+            [theme.breakpoints.up(2000)]: {
+              height: "1.2em",
+              width: "1.2em",
+            },
+            [theme.breakpoints.only("lg")]: {
+              height: "0.7em",
+              width: "0.7em",
+            },
             [theme.breakpoints.between(1200, 1439)]: {
               height: "0.78em",
               width: "0.78em",
@@ -132,34 +143,66 @@ export default function TermNode({
               height: "0.7em",
               width: "0.7em",
             },
-            
           }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="8"
-            height="8"
-            viewBox="0 0 12 10"
-            fill="none"
-          >
-            <path
-              d="M11 0.830078L4.125 8.69448L1 5.11975"
-              stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </Stack>
+        />
+        // <Stack
+        //   sx={{
+        //     border: "1px solid #34C759",
+        //     borderRadius: "100%",
+        //     height: "0.9rem",
+        //     width: "0.9rem",
+        //     justifyContent: "center",
+        //     alignItems: "center",
+        //     backgroundColor: "#34C759",
+
+        //     [theme.breakpoints.up(2000)]: {
+        //       height: "1.2em",
+        //       width: "1.2em",
+        //     },
+        //     [theme.breakpoints.between(1200, 1439)]: {
+        //       height: "0.78em",
+        //       width: "0.78em",
+        //     },
+        //     [theme.breakpoints.between("sm", "md")]: {
+        //       height: "0.68em",
+        //       width: "0.68em",
+        //     },
+        //     [theme.breakpoints.only("md")]: {
+        //       height: "0.7em",
+        //       width: "0.7em",
+        //     },
+        //   }}
+        // >
+        //   <svg
+        //       xmlns="http://www.w3.org/2000/svg"
+        //       width="8"
+        //       height="8"
+        //       viewBox="0 0 12 10"
+        //       fill="none"
+        //     >
+        //       <path
+        //         d="M11 0.830078L4.125 8.69448L1 5.11975"
+        //         stroke="white"
+        //         stroke-width="2"
+        //         stroke-linecap="round"
+        //         stroke-linejoin="round"
+        //       />
+        //     </svg>
+        // </Stack>
       );
     } else {
       return (
-        <Box
+        <RadioButtonUncheckedIcon
           sx={{
-            height: "0.9rem",
-            width: "0.9rem",
-            border: "1px solid" + color,
-            borderRadius: "100%",
+            color: color,
+            [theme.breakpoints.up(2000)]: {
+              height: "1.2em",
+              width: "1.2em",
+            },
+            [theme.breakpoints.only("lg")]: {
+              height: "0.7em",
+              width: "0.7em",
+            },
             [theme.breakpoints.between(1200, 1439)]: {
               height: "0.78em",
               width: "0.78em",
@@ -172,9 +215,32 @@ export default function TermNode({
               height: "0.7em",
               width: "0.7em",
             },
-            
           }}
-        ></Box>
+        />
+        // <Box
+        //   sx={{
+        //     height: "0.9rem",
+        //     width: "0.9rem",
+        //     border: "1px solid" + color,
+        //     borderRadius: "100%",
+        //     [theme.breakpoints.up("xl")]: {
+        //       height: "1em",
+        //       width: "1em",
+        //     },
+        //     [theme.breakpoints.between(1200, 1439)]: {
+        //       height: "0.78em",
+        //       width: "0.78em",
+        //     },
+        //     [theme.breakpoints.between("sm", "md")]: {
+        //       height: "0.68em",
+        //       width: "0.68em",
+        //     },
+        //     [theme.breakpoints.only("md")]: {
+        //       height: "0.7em",
+        //       width: "0.7em",
+        //     },
+        //   }}
+        // ></Box>
       );
     }
   }
@@ -205,16 +271,20 @@ export default function TermNode({
           padding: "1vh 0",
           border: "1.5px solid" + color,
           borderRadius: "0.5rem",
-          cursor: 'pointer',
-          
-          [theme.breakpoints.down("lg")]: {
-            // height: "30px",
+          cursor: "pointer",
+          [theme.breakpoints.up("xl")]: {
+            border: "2.5px solid" + color,
             // bgcolor: 'gainsboro'
           },
+          [theme.breakpoints.only("lg")]: {
+            width: "6.146vw",
+            height: "5.3704vh",
+            // bgcolor: "gainsboro",
+          },
           [theme.breakpoints.between("sm", "md")]: {
-            // height: "16px",
-            width: "9.146vw",
-            // bgcolor: 'lavender',
+            height: "40px",
+            width: "70px",
+            // bgcolor: "lavender",
           },
           [theme.breakpoints.only("md")]: {
             // height: "22px",
