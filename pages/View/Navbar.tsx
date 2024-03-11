@@ -339,6 +339,8 @@ function Navbar() {
 
         <Divider />
         <List sx={{}}>
+          {open ? (<ListItem>Menu</ListItem>): null}
+          
           <ListItem
             disablePadding
             sx={{ display: "block" }}
@@ -399,8 +401,10 @@ function Navbar() {
         <Divider />
 
         <List sx={{}}>
-          {open == true ? (
-            // <ListItem disablePadding sx={{ display: "block" }}>
+          {open ? (<ListItem>View Board</ListItem>) : null}
+          
+          {/* {open == true ? (
+
             <ListItem
               sx={{
                 minHeight: 48,
@@ -424,8 +428,8 @@ function Navbar() {
                 sx={{ opacity: open ? 1 : 0, color: "gray" }}
               />
             </ListItem>
-          ) : // </ListItem>
-          null}
+          ) : 
+          null} */}
 
           {/* Category View */}
           <ListItem
@@ -467,7 +471,7 @@ function Navbar() {
                   <CategoryIcon sx={{ color: "white" }} />
                 )}
                 {url !== "/NuikitView" && open && (
-                  <CategoryIcon sx={{ opacity: 0 }} />
+                  <CategoryIcon sx={{ opacity: 1 }} />
                 )}
                 {url !== "/NuikitView" && !open && (
                   <CategoryIcon sx={{ color: "grey" }} />
@@ -507,7 +511,6 @@ function Navbar() {
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  ml: open ? 3 : "auto",
                   justifyContent: "center",
                 }}
               >
@@ -524,7 +527,7 @@ function Navbar() {
                   <AccountTreeIcon sx={{ opacity: 0 }} />
                 )}
                 {url !== "/TermView" && open && (
-                  <AccountTreeIcon sx={{ opacity: 0 }} />
+                  <AccountTreeIcon sx={{ opacity: 1 }} />
                 )}
                 {url !== "/TermView" && !open && (
                   <AccountTreeIcon sx={{ color: "grey" }} />
@@ -535,6 +538,7 @@ function Navbar() {
                 sx={{
                   opacity: open ? 1 : 0,
                   color: url === "/TermView" ? "white" : "grey",
+                  ml: open ? 3 : 0,
                 }}
               />
             </ListItemButton>

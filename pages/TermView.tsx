@@ -287,6 +287,10 @@ function DisplayBackDrop(checked: boolean) {
 function TermView() {
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+  var search = searchParams.has("mockData");
+  var qryValue = searchParams.get("mockData");
+
   const [fullName, setFullName] = useState("");
   const [f_name, setF_name] = useState("");
   const [l_name, setL_name] = useState("");
@@ -396,8 +400,6 @@ function TermView() {
 
   const openPopover = Boolean(anchorEl);
   const openPopoverQ = Boolean(anchorElQ);
-
-  
 
   const bp = useMediaQuery(theme.breakpoints.down("lg"));
 
@@ -974,7 +976,10 @@ function TermView() {
             )}
 
             <Divider />
+
             <List>
+              {open ? <ListItem>Menu</ListItem> : null}
+
               <ListItem
                 disablePadding
                 sx={{ display: "block" }}
@@ -1014,7 +1019,8 @@ function TermView() {
             <Divider />
 
             <List>
-              {open === true ? (
+              {open ? <ListItem>View Board</ListItem> : null}
+              {/* {open === true ? (
                 // <ListItem disablePadding sx={{ display: "block" }}>
                 <ListItem
                   sx={{
@@ -1038,8 +1044,8 @@ function TermView() {
                     sx={{ opacity: open ? 1 : 0, color: "gray" }}
                   />
                 </ListItem>
-              ) : // </ListItem>
-              null}
+              ) : 
+              null} */}
 
               {/* Category View */}
               <ListItem
@@ -1064,7 +1070,7 @@ function TermView() {
                     }}
                   >
                     {open === true ? (
-                      <CategoryIcon sx={{ opacity: 0 }} />
+                      <CategoryIcon sx={{ opacity: 1 }} />
                     ) : (
                       <CategoryIcon sx={{ color: fontChange("nuikit") }} />
                     )}
@@ -1125,19 +1131,33 @@ function TermView() {
               {!open ? (
                 <Stack sx={{}}>
                   {/* Avatar */}
-                  <Avatar
-                    sx={{
-                      width: 44,
-                      height: 44,
-                      mb: 2,
-                      ml: "auto",
-                      mr: "auto",
-                    }}
-                  >
-                    {/* {f_name === undefined ? null : f_name[0]}
-                    {l_name === undefined ? null : l_name[0]} */}
-                    M
-                  </Avatar>
+                  {search ? (
+                    <Avatar
+                      sx={{
+                        width: 44,
+                        height: 44,
+                        mb: 2,
+                        ml: "auto",
+                        mr: "auto",
+                      }}
+                    >
+                      M
+                    </Avatar>
+                  ) : (
+                    <Avatar
+                      sx={{
+                        width: 44,
+                        height: 44,
+                        mb: 2,
+                        ml: "auto",
+                        mr: "auto",
+                      }}
+                    >
+                      {f_name === undefined ? null : f_name[0]}
+                      {l_name === undefined ? null : l_name[0]}
+                      {/* M */}
+                    </Avatar>
+                  )}
 
                   <IconButton
                     onClick={signOut}
@@ -1173,16 +1193,28 @@ function TermView() {
                   >
                     {/* Name */}
                     <Stack>
-                      <Typography
-                        sx={{
-                          color: "#EE6457",
-                          fontWeight: "bold",
-                          fontSize: "1rem",
-                        }}
-                      >
-                        {/* {studentId === undefined ? null : studentId} */}
-                        Mock Data 13
-                      </Typography>
+                      {search ? (
+                        <Typography
+                          sx={{
+                            color: "#EE6457",
+                            fontWeight: "bold",
+                            fontSize: "1rem",
+                          }}
+                        >
+                          Mock Data {qryValue}
+                        </Typography>
+                      ) : (
+                        <Typography
+                          sx={{
+                            color: "#EE6457",
+                            fontWeight: "bold",
+                            fontSize: "1rem",
+                          }}
+                        >
+                          {studentId === undefined ? null : studentId}
+                        </Typography>
+                      )}
+
                       <Stack direction={"row"} spacing={1}>
                         <Typography
                           sx={{
@@ -1207,11 +1239,14 @@ function TermView() {
                       </Stack>
                     </Stack>
                     {/* Avatar */}
-                    <Avatar sx={{ width: 44, height: 44 }}>
-                      {/* {f_name === undefined ? null : f_name[0]}
-                      {l_name === undefined ? null : l_name[0]} */}
-                      M
-                    </Avatar>
+                    {search ? (
+                      <Avatar sx={{ width: 44, height: 44 }}>M</Avatar>
+                    ) : (
+                      <Avatar sx={{ width: 44, height: 44 }}>
+                        {f_name === undefined ? null : f_name[0]}
+                        {l_name === undefined ? null : l_name[0]}
+                      </Avatar>
+                    )}
                   </Stack>
                   <Button
                     variant="outlined"
@@ -2054,7 +2089,9 @@ function TermView() {
                           <Stack>
                             <Stack
                               aria-owns={
-                                openPopoverQ ? "mouse-over-popover-q" : undefined
+                                openPopoverQ
+                                  ? "mouse-over-popover-q"
+                                  : undefined
                               }
                               aria-haspopup="true"
                               onMouseEnter={handlePopoverOpenQ}
@@ -2086,7 +2123,11 @@ function TermView() {
                             >
                               <Paper sx={{ backgroundColor: grey[200], p: 1 }}>
                                 <Typography sx={{ fontSize: "0.6rem" }}>
-                                  Filter ตัวนี้จะทำการเปิด และปิดเส้นแสดงตัวต่อทั้งหมด<br></br>หากปุ่ม see prerequisite course มีสถานะ<br></br>เปิดใช้งานอยู่การทำงานของ Filter ตัวนี้จะไม่เห็นผล
+                                  Filter ตัวนี้จะทำการเปิด
+                                  และปิดเส้นแสดงตัวต่อทั้งหมด<br></br>หากปุ่ม
+                                  see prerequisite course มีสถานะ<br></br>
+                                  เปิดใช้งานอยู่การทำงานของ Filter
+                                  ตัวนี้จะไม่เห็นผล
                                 </Typography>
                               </Paper>
                             </Popover>
