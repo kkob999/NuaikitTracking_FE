@@ -100,6 +100,10 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
               height: "1.2em",
               width: "1.2em",
             },
+            [theme.breakpoints.only("lg")]: {
+              height: "0.7em",
+              width: "0.7em",
+            },
             [theme.breakpoints.between(1200, 1439)]: {
               height: "0.78em",
               width: "0.78em",
@@ -109,47 +113,47 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
               width: "0.68em",
             },
             [theme.breakpoints.only("md")]: {
-              height: "0.7em",
-              width: "0.7em",
-            },
-            [theme.breakpoints.only("lg")]: {
-              height: "0.7em",
-              width: "0.7em",
+              height: "0.56em",
+              width: "0.56em",
             },
           }}
         />
       );
     } else {
       return (
-        <Box
+        <RadioButtonUncheckedIcon
           sx={{
-            height: "0.9rem",
-            width: "0.9rem",
-            border: "1px solid" + color,
-            borderRadius: "100%",
-            [theme.breakpoints.between("sm", "md")]: {
-              height: "0.68em",
-              width: "0.68em",
-            },
-            [theme.breakpoints.only("md")]: {
-              height: "0.7em",
-              width: "0.7em",
-            },
-            [theme.breakpoints.between(1200,1439)]: {
-              height: "0.78em",
-              width: "0.78em",
+            color: color,
+            [theme.breakpoints.up(2000)]: {
+              height: "1.2em",
+              width: "1.2em",
             },
             [theme.breakpoints.only("lg")]: {
               height: "0.7em",
               width: "0.7em",
             },
+            [theme.breakpoints.between(1200, 1439)]: {
+              height: "0.78em",
+              width: "0.78em",
+            },
+            [theme.breakpoints.between("sm", "md")]: {
+              height: "0.68em",
+              width: "0.68em",
+            },
+            [theme.breakpoints.only("md")]: {
+              height: "0.56em",
+              width: "0.56em",
+            },
           }}
-        ></Box>
+        ></RadioButtonUncheckedIcon>
       );
     }
   }
 
   let x = (window.innerWidth * 1.8) / 1440;
+  if (window.innerWidth > 600 && window.innerWidth < 1000) {
+    x = (window.innerWidth * 1.8) / 800;
+  }
 
   return (
     <>
@@ -192,7 +196,7 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
           [theme.breakpoints.between("sm", "md")]: {
             height: "40px",
             width: "70px",
-            bgcolor: 'lavender',
+            
           },
           [theme.breakpoints.only("md")]: {
             // height: "22px",
@@ -225,7 +229,7 @@ export default function haveLab({ data, isConnectable }: NodeProps<NodeData>) {
                 fontSize: "0.68em",
               },
               [theme.breakpoints.only("md")]: {
-                fontSize: "0.7em",
+                fontSize: "0.64em",
               },
               [theme.breakpoints.between(1200,1439)]: {
                 fontSize: "0.78em",

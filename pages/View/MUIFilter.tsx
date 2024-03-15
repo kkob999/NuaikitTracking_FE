@@ -8,10 +8,12 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   useMediaQuery,
+  Divider,
 } from "@mui/material";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { free_pass, ge_pass, majorCore_pass } from "../../constants/color";
+import { free_pass, ge_pass, majorCore_pass, major_pass } from "../../constants/color";
 import { theme } from "../../constants/theme";
+import { grey } from "@mui/material/colors";
 
 export default function isSelected(selected: boolean) {
   if (selected) return "#EE6457";
@@ -37,12 +39,11 @@ export function TogglePlan() {
   );
 }
 
-export const displayGE = (screenWidth : number) => {
+export const displayGE = (screenWidth: number) => {
   return (
     <Stack
       direction={"row"}
       sx={{
-        
         // bgcolor: "white",
         pt: 0.5,
         pb: 0.5,
@@ -130,7 +131,62 @@ export const displaySp = () => {
         },
       }}
     >
-      <Stack
+      <Stack direction={"row"} spacing={1}>
+        <Stack direction={"row"} sx={{alignItems: 'center'}}>
+          <Stack
+            sx={{
+              width: "0.8vw",
+              height: "0.8vw",
+              bgcolor: majorCore_pass,
+              mr: 1,
+              borderRadius: 100,
+            }}
+          ></Stack>
+          <Typography
+            sx={{
+              fontSize: "0.9rem",
+              color: "#EE6457",
+              [theme.breakpoints.down("lg")]: {
+                fontSize: "0.86rem",
+              },
+              [theme.breakpoints.between("sm", "md")]: {
+                fontSize: "0.7rem",
+              },
+            }}
+          >
+            Core
+          </Typography>
+        </Stack>
+        <Divider orientation="vertical" variant="middle" flexItem sx={{borderWidth: 0.5, borderColor: grey[800]}}/>
+        <Stack direction={"row"} sx={{alignItems: 'center'}}>
+          <Stack
+            sx={{
+              width: "0.8vw",
+              height: "0.8vw",
+              bgcolor: major_pass,
+              mr: 1,
+              borderRadius: 100,
+            }}
+          ></Stack>
+          <Typography
+            sx={{
+              fontSize: "0.9rem",
+              color: "#EE6457",
+              [theme.breakpoints.down("lg")]: {
+                fontSize: "0.86rem",
+              },
+              [theme.breakpoints.between("sm", "md")]: {
+                fontSize: "0.7rem",
+              },
+            }}
+          >
+            Major
+          </Typography>
+        </Stack>
+      </Stack>
+
+
+      {/* <Stack
         sx={{
           width: "0.8vw",
           height: "0.8vw",
@@ -152,12 +208,12 @@ export const displaySp = () => {
         }}
       >
         Specification
-      </Typography>
+      </Typography> */}
     </Stack>
   );
 };
 
-export const displayFree = (screenWidth : number) => {
+export const displayFree = (screenWidth: number) => {
   return (
     <Stack
       direction={"row"}
@@ -324,20 +380,20 @@ export const displayCoopPlan = () => {
         </Typography>
       )} */}
 
-<Typography
-          sx={{
-            fontSize: "0.9rem",
-            color: "#EE6457",
-            [theme.breakpoints.down("lg")]: {
-              fontSize: "0.86rem",
-            },
-            [theme.breakpoints.between("sm", "md")]: {
-              fontSize: "0.7rem",
-            },
-          }}
-        >
-          Cooperative Plan
-        </Typography>
+      <Typography
+        sx={{
+          fontSize: "0.9rem",
+          color: "#EE6457",
+          [theme.breakpoints.down("lg")]: {
+            fontSize: "0.86rem",
+          },
+          [theme.breakpoints.between("sm", "md")]: {
+            fontSize: "0.7rem",
+          },
+        }}
+      >
+        Cooperative Plan
+      </Typography>
     </Stack>
   );
 };

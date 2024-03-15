@@ -15,7 +15,7 @@ import Navbar from "./View/Navbar";
 
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "next/router";
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { WhoAmIResponse } from "./api/whoAmI";
 import { theme } from "../constants/theme";
@@ -78,24 +78,19 @@ function CircularWithValueLabel(allgetCredit: number, allneedCredit: number) {
   return progress;
 }
 
-
-
 function DashBoard() {
   //Login
   const router = useRouter();
 
-  const searchParams = useSearchParams()
-  const search = searchParams.has('mockData')
-  const qryValue = searchParams.get('mockData')
-  console.log('is mockData link ' + search)
-  console.log(qryValue)
+  const searchParams = useSearchParams();
+  const search = searchParams.has("mockData");
+  const qryValue = searchParams.get("mockData");
+  
 
   const [fullName, setFullName] = useState("");
   const [cmuAccount, setCmuAccount] = useState("");
   const [studentId, setStudentId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  
 
   var [allgetCredit, setAllGetCredit] = React.useState<number>(0);
   var [allgetCreditCal, setAllGetCreditCal] = React.useState<number>(0);
@@ -147,7 +142,6 @@ function DashBoard() {
   var tmp_gen_elecCreditNeed = 0;
 
   async function FetchDashBoard(url: string) {
-    
     return new Promise(function (resolve, reject) {
       axios
         .get(url, {
@@ -159,7 +153,6 @@ function DashBoard() {
           },
         })
         .then((response) => {
-          console.log("fetch dashboard data");
           resolve(response.data);
           return response.data;
         })
@@ -174,15 +167,12 @@ function DashBoard() {
 
   async function DatchBoardData(url: string) {
     const resp: any = await FetchDashBoard(url);
-    // console.log(resp["coreCategory"]);
-    console.log(resp);
 
     setAllGetCredit(resp["summaryCredit"]);
     setAllNeedCredit(resp["requiredCredits"]);
 
     for (let i = 0; i < resp["coreCategory"].length; i++) {
       tmp_coreCredit += resp["coreCategory"][i]["requiredCreditsGet"];
-      // console.log(resp["coreCategory"][i]["requiredCreditsGet"])
       setcoreCredit(tmp_coreCredit);
 
       tmp_coreCreditNeed += resp["coreCategory"][i]["requiredCreditsNeed"];
@@ -219,9 +209,7 @@ function DashBoard() {
       }
     }
 
-    console.log('genReqCredit ' + gen_reqCredit)
-
-    setgenElecCreditCal(free_Credit);
+    setgenElecCreditCal(gen_elecCredit);
     if (gen_elecCredit > gen_elecCreditNeed) {
       setgenElecCreditCal(gen_elecCreditNeed);
     }
@@ -238,39 +226,38 @@ function DashBoard() {
       if (resp["majorCategory"][i]["electiveCreditsNeed"] > 0) {
         tmp_major_elecCredit += resp["majorCategory"][i]["electiveCreditsGet"];
         setmajorElecCredit(tmp_major_elecCredit);
-        console.log(tmp_major_elecCredit);
 
         tmp_major_elecCreditNeed +=
           resp["majorCategory"][i]["electiveCreditsNeed"];
         setmajorElecCreditNeed(tmp_major_elecCreditNeed);
       }
-      // console.log('.')
     }
 
     setmajorElecCreditCal(major_elecCredit);
     if (major_elecCredit > major_elecCreditNeed) {
       setmajorElecCreditCal(major_elecCreditNeed);
     }
-    // console.log('.')
-    // setClock(CircularWithValueLabel(allgetCredit,allneedCredit))
-
-    setAllGetCreditCal(
-      core_Credit +
-        +gen_reqCredit +
-        gen_elecCreditCal +
-        free_CreditCal +
-        major_elecCreditCal +
-        major_reqCredit
-    );
-
-
-
+    
 
     if (
       gen_reqCredit + gen_elecCredit >
       gen_reqCreditNeed + gen_elecCreditNeed
     ) {
-      setGEPercent(100);
+      if (gen_elecCredit > gen_elecCreditNeed) {
+        var tempGEElec = gen_elecCreditNeed;
+        if (
+          gen_reqCredit + tempGEElec <
+          gen_reqCreditNeed + gen_elecCreditNeed
+        ) {
+          setgenElecCredit(tempGEElec);
+          var tempScore =
+            ((gen_reqCredit + tempGEElec) * 100) /
+            (gen_reqCreditNeed + gen_elecCreditNeed);
+          setGEPercent(Math.floor(tempScore));
+        } else {
+          setGEPercent(100);
+        }
+      }
     } else {
       setGEPercent(
         Math.floor(
@@ -279,8 +266,6 @@ function DashBoard() {
         )
       );
     }
-    
-    
 
     setCorePercent(Math.floor((core_Credit * 100) / core_CreditNeed));
 
@@ -304,18 +289,11 @@ function DashBoard() {
     if (allgetCredit > allneedCredit) {
       setClock(100);
     } else {
-      setClock(Math.floor((allgetCredit * 100) / allneedCredit));
+      setClock(Math.floor((allgetCreditCal * 100) / allneedCredit));
     }
   }
 
-  // React.useEffect(() => {
-  //   DatchBoardData();
-  // });
-
   const bp = useMediaQuery(theme.breakpoints.down("lg"));
-
-  // var url =
-  //   "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false&studentId=630610768";
 
   var stdId = "";
   async function cmuOauth() {
@@ -327,10 +305,6 @@ function DashBoard() {
           setCmuAccount(response.data.cmuAccount);
           setStudentId(response.data.studentId ?? "No Student Id");
           stdId = response.data.studentId ?? "No Student Id";
-          console.log(studentId);
-          console.log("orgCode");
-          console.log(response.data.orgCode);
-          console.log(response.data.orgNameEN);
         }
       })
       .catch((error: AxiosError<WhoAmIResponse>) => {
@@ -345,47 +319,53 @@ function DashBoard() {
         } else {
           setErrorMessage("Unknown error occurred. Please try again later");
         }
+        throw 500
       });
   }
 
   async function fetchStdData() {
     await cmuOauth();
+    var year = "2563"
+    if (Number(stdId.substring(0, 2)) >= 63 && Number(stdId.substring(0, 2)) <= 67){
+      year = "2563"
+    }
 
     var url =
-      "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE"
+        "http://localhost:8080/summaryCredits?year="+year+"&curriculumProgram=CPE";
 
-    if (!search) {
-      url += "&isCOOP=false&studentId=" + stdId;
-    }else{
-      // is mockdata
-      if (qryValue === null || qryValue === "") {
-        console.log('error')
-        setErrorMessage('Please fill number of mockData')
-      }else{
-        url += "&isCOOP=false&mockData=mockData" + qryValue
+      if (!search) {
+        url += "&isCOOP=false&studentId=" + stdId;
+        
+      } else {
+        // is mockdata
+        if (qryValue === null || qryValue === "") {
+          
+          setErrorMessage("Please fill number of mockData");
+        } else {
+          url += "&isCOOP=false&mockData=mockData" + qryValue;
+        }
       }
+
+    if (errorMessage === "") {
       
+      await DatchBoardData(url);
     }
-    
-    // var url =
-    //   "http://localhost:8080/summaryCredits?year=2563&curriculumProgram=CPE&isCOOP=false" +
-      // "&studentId=" + stdId;
-      // "&mockData=mockData2";
-    // "630610727"
-    console.log(url);
-    await DatchBoardData(url);
-    
   }
 
   async function calData() {
     await fetchStdData();
-    console.log('fetchstddata')
-    
   }
 
   React.useEffect(() => {
+    if (window.innerWidth < 601) {
+      setErrorMessage("Please use this website in bigger device.")
+    }
+    if (window.innerHeight < 700) {
+      setErrorMessage("Please use this website in bigger device.")
+    }
     calData();
-  }, [clock]);
+    
+  }, [clock,errorMessage]);
 
   return (
     <Stack
@@ -407,7 +387,7 @@ function DashBoard() {
             justifyContent: "center",
           }}
         >
-          <Typography variant="h5" sx={{ color: "red", mb: 4 }}>
+          <Typography variant="h5" sx={{ color: "red", mb: 4, textAlign: 'center' }}>
             {errorMessage}
           </Typography>
           {/* <Typography variant="subtitle1" sx={{color: 'grey', mb: 3}}>Please Log in before use website</Typography> */}
@@ -438,713 +418,981 @@ function DashBoard() {
       {/* Navbar */}
 
       {/* Dashboard */}
-
-      <Stack
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        margin={{ xs: "16px", sm: "16px", lg: "48px" }}
-        height={{ xs: "", sm: "", lg: "100vh" }}
-        flexDirection={{ xs: "column", sm: "column", lg: "row" }}
-        gap={{ xs: "16px", sm: "16px", lg: "48px" }}
-        marginTop={{ xs: "20px", sm: "20px", lg: "0px" }}
-      >
+      {errorMessage === "" && (
         <Stack
           sx={{
-            height: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-          width={{ xs: "80%", sm: "80%", lg: "45%" }}
-        >
-          {/* Total Nuikit */}
-          <Stack width={{ xs: "100%", sm: "100%", lg: "100%" }}>
-            <Stack direction={"row"} sx={{ alignItems: "center" }}>
-              <Typography variant="h6">Total Nuaikit</Typography>
-              {warningIcon(setWarning)}
-            </Stack>
-
-            <Stack
-              sx={{
-                border: "2px solid var(--Grey_2, #C2C2C2)",
-                borderRadius: "1.25rem",
-                justifyContent: "center",
-                padding: "8px",
-              }}
-            >
-              {warning && warningModal(setWarning)}
-              <Stack
-                sx={{
-                  display: "flex",
-                  margin: "16px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "16px",
-                }}
-                flexDirection={"row"}
-              >
-                {/* Total Nuikit */}
-                <Stack
-                  sx={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100%",
-                  }}
-                  width={"50%"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                >
-                  <Box
-                    position="relative"
-                    display="inline-block"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <Box
-                      top={0}
-                      left={0}
-                      bottom={0}
-                      right={0}
-                      position="absolute"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <CircularProgress
-                        style={{ color: "#f5f5f5" }}
-                        size={180}
-                        variant="determinate"
-                        value={100}
-                      />
-                    </Box>
-                    <CircularProgress
-                      sx={{
-                        [`& .${circularProgressClasses.circle}`]: {
-                          strokeLinecap: "round",
-                        },
-                        color: "#F1485B",
-                      }}
-                      size={180}
-                      variant="determinate"
-                      value={clock ? (clock < 100 ? clock : 100) : 0}
-                    />
-                    <Box
-                      top={0}
-                      left={0}
-                      bottom={0}
-                      right={0}
-                      position="absolute"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      flexDirection={"column"}
-                    >
-                      <Typography
-                        variant="subtitle1"
-                        component="div"
-                        color="textSecondary"
-                      >
-                        Total
-                      </Typography>
-                      <Typography
-                        variant="h5"
-                        component="div"
-                        color="textSecondary"
-                      >
-                        {clock ? clock : 0} %
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Stack>
-                {/* Total Nuikit */}
-
-                {/* แยก */}
-                <Stack
-                  flexDirection={"column"}
-                  gap={"16px"}
-                  width={"50%"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                >
-                  <Stack flexDirection={"row"} gap="20px">
-                    <Stack
-                      sx={{ justifyContent: "center", alignItems: "center" }}
-                      width={"100px"}
-                    >
-                      <Typography variant="body2" marginBottom={"5px"}>
-                        GE
-                      </Typography>
-
-                      <Box
-                        position="relative"
-                        display="inline-block"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <Box
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          position="absolute"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <CircularProgress
-                            style={{ color: "#f5f5f5" }}
-                            size={90}
-                            variant="determinate"
-                            value={100}
-                          />
-                        </Box>
-                        <CircularProgress
-                          sx={{
-                            [`& .${circularProgressClasses.circle}`]: {
-                              strokeLinecap: "round",
-                            },
-                            color: ge_pass,
-                          }}
-                          size={90}
-                          variant="determinate"
-                          value={
-                            gePercent ? (gePercent < 100 ? gePercent : 100) : 0
-                          }
-                        />
-                        <Box
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          position="absolute"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Typography
-                            variant="subtitle1"
-                            component="div"
-                            color="textSecondary"
-                          >
-                            {gePercent ? gePercent : 0} %
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Stack>
-
-                    <Stack
-                      sx={{ justifyContent: "center", alignItems: "center" }}
-                      width={"100px"}
-                    >
-                      <Typography variant="body2" marginBottom={"5px"}>
-                        Core
-                      </Typography>
-
-                      <Box
-                        position="relative"
-                        display="inline-block"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <Box
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          position="absolute"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <CircularProgress
-                            style={{ color: "#f5f5f5" }}
-                            size={90}
-                            variant="determinate"
-                            value={100}
-                          />
-                        </Box>
-                        <CircularProgress
-                          sx={{
-                            [`& .${circularProgressClasses.circle}`]: {
-                              strokeLinecap: "round",
-                            },
-                            color: majorCore_pass,
-                          }}
-                          size={90}
-                          variant="determinate"
-                          value={
-                            corePercent
-                              ? corePercent < 100
-                                ? corePercent
-                                : 100
-                              : 0
-                          }
-                        />
-                        <Box
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          position="absolute"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Typography
-                            variant="subtitle1"
-                            component="div"
-                            color="textSecondary"
-                          >
-                            {corePercent ? corePercent : 0} %
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Stack>
-                  </Stack>
-
-                  <Stack flexDirection={"row"} gap="20px">
-                    <Stack
-                      sx={{ justifyContent: "center", alignItems: "center" }}
-                      width={"100px"}
-                    >
-                      <Typography variant="body2" marginBottom={"5px"}>
-                        Major
-                      </Typography>
-
-                      <Box
-                        position="relative"
-                        display="inline-block"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <Box
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          position="absolute"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <CircularProgress
-                            style={{ color: "#f5f5f5" }}
-                            size={90}
-                            variant="determinate"
-                            value={100}
-                          />
-                        </Box>
-                        <CircularProgress
-                          sx={{
-                            [`& .${circularProgressClasses.circle}`]: {
-                              strokeLinecap: "round",
-                            },
-                            color: major_pass,
-                          }}
-                          size={90}
-                          variant="determinate"
-                          value={
-                            majorPercent
-                              ? majorPercent < 100
-                                ? majorPercent
-                                : 100
-                              : 0
-                          }
-                        />
-                        <Box
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          position="absolute"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Typography
-                            variant="subtitle1"
-                            component="div"
-                            color="textSecondary"
-                          >
-                            {majorPercent ? majorPercent : 0} %
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Stack>
-
-                    <Stack
-                      sx={{ justifyContent: "center", alignItems: "center" }}
-                      width={"100px"}
-                    >
-                      <Typography variant="body2" marginBottom={"5px"}>
-                        Free Elective
-                      </Typography>
-
-                      <Box
-                        position="relative"
-                        display="inline-block"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <Box
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          position="absolute"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <CircularProgress
-                            style={{ color: "#f5f5f5" }}
-                            size={90}
-                            variant="determinate"
-                            value={100}
-                          />
-                        </Box>
-                        <CircularProgress
-                          sx={{
-                            [`& .${circularProgressClasses.circle}`]: {
-                              strokeLinecap: "round",
-                            },
-                            color: free_pass,
-                          }}
-                          size={90}
-                          variant="determinate"
-                          value={
-                            freePercent
-                              ? freePercent < 100
-                                ? freePercent
-                                : 100
-                              : 0
-                          }
-                        />
-                        <Box
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          position="absolute"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Typography
-                            variant="subtitle1"
-                            component="div"
-                            color="textSecondary"
-                          >
-                            {freePercent ? freePercent : 0} %
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Stack>
-                  </Stack>
-                </Stack>
-                {/* แยก */}
-              </Stack>
-            </Stack>
-
-            {/* End Total Nuikit */}
-
-            {!bp && (
-              <>
-                <Stack
-                  width={{ xs: "100%", sm: "100%", lg: "100%" }}
-                  height={"24px"}
-                ></Stack>
-                <Stack width={{ xs: "100%", sm: "100%", lg: "100%" }}>
-                  <Typography variant="h6" marginBottom={"4px"}>
-                    Profile
-                  </Typography>
-                  <Stack
-                    sx={{
-                      padding: "16px",
-                      border: "2px solid var(--Grey_2, #C2C2C2)",
-                      borderRadius: "1.25rem",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Stack
-                      sx={{
-                        marginLeft: "1.771vw",
-                        marginRight: "1.771vw",
-                        gap: "1.4815vh",
-                        width: "100%",
-                      }}
-                    >
-                      <Stack sx={{ display: "flex", flexDirection: "row" }}>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ width: "6.771vw" }}
-                        >
-                          Name
-                        </Typography>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ marginLeft: "0" }}
-                        >
-                          {fullName}
-                        </Typography>
-                      </Stack>
-                      <Stack sx={{ display: "flex", flexDirection: "row" }}>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ width: "6.771vw" }}
-                        >
-                          Email
-                        </Typography>
-                        <Typography variant="subtitle2">
-                          {cmuAccount}
-                        </Typography>
-                      </Stack>
-                      <Stack sx={{ display: "flex", flexDirection: "row" }}>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ width: "6.771vw" }}
-                        >
-                          Student code
-                        </Typography>
-                        <Typography variant="subtitle2">{studentId}</Typography>
-                      </Stack>
-                    </Stack>
-                  </Stack>
-                </Stack>
-              </>
-            )}
-          </Stack>
-        </Stack>
-
-        {/* Your Nuikit */}
-        <Stack
-          sx={{
-            height: "100%",
+            width: "100%",
+            display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
-          width={{ xs: "80%", sm: "80%", lg: "45%" }}
+          margin={{ xs: "16px", sm: "16px", lg: "48px" }}
+          height={{ xs: "", sm: "", lg: "100vh" }}
+          flexDirection={{ xs: "column", sm: "column", lg: "row" }}
+          gap={{ xs: "16px", sm: "16px", lg: "48px" }}
+          marginTop={{ xs: "20px", sm: "20px", lg: "0px" }}
         >
           <Stack
             sx={{
-              width: "100%",
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
             }}
-            height={{ lg: "520px" }}
+            width={{ xs: "80%", sm: "80%", lg: "45%" }}
           >
-            <Typography variant="h6">Your Nuaikit</Typography>
-            {/* frame */}
-            <Stack
-              sx={{
-                height: "100%",
-                width: "100%",
-                border: "2px solid var(--Grey_2, #C2C2C2)",
-                borderRadius: "1.25rem",
-                justifyContent: "center",
-                paddingX: "24px",
-              }}
-            >
-              {/* Start */}
+            {/* Total Nuikit */}
+            <Stack width={{ xs: "100%", sm: "100%", lg: "100%" }}>
+              <Stack direction={"row"} sx={{ alignItems: "center" }}>
+                <Typography variant="h6">Total Nuaikit</Typography>
+                {warningIcon(setWarning)}
+              </Stack>
+
               <Stack
                 sx={{
-                  margin: "20px",
-                  gap: "2.9630vh",
-                  justifyItems: "center",
+                  border: "2px solid var(--Grey_2, #C2C2C2)",
+                  borderRadius: "1.25rem",
+                  justifyContent: "center",
+                  padding: "8px",
                 }}
               >
-                {/* General */}
-                <Stack>
+                {warning && warningModal(setWarning)}
+                <Stack
+                  sx={{
+                    display: "flex",
+                    margin: "16px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "16px",
+                  }}
+                  flexDirection={"row"}
+                >
+                  {/* Total Nuikit */}
                   <Stack
                     sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
                     }}
+                    width={"50%"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
                   >
-                    <Typography variant="subtitle1" sx={{ color: ge_pass }}>
-                      General Education
-                    </Typography>
+                    <Box
+                      position="relative"
+                      display="inline-block"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Box
+                        top={0}
+                        left={0}
+                        bottom={0}
+                        right={0}
+                        position="absolute"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <CircularProgress
+                          style={{ color: "#f5f5f5" }}
+                          size={180}
+                          variant="determinate"
+                          value={100}
+                        />
+                      </Box>
+                      <CircularProgress
+                        sx={{
+                          [`& .${circularProgressClasses.circle}`]: {
+                            strokeLinecap: "round",
+                          },
+                          color: "#F1485B",
+                        }}
+                        size={180}
+                        variant="determinate"
+                        value={clock ? (clock < 100 ? clock : 100) : 0}
+                      />
+                      <Box
+                        top={0}
+                        left={0}
+                        bottom={0}
+                        right={0}
+                        position="absolute"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection={"column"}
+                      >
+                        <Typography
+                          variant="subtitle1"
+                          component="div"
+                          color="textSecondary"
+                        >
+                          Total
+                        </Typography>
+                        <Typography
+                          variant="h5"
+                          component="div"
+                          color="textSecondary"
+                        >
+                          {clock ? clock : 0} %
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Stack>
+                  {/* Total Nuikit */}
 
+                  {/* แยก */}
+                  <Stack
+                    flexDirection={"column"}
+                    gap={"16px"}
+                    width={"50%"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                  >
+                    <Stack flexDirection={"row"} gap="20px">
+                      <Stack
+                        sx={{ justifyContent: "center", alignItems: "center" }}
+                        width={"100px"}
+                      >
+                        <Typography variant="body2" marginBottom={"5px"}>
+                          GE
+                        </Typography>
+
+                        <Box
+                          position="relative"
+                          display="inline-block"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Box
+                            top={0}
+                            left={0}
+                            bottom={0}
+                            right={0}
+                            position="absolute"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <CircularProgress
+                              style={{ color: "#f5f5f5" }}
+                              size={90}
+                              variant="determinate"
+                              value={100}
+                            />
+                          </Box>
+                          <CircularProgress
+                            sx={{
+                              [`& .${circularProgressClasses.circle}`]: {
+                                strokeLinecap: "round",
+                              },
+                              color: ge_pass,
+                            }}
+                            size={90}
+                            variant="determinate"
+                            value={
+                              gePercent
+                                ? gePercent < 100
+                                  ? gePercent
+                                  : 100
+                                : 0
+                            }
+                          />
+                          <Box
+                            top={0}
+                            left={0}
+                            bottom={0}
+                            right={0}
+                            position="absolute"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <Typography
+                              variant="subtitle1"
+                              component="div"
+                              color="textSecondary"
+                            >
+                              {gePercent ? gePercent : 0} %
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Stack>
+
+                      <Stack
+                        sx={{ justifyContent: "center", alignItems: "center" }}
+                        width={"100px"}
+                      >
+                        <Typography variant="body2" marginBottom={"5px"}>
+                          Core
+                        </Typography>
+
+                        <Box
+                          position="relative"
+                          display="inline-block"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Box
+                            top={0}
+                            left={0}
+                            bottom={0}
+                            right={0}
+                            position="absolute"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <CircularProgress
+                              style={{ color: "#f5f5f5" }}
+                              size={90}
+                              variant="determinate"
+                              value={100}
+                            />
+                          </Box>
+                          <CircularProgress
+                            sx={{
+                              [`& .${circularProgressClasses.circle}`]: {
+                                strokeLinecap: "round",
+                              },
+                              color: majorCore_pass,
+                            }}
+                            size={90}
+                            variant="determinate"
+                            value={
+                              corePercent
+                                ? corePercent < 100
+                                  ? corePercent
+                                  : 100
+                                : 0
+                            }
+                          />
+                          <Box
+                            top={0}
+                            left={0}
+                            bottom={0}
+                            right={0}
+                            position="absolute"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <Typography
+                              variant="subtitle1"
+                              component="div"
+                              color="textSecondary"
+                            >
+                              {corePercent ? corePercent : 0} %
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Stack>
+                    </Stack>
+
+                    <Stack flexDirection={"row"} gap="20px">
+                      <Stack
+                        sx={{ justifyContent: "center", alignItems: "center" }}
+                        width={"100px"}
+                      >
+                        <Typography variant="body2" marginBottom={"5px"}>
+                          Major
+                        </Typography>
+
+                        <Box
+                          position="relative"
+                          display="inline-block"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Box
+                            top={0}
+                            left={0}
+                            bottom={0}
+                            right={0}
+                            position="absolute"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <CircularProgress
+                              style={{ color: "#f5f5f5" }}
+                              size={90}
+                              variant="determinate"
+                              value={100}
+                            />
+                          </Box>
+                          <CircularProgress
+                            sx={{
+                              [`& .${circularProgressClasses.circle}`]: {
+                                strokeLinecap: "round",
+                              },
+                              color: major_pass,
+                            }}
+                            size={90}
+                            variant="determinate"
+                            value={
+                              majorPercent
+                                ? majorPercent < 100
+                                  ? majorPercent
+                                  : 100
+                                : 0
+                            }
+                          />
+                          <Box
+                            top={0}
+                            left={0}
+                            bottom={0}
+                            right={0}
+                            position="absolute"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <Typography
+                              variant="subtitle1"
+                              component="div"
+                              color="textSecondary"
+                            >
+                              {majorPercent ? majorPercent : 0} %
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Stack>
+
+                      <Stack
+                        sx={{ justifyContent: "center", alignItems: "center" }}
+                        width={"100px"}
+                      >
+                        <Typography variant="body2" marginBottom={"5px"}>
+                          Free Elective
+                        </Typography>
+
+                        <Box
+                          position="relative"
+                          display="inline-block"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Box
+                            top={0}
+                            left={0}
+                            bottom={0}
+                            right={0}
+                            position="absolute"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <CircularProgress
+                              style={{ color: "#f5f5f5" }}
+                              size={90}
+                              variant="determinate"
+                              value={100}
+                            />
+                          </Box>
+                          <CircularProgress
+                            sx={{
+                              [`& .${circularProgressClasses.circle}`]: {
+                                strokeLinecap: "round",
+                              },
+                              color: free_pass,
+                            }}
+                            size={90}
+                            variant="determinate"
+                            value={
+                              freePercent
+                                ? freePercent < 100
+                                  ? freePercent
+                                  : 100
+                                : 0
+                            }
+                          />
+                          <Box
+                            top={0}
+                            left={0}
+                            bottom={0}
+                            right={0}
+                            position="absolute"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <Typography
+                              variant="subtitle1"
+                              component="div"
+                              color="textSecondary"
+                            >
+                              {freePercent ? freePercent : 0} %
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Stack>
+                    </Stack>
+                  </Stack>
+                  {/* แยก */}
+                </Stack>
+              </Stack>
+
+              {/* End Total Nuikit */}
+
+              {!bp && (
+                <>
+                  <Stack
+                    width={{ xs: "100%", sm: "100%", lg: "100%" }}
+                    height={"24px"}
+                  ></Stack>
+                  <Stack width={{ xs: "100%", sm: "100%", lg: "100%" }}>
+                    <Typography variant="h6" marginBottom={"4px"}>
+                      Profile
+                    </Typography>
+                    <Stack
+                      sx={{
+                        padding: "16px",
+                        border: "2px solid var(--Grey_2, #C2C2C2)",
+                        borderRadius: "1.25rem",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Stack
+                        sx={{
+                          marginLeft: "1.771vw",
+                          marginRight: "1.771vw",
+                          gap: "1.4815vh",
+                          width: "100%",
+                        }}
+                      >
+                        <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ width: "6.771vw" }}
+                          >
+                            Name
+                          </Typography>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ marginLeft: "0" }}
+                          >
+                            {fullName}
+                          </Typography>
+                        </Stack>
+                        <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ width: "6.771vw" }}
+                          >
+                            Email
+                          </Typography>
+                          <Typography variant="subtitle2">
+                            {cmuAccount}
+                          </Typography>
+                        </Stack>
+                        <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ width: "6.771vw" }}
+                          >
+                            Student code
+                          </Typography>
+                          <Typography variant="subtitle2">
+                            {studentId}
+                          </Typography>
+                        </Stack>
+                      </Stack>
+                    </Stack>
+                  </Stack>
+                </>
+              )}
+            </Stack>
+          </Stack>
+
+          {/* Your Nuikit */}
+          <Stack
+            sx={{
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            width={{ xs: "80%", sm: "80%", lg: "45%" }}
+          >
+            <Stack
+              sx={{
+                width: "100%",
+              }}
+              height={{ lg: "520px" }}
+            >
+              <Typography variant="h6">Your Nuaikit</Typography>
+              {/* frame */}
+              <Stack
+                sx={{
+                  height: "100%",
+                  width: "100%",
+                  border: "2px solid var(--Grey_2, #C2C2C2)",
+                  borderRadius: "1.25rem",
+                  justifyContent: "center",
+                  paddingX: "24px",
+                }}
+              >
+                {/* Start */}
+                <Stack
+                  sx={{
+                    margin: "20px",
+                    gap: "2.9630vh",
+                    justifyItems: "center",
+                  }}
+                >
+                  {/* General */}
+                  <Stack>
                     <Stack
                       sx={{
                         display: "flex",
                         flexDirection: "row",
-                        alignItems: "baseline",
+                        justifyContent: "space-between",
                       }}
                     >
                       <Typography variant="subtitle1" sx={{ color: ge_pass }}>
-                        {gen_reqCredit + gen_elecCredit}
+                        General Education
                       </Typography>
-                      <Typography
-                        variant="subtitle1"
-                        sx={{
-                          color: "black",
-                          opacity: 0.5,
-                        }}
-                      >
-                        /
-                      </Typography>
-                      <Typography
-                        variant="subtitle1"
-                        sx={{
-                          fontSize: "0.8rem",
-                          color: "black",
-                          opacity: 0.5,
-                        }}
-                      >
-                        {gen_reqCreditNeed + gen_elecCreditNeed}
-                      </Typography>
-                    </Stack>
-                  </Stack>
 
-                  <Stack
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginLeft: "1.042vw",
-                    }}
-                  >
-                    {/* SVG */}
-                    <Stack sx={{ marginRight: "0.417vw" }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="58"
-                        viewBox="0 0 16 68"
-                        fill="none"
-                      >
-                        <path
-                          d="M15 21.1489L1 21.1489L1 1.14893"
-                          stroke="black"
-                          stroke-linecap="round"
-                        />
-                        <path
-                          d="M15 57.1489L1 57.1489L1 21.1489"
-                          stroke="black"
-                          stroke-linecap="round"
-                        />
-                      </svg>
-                    </Stack>
-
-                    <Stack sx={{ width: "100%" }}>
-                      {/* Req Course */}
                       <Stack
                         sx={{
-                          marginTop: "1.2963vh",
-                          width: "100%",
                           display: "flex",
                           flexDirection: "row",
-                          justifyContent: "space-between",
+                          alignItems: "baseline",
                         }}
                       >
-                        <Typography variant="body2">Required Course</Typography>
-
-                        <Stack
+                        <Typography variant="subtitle1" sx={{ color: ge_pass }}>
+                          {gen_reqCredit + gen_elecCredit}
+                        </Typography>
+                        <Typography
+                          variant="subtitle1"
                           sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "baseline",
+                            color: "black",
+                            opacity: 0.5,
                           }}
                         >
-                          <Typography variant="body2" sx={{ color: ge_pass }}>
-                            {gen_reqCredit}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: "black",
-                              opacity: 0.5,
-                            }}
-                          >
-                            /
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontSize: "0.8rem",
-                              color: "black",
-                              opacity: 0.5,
-                            }}
-                          >
-                            {gen_reqCreditNeed}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      {/* Elective */}
-                      <Stack
-                        sx={{
-                          alignItems: "end",
-                          width: "100%",
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="body2">Elective</Typography>
-
-                        <Stack
+                          /
+                        </Typography>
+                        <Typography
+                          variant="subtitle1"
                           sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "baseline",
+                            fontSize: "0.8rem",
+                            color: "black",
+                            opacity: 0.5,
                           }}
                         >
-                          <Typography variant="body2" sx={{ color: ge_pass }}>
-                            {gen_elecCredit}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: "black",
-                              opacity: 0.5,
-                            }}
-                          >
-                            /
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontSize: "0.8rem",
-                              color: "black",
-                              opacity: 0.5,
-                            }}
-                          >
-                            {gen_elecCreditNeed}
-                          </Typography>
-                        </Stack>
+                          {gen_reqCreditNeed + gen_elecCreditNeed}
+                        </Typography>
                       </Stack>
                     </Stack>
-                  </Stack>
-                </Stack>
-                {/* End General */}
-
-                {/* Specification */}
-                <Stack sx={{}}>
-                  <Stack
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle1"
-                      sx={{ color: majorCore_pass }}
-                    >
-                      Specification
-                    </Typography>
 
                     <Stack
                       sx={{
                         display: "flex",
                         flexDirection: "row",
-                        alignItems: "baseline",
+                        marginLeft: "1.042vw",
+                      }}
+                    >
+                      {/* SVG */}
+                      <Stack sx={{ marginRight: "0.417vw" }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="58"
+                          viewBox="0 0 16 68"
+                          fill="none"
+                        >
+                          <path
+                            d="M15 21.1489L1 21.1489L1 1.14893"
+                            stroke="black"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M15 57.1489L1 57.1489L1 21.1489"
+                            stroke="black"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </Stack>
+
+                      <Stack sx={{ width: "100%" }}>
+                        {/* Req Course */}
+                        <Stack
+                          sx={{
+                            marginTop: "1.2963vh",
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="body2">
+                            Required Course
+                          </Typography>
+
+                          <Stack
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "baseline",
+                            }}
+                          >
+                            <Typography variant="body2" sx={{ color: ge_pass }}>
+                              {gen_reqCredit}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "black",
+                                opacity: 0.5,
+                              }}
+                            >
+                              /
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontSize: "0.8rem",
+                                color: "black",
+                                opacity: 0.5,
+                              }}
+                            >
+                              {gen_reqCreditNeed}
+                            </Typography>
+                          </Stack>
+                        </Stack>
+                        {/* Elective */}
+                        <Stack
+                          sx={{
+                            alignItems: "end",
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="body2">Elective</Typography>
+
+                          <Stack
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "baseline",
+                            }}
+                          >
+                            <Typography variant="body2" sx={{ color: ge_pass }}>
+                              {gen_elecCredit}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "black",
+                                opacity: 0.5,
+                              }}
+                            >
+                              /
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontSize: "0.8rem",
+                                color: "black",
+                                opacity: 0.5,
+                              }}
+                            >
+                              {gen_elecCreditNeed}
+                            </Typography>
+                          </Stack>
+                        </Stack>
+                      </Stack>
+                    </Stack>
+                  </Stack>
+                  {/* End General */}
+
+                  {/* Specification */}
+                  <Stack sx={{}}>
+                    <Stack
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
                       }}
                     >
                       <Typography
                         variant="subtitle1"
                         sx={{ color: majorCore_pass }}
                       >
-                        {major_elecCredit + major_reqCredit + core_Credit}
+                        Specification
+                      </Typography>
+
+                      <Stack
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "baseline",
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ color: majorCore_pass }}
+                        >
+                          {major_elecCredit + major_reqCredit + core_Credit}
+                        </Typography>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{
+                            fontSize: "0.9rem",
+                            color: "black",
+                            opacity: 0.5,
+                          }}
+                        >
+                          /
+                          {major_elecCreditNeed +
+                            major_reqCreditNeed +
+                            core_CreditNeed}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+
+                    <Stack
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginLeft: "1.042vw",
+                      }}
+                    >
+                      {/* SVG */}
+                      <Stack sx={{ marginRight: "0.417vw" }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="58"
+                          viewBox="0 0 16 68"
+                          fill="none"
+                        >
+                          <path
+                            d="M15 21.1489L1 21.1489L1 1.14893"
+                            stroke="black"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M15 57.1489L1 57.1489L1 21.1489"
+                            stroke="black"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </Stack>
+
+                      <Stack sx={{ width: "100%" }}>
+                        {/* Req Course */}
+                        <Stack
+                          sx={{
+                            marginTop: "1.2963vh",
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="body2">Core Course</Typography>
+
+                          <Stack
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "baseline",
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              sx={{ color: majorCore_pass }}
+                            >
+                              {core_Credit}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontSize: "0.8rem",
+                                color: "black",
+                                opacity: 0.5,
+                              }}
+                            >
+                              /{core_CreditNeed}
+                            </Typography>
+                          </Stack>
+                        </Stack>
+                        {/* Elective */}
+                        <Stack
+                          sx={{
+                            alignItems: "end",
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="body2">Major Course</Typography>
+
+                          <Stack
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "baseline",
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              sx={{ color: major_pass }}
+                            >
+                              {major_elecCredit + major_reqCredit}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontSize: "0.8rem",
+                                color: "black",
+                                opacity: 0.5,
+                              }}
+                            >
+                              /{major_elecCreditNeed + major_reqCreditNeed}
+                            </Typography>
+                          </Stack>
+                        </Stack>
+                      </Stack>
+                    </Stack>
+
+                    <Stack
+                      sx={{
+                        marginLeft: "3.125vw",
+                        display: "flex",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <Stack sx={{ marginRight: "0.417vw" }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="58"
+                          viewBox="0 0 16 68"
+                          fill="none"
+                        >
+                          <path
+                            d="M15 21.1489L1 21.1489L1 1.14893"
+                            stroke="black"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M15 57.1489L1 57.1489L1 21.1489"
+                            stroke="black"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </Stack>
+
+                      <Stack sx={{ width: "100%" }}>
+                        {/* Major Required Coursed */}
+                        <Stack
+                          sx={{
+                            marginTop: "1.2963vh",
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            width: "100%",
+                          }}
+                        >
+                          <Typography variant="body2">
+                            Major Required Course
+                          </Typography>
+
+                          <Stack
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "baseline",
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              sx={{ color: major_pass }}
+                            >
+                              {major_reqCredit}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontSize: "0.8rem",
+                                color: "black",
+                                opacity: 0.5,
+                              }}
+                            >
+                              /{major_reqCreditNeed}
+                            </Typography>
+                          </Stack>
+                        </Stack>
+                        {/*  */}
+                        {/* Major Elective */}
+                        <Stack
+                          sx={{
+                            alignItems: "end",
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="body2">
+                            Major Elective
+                          </Typography>
+
+                          <Stack
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "baseline",
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              sx={{ color: major_pass }}
+                            >
+                              {major_elecCredit}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontSize: "0.8rem",
+                                color: "black",
+                                opacity: 0.5,
+                              }}
+                            >
+                              /{major_elecCreditNeed}
+                            </Typography>
+                          </Stack>
+                        </Stack>
+                        {/*  */}
+                      </Stack>
+                    </Stack>
+                    {/*  */}
+                  </Stack>
+                  {/* End Specification */}
+                  {/* Free Elective */}
+                  <Stack
+                    sx={{
+                      color: free_pass,
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Typography variant="subtitle1">Free Elective</Typography>
+
+                    <Stack
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "baseline",
+                      }}
+                    >
+                      <Typography variant="subtitle1" sx={{ color: free_pass }}>
+                        {free_Credit}
                       </Typography>
                       <Typography
                         variant="subtitle1"
@@ -1154,355 +1402,98 @@ function DashBoard() {
                           opacity: 0.5,
                         }}
                       >
-                        /
-                        {major_elecCreditNeed +
-                          major_reqCreditNeed +
-                          core_CreditNeed}
+                        /{free_CreditNeed}
                       </Typography>
                     </Stack>
                   </Stack>
 
+                  {/* Total */}
                   <Stack
                     sx={{
+                      color: "var(--Primary_1, #EE6457)",
                       display: "flex",
                       flexDirection: "row",
-                      marginLeft: "1.042vw",
+                      justifyContent: "space-between",
                     }}
                   >
-                    {/* SVG */}
-                    <Stack sx={{ marginRight: "0.417vw" }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="58"
-                        viewBox="0 0 16 68"
-                        fill="none"
-                      >
-                        <path
-                          d="M15 21.1489L1 21.1489L1 1.14893"
-                          stroke="black"
-                          stroke-linecap="round"
-                        />
-                        <path
-                          d="M15 57.1489L1 57.1489L1 21.1489"
-                          stroke="black"
-                          stroke-linecap="round"
-                        />
-                      </svg>
-                    </Stack>
-
-                    <Stack sx={{ width: "100%" }}>
-                      {/* Req Course */}
-                      <Stack
-                        sx={{
-                          marginTop: "1.2963vh",
-                          width: "100%",
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="body2">Core Course</Typography>
-
-                        <Stack
-                          sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "baseline",
-                          }}
-                        >
-                          <Typography
-                            variant="body2"
-                            sx={{ color: majorCore_pass }}
-                          >
-                            {core_Credit}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontSize: "0.8rem",
-                              color: "black",
-                              opacity: 0.5,
-                            }}
-                          >
-                            /{core_CreditNeed}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      {/* Elective */}
-                      <Stack
-                        sx={{
-                          alignItems: "end",
-                          width: "100%",
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="body2">Major Course</Typography>
-
-                        <Stack
-                          sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "baseline",
-                          }}
-                        >
-                          <Typography
-                            variant="body2"
-                            sx={{ color: major_pass }}
-                          >
-                            {major_elecCredit + major_reqCredit}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontSize: "0.8rem",
-                              color: "black",
-                              opacity: 0.5,
-                            }}
-                          >
-                            /{major_elecCreditNeed + major_reqCreditNeed}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                    </Stack>
-                  </Stack>
-
-                  <Stack
-                    sx={{
-                      marginLeft: "3.125vw",
-                      display: "flex",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <Stack sx={{ marginRight: "0.417vw" }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="58"
-                        viewBox="0 0 16 68"
-                        fill="none"
-                      >
-                        <path
-                          d="M15 21.1489L1 21.1489L1 1.14893"
-                          stroke="black"
-                          stroke-linecap="round"
-                        />
-                        <path
-                          d="M15 57.1489L1 57.1489L1 21.1489"
-                          stroke="black"
-                          stroke-linecap="round"
-                        />
-                      </svg>
-                    </Stack>
-
-                    <Stack sx={{ width: "100%" }}>
-                      {/* Major Required Coursed */}
-                      <Stack
-                        sx={{
-                          marginTop: "1.2963vh",
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          width: "100%",
-                        }}
-                      >
-                        <Typography variant="body2">
-                          Major Required Course
-                        </Typography>
-
-                        <Stack
-                          sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "baseline",
-                          }}
-                        >
-                          <Typography
-                            variant="body2"
-                            sx={{ color: major_pass }}
-                          >
-                            {major_reqCredit}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontSize: "0.8rem",
-                              color: "black",
-                              opacity: 0.5,
-                            }}
-                          >
-                            /{major_reqCreditNeed}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      {/*  */}
-                      {/* Major Elective */}
-                      <Stack
-                        sx={{
-                          alignItems: "end",
-                          width: "100%",
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="body2">Major Elective</Typography>
-
-                        <Stack
-                          sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "baseline",
-                          }}
-                        >
-                          <Typography
-                            variant="body2"
-                            sx={{ color: major_pass }}
-                          >
-                            {major_elecCredit}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontSize: "0.8rem",
-                              color: "black",
-                              opacity: 0.5,
-                            }}
-                          >
-                            /{major_elecCreditNeed}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      {/*  */}
-                    </Stack>
-                  </Stack>
-                  {/*  */}
-                </Stack>
-                {/* End Specification */}
-                {/* Free Elective */}
-                <Stack
-                  sx={{
-                    color: free_pass,
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Typography variant="subtitle1">Free Elective</Typography>
-
-                  <Stack
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "baseline",
-                    }}
-                  >
-                    <Typography variant="subtitle1" sx={{ color: free_pass }}>
-                      {free_Credit}
-                    </Typography>
-                    <Typography
-                      variant="subtitle1"
+                    <Typography variant="h6">Total</Typography>
+                    <Stack
                       sx={{
-                        fontSize: "0.9rem",
-                        color: "black",
-                        opacity: 0.5,
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "baseline",
                       }}
                     >
-                      /{free_CreditNeed}
-                    </Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{ color: "var(--GE_done, #EE6457)" }}
+                      >
+                        {allgetCredit}
+                      </Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontSize: "1.1rem",
+                          color: "black",
+                          opacity: 0.5,
+                        }}
+                      >
+                        /{allneedCredit}
+                      </Typography>
+                    </Stack>
                   </Stack>
                 </Stack>
-
-                {/* Total */}
-                <Stack
-                  sx={{
-                    color: "var(--Primary_1, #EE6457)",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Typography variant="h6">Total</Typography>
-                  <Stack
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "baseline",
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      sx={{ color: "var(--GE_done, #EE6457)" }}
-                    >
-                      {allgetCredit}
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontSize: "1.1rem",
-                        color: "black",
-                        opacity: 0.5,
-                      }}
-                    >
-                      /{allneedCredit}
-                    </Typography>
-                  </Stack>
-                </Stack>
+                {/* End */}
               </Stack>
-              {/* End */}
             </Stack>
           </Stack>
-        </Stack>
 
-        {bp && (
-          <Stack width={"80%"}>
-            <Typography variant="h6">Profile</Typography>
-            <Stack
-              sx={{
-                padding: "16px",
-                width: "100%",
-                height: "13.9229vh",
-                border: "2px solid var(--Grey_2, #C2C2C2)",
-                borderRadius: "1.25rem",
-                justifyContent: "center",
-              }}
-            >
+          {bp && (
+            <Stack width={"80%"}>
+              <Typography variant="h6">Profile</Typography>
               <Stack
                 sx={{
-                  marginLeft: "1.771vw",
-                  marginRight: "1.771vw",
-                  gap: "1.4815vh",
+                  padding: "16px",
+                  width: "100%",
+                  height: "13.9229vh",
+                  border: "2px solid var(--Grey_2, #C2C2C2)",
+                  borderRadius: "1.25rem",
+                  justifyContent: "center",
                 }}
               >
-                <Stack sx={{ display: "flex", flexDirection: "row" }}>
-                  <Typography variant="subtitle2" sx={{ width: "80px" }}>
-                    Name
-                  </Typography>
-                  <Typography variant="subtitle2" sx={{ marginLeft: "0" }}>
-                    {fullName}
-                  </Typography>
-                </Stack>
-                <Stack sx={{ display: "flex", flexDirection: "row" }}>
-                  <Typography variant="subtitle2" sx={{ width: "80px" }}>
-                    Email
-                  </Typography>
-                  <Typography variant="subtitle2">{cmuAccount}</Typography>
-                </Stack>
-                <Stack sx={{ display: "flex", flexDirection: "row" }}>
-                  <Typography variant="subtitle2" sx={{ width: "80px" }}>
-                    Student code
-                  </Typography>
-                  <Typography variant="subtitle2">{studentId}</Typography>
+                <Stack
+                  sx={{
+                    marginLeft: "1.771vw",
+                    marginRight: "1.771vw",
+                    gap: "1.4815vh",
+                  }}
+                >
+                  <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                    <Typography variant="subtitle2" sx={{ width: "80px" }}>
+                      Name
+                    </Typography>
+                    <Typography variant="subtitle2" sx={{ marginLeft: "0" }}>
+                      {fullName}
+                    </Typography>
+                  </Stack>
+                  <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                    <Typography variant="subtitle2" sx={{ width: "80px" }}>
+                      Email
+                    </Typography>
+                    <Typography variant="subtitle2">{cmuAccount}</Typography>
+                  </Stack>
+                  <Stack sx={{ display: "flex", flexDirection: "row" }}>
+                    <Typography variant="subtitle2" sx={{ width: "80px" }}>
+                      Student code
+                    </Typography>
+                    <Typography variant="subtitle2">{studentId}</Typography>
+                  </Stack>
                 </Stack>
               </Stack>
             </Stack>
-          </Stack>
-        )}
-      </Stack>
+          )}
+        </Stack>
+      )}
 
       {/* End Dashboard */}
     </Stack>

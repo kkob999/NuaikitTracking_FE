@@ -33,12 +33,15 @@ export const getSpecialPath = (
     let x = (window.innerWidth * 96) / 1440
 
     if(window.innerWidth < 1299) x = (window.innerWidth * 120) / 1440
+    if(window.innerWidth < 1000 ) x = (window.innerWidth * 90) / 960
+    if(window.innerWidth < 700 ) x = (window.innerWidth * 86) / 627
     
     if( typeof(data.edPos) == 'number') {
       // if (sourceX - x < 20 ) {
       //   // x = (window.innerWidth * 120) / 1440
       //   return `M ${sourceX} ${sourceY} L ${data.edPos-x} ${sourceY} L ${data.edPos-x} ${targetY} L ${targetX} ${targetY}`;
       // }else{
+        
         return `M ${sourceX} ${sourceY} L ${data.edPos+x} ${sourceY} L ${data.edPos+x} ${targetY} L ${targetX} ${targetY}`;
       // }
       

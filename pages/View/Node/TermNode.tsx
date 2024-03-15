@@ -80,7 +80,7 @@ export default function TermNode({
               fontSize: "0.9em",
             },
             [theme.breakpoints.between("sm", "lg")]: {
-              fontSize: "0.58em",
+              fontSize: "0.54em",
             },
           }}
         >
@@ -106,7 +106,7 @@ export default function TermNode({
               fontSize: "0.68em",
             },
             [theme.breakpoints.only("md")]: {
-              fontSize: "0.7em",
+              fontSize: "0.64em",
             },
           }}
         >
@@ -118,7 +118,7 @@ export default function TermNode({
 
   function checkisPass(isPass: boolean) {
     if (isPass) {
-      console.log(window.innerWidth);
+      // console.log(window.innerWidth);
       return (
         <CheckCircleIcon
           sx={{
@@ -140,8 +140,8 @@ export default function TermNode({
               width: "0.68em",
             },
             [theme.breakpoints.only("md")]: {
-              height: "0.7em",
-              width: "0.7em",
+              height: "0.56em",
+              width: "0.56em",
             },
           }}
         />
@@ -212,8 +212,8 @@ export default function TermNode({
               width: "0.68em",
             },
             [theme.breakpoints.only("md")]: {
-              height: "0.7em",
-              width: "0.7em",
+              height: "0.56em",
+              width: "0.56em",
             },
           }}
         />
@@ -246,6 +246,9 @@ export default function TermNode({
   }
 
   let x = (window.innerWidth * 1.8) / 1440;
+  if (window.innerWidth > 600 && window.innerWidth < 1000) {
+    x = (window.innerWidth * 1.8) / 800;
+  }
   // console.log(data.sub_no + ' has x position in ' + xPos)
 
   return (

@@ -55,7 +55,7 @@ export async function getOAuthAccessTokenAsync(
         },
       }
     );
-    console.log(response);
+    // console.log(response);
     return response.data.access_token;
   } catch (err) {
     console.log(err);
@@ -77,19 +77,3 @@ export async function getCMUBasicInfoAsync(accessToken: string) {
   }
 }
 
-// export default function Login() {
-//   const [data, setData] = React.useState([]);
-
-//   React.useEffect(() => {
-//     fetch("https://randomuser.me/api/?results=10")
-//       .then((response) => response.json())
-//       .then((responseJson) => {
-//         setData(responseJson.results);
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//       });
-//   }, []);
-//   return data;
-//   return <div>Calculating</div>;
-// }

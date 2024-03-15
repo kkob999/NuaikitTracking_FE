@@ -46,6 +46,9 @@ export const NormalTerm = (
         [theme.breakpoints.only("md")]: {
           width: "19.938vw",
         },
+        [theme.breakpoints.between(600, 900)]: {
+          width: "200px",
+        },
         pb: 4,
       }}
     >
@@ -199,6 +202,9 @@ export const summerTerm = (
         [theme.breakpoints.only("md")]: {
           width: "29.61vw",
         },
+        [theme.breakpoints.between(600, 900)]: {
+          width: "300px",
+        },
         // bgcolor: "beige",
         pb: 4,
       }}
@@ -227,6 +233,9 @@ export const summerTerm = (
             },
             [theme.breakpoints.only("md")]: {
               width: "9.87vw",
+            },
+            [theme.breakpoints.between(600, 800)]: {
+              width: "100px",
             },
             opacity: 0.25,
           }}
@@ -259,6 +268,9 @@ export const summerTerm = (
             [theme.breakpoints.only("md")]: {
               width: "9.87vw",
             },
+            [theme.breakpoints.between(600, 800)]: {
+              width: "100px",
+            },
             opacity: 0.25,
           }}
         >
@@ -289,6 +301,9 @@ export const summerTerm = (
             },
             [theme.breakpoints.only("md")]: {
               width: "9.87vw",
+            },
+            [theme.breakpoints.between(600, 800)]: {
+              width: "100px",
             },
             opacity: 0.25,
           }}

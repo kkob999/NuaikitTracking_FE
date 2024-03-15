@@ -120,8 +120,6 @@ export function fetchNuikitData(url: string) {
         },
       })
       .then((response) => {
-        console.log("fetch nuikit data");
-        // console.log(response.data);
         resolve(response.data);
         return response.data;
       })

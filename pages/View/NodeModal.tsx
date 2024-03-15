@@ -42,8 +42,11 @@ export function DisplayNodeModal(
   var enForceEN = "";
   var enForceTH = "";
 
-  // console.log("click");
-  // console.log(TermArr);
+  console.log("click");
+  console.log('Node Arr')
+  console.log(NodeArr)
+  console.log('Term Arr')
+  console.log(TermArr);
 
   if (courseDetail !== undefined) {
     if (useIn === "term") {
@@ -842,12 +845,26 @@ export function warningModal(setOpen: Function) {
             pt: 1,
             pb: 1,
             borderRadius: "1rem 1rem 0 0",
+            justifyItems: 'center'
           }}
         >
+          <IconButton
+            disabled
+            sx={{
+              width: "2.222vw",
+              height: "2.222vw",
+              marginLeft: "auto",
+              marginRight: "2vw",
+              color: "white",
+              opacity: 0
+            }}
+          >
+            <CloseRoundedIcon />
+          </IconButton>
           <Stack
             direction={"row"}
             spacing={1}
-            sx={{ ml: "43%", mt: "auto", mb: "auto" }}
+            sx={{ m: 'auto' }}
           >
             <WarningIcon sx={{ color: amber[500] }} />
             <Typography sx={{ color: "white" }}>Warning</Typography>

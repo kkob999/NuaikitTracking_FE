@@ -29,6 +29,7 @@ import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 // import { useNavigate, Link } from "react-router-dom";
 
 import { useRouter, useSearchParams } from "next/navigation";
@@ -179,7 +180,7 @@ function Navbar() {
       .get<{}, AxiosResponse<WhoAmIResponse>, {}>("/api/whoAmI")
       .then((response) => {
         if (response.data.ok) {
-          console.log("data ok");
+          
           setFullName(response.data.firstName + " " + response.data.lastName);
           setF_name(response.data.firstName);
           setL_name(response.data.lastName);
@@ -216,7 +217,7 @@ function Navbar() {
     if (typeof window !== "undefined") {
       if (window.innerWidth <= 1300) setOpen(false);
     }
-    console.log(fullName);
+    
   }, []);
 
   return (
@@ -229,11 +230,8 @@ function Navbar() {
       >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
+            {open ? (<ChevronLeftIcon />):(<ChevronRightIcon />)}
+            
           </IconButton>
         </DrawerHeader>
 
@@ -358,6 +356,10 @@ function Navbar() {
                 ml: 0,
                 mr: 1,
                 borderRadius: "0 0.6rem 0.6rem 0",
+                '&:hover': {
+                  bgcolor: url === "/Dashboard" ? "#EE6457" : null,
+                  
+                }
               }}
             >
               {/* <Stack direction={"row"}> */}
@@ -449,6 +451,10 @@ function Navbar() {
                 ml: 0,
                 mr: 1,
                 borderRadius: "0 0.6rem 0.6rem 0",
+                '&:hover': {
+                  bgcolor: url === "/NuikitView" ? "#EE6457" : null,
+                  
+                }
               }}
             >
               <ListItemIcon
@@ -506,6 +512,10 @@ function Navbar() {
                 ml: 0,
                 mr: 1,
                 borderRadius: "0 0.6rem 0.6rem 0",
+                '&:hover': {
+                  bgcolor: url === "/TermView" ? "#EE6457" : null,
+                  
+                }
               }}
             >
               <ListItemIcon
