@@ -3,9 +3,10 @@ The repo shows how to implement CMU OAuth (sign-in with CMU Account) in your own
 ## Please do the following steps before you start
 
 1. Run **npm install** in your terminal.
-2. Update the .env file. Copy your CLIENT ID and CLIENT SECRET to the .env.
-3. Update NEXT_PUBLIC_CMU_OAUTH_URL variable in the .env
-4. Run **npm run dev**
+2. Run **npm install reactflow** in your terminal.
+3. Update the .env file. Copy your CLIENT ID and CLIENT SECRET to the .env.
+4. Update NEXT_PUBLIC_CMU_OAUTH_URL variable in the .env
+5. Run **npm run dev**
 
 ## Warning
 

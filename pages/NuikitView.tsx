@@ -294,12 +294,18 @@ function NuikitView() {
     } else {
       setisCoop(false);
       setFormats("normal");
-      
-      if (resp["number of term"].length >= 4) {
-        setDisCoopButton(true);
-      } else {
+
+      if (resp["number of term"] === null) {
         setDisCoopButton(false);
+      }else{
+        if (resp["number of term"].length >= 4) {
+          setDisCoopButton(true);
+        } else {
+          setDisCoopButton(false);
+        }
       }
+
+      
     }
 
     gen_req = [];
@@ -527,11 +533,7 @@ function NuikitView() {
         // console.log(node)
         checkLearn = mjelectiveNode;
         // console.log(checkLearn)
-        console.log(
-          checkLearn.some((n: any) => {
-            n.courseNo === node.courseNo;
-          })
-        );
+        
 
         // console.log(node.courseNo)
 
@@ -727,7 +729,6 @@ function NuikitView() {
                 j < Math.ceil(notLearnGEArr[i]["remainedCredits"] / 3);
                 j++
               ) {
-                console.log(notLearnGEArr[i]["remainedCredits"]);
                 total.push(
                   <Stack
                     onClick={() => {
@@ -1206,7 +1207,6 @@ function NuikitView() {
       isCoop;
 
     if (search) {
-      console.log("have mock");
       urlNuikit += "&mockData=mockData" + qryValue;
     } else {
       

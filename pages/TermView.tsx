@@ -1709,9 +1709,11 @@ function TermView() {
                         maxWidth: "20vw",
                         [theme.breakpoints.down("lg")]: {
                           maxHeight: "3.4vh",
+                          
                         },
                         [theme.breakpoints.between("sm", "md")]: {
                           maxHeight: "3vh",
+                          
                         },
                       }}
                       onClick={() => {
@@ -1884,11 +1886,12 @@ function TermView() {
                             ? "1px solid #EE6457"
                             : "1px solid #9B9B9B",
                           textTransform: "none",
-                          maxHeight: "4.2vh",
+                          maxHeight: "4vh",
                           maxWidth: "20vw",
                           [theme.breakpoints.down("lg")]: {
                             maxHeight: "3vh",
                             fontSize: "0.9rem",
+                            
                           },
                           [theme.breakpoints.only("md")]: {
                             maxHeight: "3vh",
@@ -1916,11 +1919,14 @@ function TermView() {
                         <Typography
                           sx={{
                             color: checkedPre ? "#EE6457" : "#9B9B9B",
-                            [theme.breakpoints.only("md")]: {
-                              
-                              fontSize: "0.68rem",
-                              
-                            },
+                            fontSize: "0.8rem",
+
+                          [theme.breakpoints.down("lg")]: {
+                            fontSize: "0.9rem",
+                          },
+                          [theme.breakpoints.between("sm", "md")]: {
+                            fontSize: "0.68rem",
+                          },
                           }}
                         >
                           Select Prerequisite Course

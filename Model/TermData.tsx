@@ -332,13 +332,11 @@ async function processData(year: string, isCoop: string, stdId: string) {
       x = ((133.5 + 11.5) * 1024) / window.innerWidth;
       x_sum = 27.2;
       xx = ((22 + 13) * 1024) / window.innerWidth;
-    }else{
+    } else {
       x = ((133.5 + 14.5) * 1056) / window.innerWidth;
       x_sum = 27.2;
       xx = ((22 + 8.4) * 1056) / window.innerWidth;
     }
-
-    
   }
   if (window.innerWidth >= 1100 && window.innerWidth < 1200) {
     x = ((133.5 + 8) * 1176) / window.innerWidth;
@@ -520,11 +518,18 @@ async function processData(year: string, isCoop: string, stdId: string) {
           }
 
           if (stdTerm.length < 4) {
-            if (i < stdTerm.length * 2) isPass = true;
-            else {
-              if (stdTerm.includes(3) && i - 1 < stdTerm.length * 2) {
-                isPass = true;
-              }
+            
+            if (
+              i < stdTerm.length * 2 
+            )
+              isPass = true;
+
+            if (stdTerm.includes(3) && i - 1 < stdTerm.length * 2) {
+              isPass = true;
+            }
+
+            if (i === (stdTerm.length*2)-1 && stdTerm[stdTerm.length - 1] === 1) {
+              isPass = false;
             }
           }
 
