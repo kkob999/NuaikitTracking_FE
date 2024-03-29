@@ -16,7 +16,6 @@ export function fetchGEElective(groupName: string) {
         },
       })
       .then((response) => {
-        console.log("fetch free elective data");
         resolve(response.data);
         return response.data;
       })
@@ -42,7 +41,6 @@ export function fetchMajorElective() {
         },
       })
       .then((response) => {
-        console.log("fetch major elective data");
         resolve(response.data);
         return response.data;
       })
@@ -68,7 +66,6 @@ export function fetchCourseDescription(courseId : string) {
         },
       })
       .then((response) => {
-        console.log("fetch major elective data");
         resolve(response.data);
         return response.data;
       })
@@ -95,7 +92,6 @@ export function fetchFreeElective(groupName: string) {
         },
       })
       .then((response) => {
-        console.log("fetch free elective data");
         resolve(response.data);
         return response.data;
       })
@@ -124,10 +120,8 @@ export function fetchNuikitData(url: string) {
         return response.data;
       })
       .catch((error) => {
-        // handle errors
         console.log(error);
         reject(error);
-        // return testfail1
       });
   });
 }

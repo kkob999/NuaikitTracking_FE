@@ -42,12 +42,6 @@ export function DisplayNodeModal(
   var enForceEN = "";
   var enForceTH = "";
 
-  console.log("click");
-  console.log('Node Arr')
-  console.log(NodeArr)
-  console.log('Term Arr')
-  console.log(TermArr);
-
   if (courseDetail !== undefined) {
     if (useIn === "term") {
       TermArr.map((n: any) => {
@@ -65,16 +59,20 @@ export function DisplayNodeModal(
         }
       });
     } else if (useIn === "cat") {
-      TermArr.map((n: any) => {
-        // console.log(n);
-        if (n["courseNo"] === courseDetail[0]["courseNo"]) {
-          if (n["prerequisites"].length !== 0) {
-            if (n["prerequisites"].length === 1) pre = n["prerequisites"][0];
-            else if (n["prerequisites"].length === 2)
-              pre = n["prerequisites"][0] + " or " + n["prerequisites"][1];
+
+      if (TermArr !== null) {
+        TermArr.map((n: any) => {
+
+          if (n["courseNo"] === courseDetail[0]["courseNo"]) {
+            if (n["prerequisites"].length !== 0) {
+              if (n["prerequisites"].length === 1) pre = n["prerequisites"][0];
+              else if (n["prerequisites"].length === 2)
+                pre = n["prerequisites"][0] + " or " + n["prerequisites"][1];
+            }
           }
-        }
-      });
+        });
+      }
+      
     }
 
     if (courseDetail[0]["updatedSemester"] === 1) {

@@ -280,32 +280,29 @@ function NuikitView() {
 
   async function NuikitData(url: string) {
     const resp: any = await fetchNuikitData(url);
-    
+
     if (resp["isCoop"] === "true") {
       setisCoop(true);
       setFormats("coop");
-      
+
       if (resp["number of term"].length >= 4) {
         setDisNormalButton(true);
       } else {
         setDisNormalButton(false);
       }
-
     } else {
       setisCoop(false);
       setFormats("normal");
 
       if (resp["number of term"] === null) {
         setDisCoopButton(false);
-      }else{
+      } else {
         if (resp["number of term"].length >= 4) {
           setDisCoopButton(true);
         } else {
           setDisCoopButton(false);
         }
       }
-
-      
     }
 
     gen_req = [];
@@ -339,8 +336,6 @@ function NuikitView() {
             resp["geCategory"][i]["electiveCreditsGet"] >
           0
         ) {
-          
-
           tempArr.push({
             groupName: resp["geCategory"][i]["groupName"],
             remainedCredits:
@@ -477,18 +472,15 @@ function NuikitView() {
     } else {
       type = "spec_mj";
       tmpArr = mjelectiveNode;
-
-      if (tmpArr === null || tmpArr.length === 0) {
-        tmpArr = [];
-      }
-      // console.log(tmpArr);
     }
-    console.log(tmpArr);
+    if (tmpArr === null || tmpArr.length === 0) {
+      tmpArr = [];
+    }
+
     checkLearn = genElecNode;
     freeModalNode.map((node: any) => {
-      if (tmpArr.length !== 0) {
+      if (tmpArr.length !== 0 || tmpArr !== null) {
         let res = tmpArr.some((n: any) => n.courseNo == node.courseNo);
-        // console.log('log res ')
 
         if (res) {
           displayArr.push(
@@ -510,11 +502,12 @@ function NuikitView() {
             </Stack>
           );
         } else {
+          
           displayArr.push(
             <Stack
               onClick={async () => {
                 setDetail(await FetchCourse(node.courseNo));
-
+               
                 setInsideArrNode(genElecNode);
                 setInsideNodeClicked(true);
               }}
@@ -533,7 +526,6 @@ function NuikitView() {
         // console.log(node)
         checkLearn = mjelectiveNode;
         // console.log(checkLearn)
-        
 
         // console.log(node.courseNo)
 
@@ -1170,12 +1162,13 @@ function NuikitView() {
       .then((response) => {
         if (response.data.ok) {
           studentId = response.data.studentId ?? "No Student Id";
-          
-          if (Number(studentId.substring(0, 2)) >= 63 && Number(studentId.substring(0, 2)) <= 67){
+
+          if (
+            Number(studentId.substring(0, 2)) >= 63 &&
+            Number(studentId.substring(0, 2)) <= 67
+          ) {
             setYear("2563");
           }
-          
-          
         }
       })
       .catch((error: AxiosError<WhoAmIResponse>) => {
@@ -1209,7 +1202,6 @@ function NuikitView() {
     if (search) {
       urlNuikit += "&mockData=mockData" + qryValue;
     } else {
-      
       urlNuikit += "&studentId=" + "630610768";
     }
     NuikitData(urlNuikit);
@@ -1218,10 +1210,9 @@ function NuikitView() {
   useEffect(() => {
     // widthResizer()
     if (window.innerWidth < 601) {
-      setErrorMessage("Please use this website in bigger device.")
+      setErrorMessage("Please use this website in bigger device.");
     }
     fetchStdData();
-    
   }, [errorMessage]);
 
   function widthResizer() {
@@ -1251,7 +1242,10 @@ function NuikitView() {
             justifyContent: "center",
           }}
         >
-          <Typography variant="h5" sx={{ color: "red", mb: 4, textAlign: 'center' }}>
+          <Typography
+            variant="h5"
+            sx={{ color: "red", mb: 4, textAlign: "center" }}
+          >
             {errorMessage}
           </Typography>
           {/* <Typography variant="subtitle1" sx={{color: 'grey', mb: 3}}>Please Log in before use website</Typography> */}
@@ -1871,27 +1865,27 @@ function NuikitView() {
                         }}
                       >
                         <Stack direction={"row"}>
-                            <Stack
-                              sx={{
-                                height: "1em",
-                                width: "1em",
-                                bgcolor: majorCore_pass,
-                                borderRadius: "100%",
-                                mr: "0.3em",
-                              }}
-                            ></Stack>
-                            <Stack
-                              sx={{
-                                height: "1em",
-                                width: "1em",
-                                bgcolor: major_pass,
-                                borderRadius: "100%",
-                                mr: "0.3em",
-                              }}
-                            ></Stack>
-                          </Stack>
+                          <Stack
+                            sx={{
+                              height: "1em",
+                              width: "1em",
+                              bgcolor: majorCore_pass,
+                              borderRadius: "100%",
+                              mr: "0.3em",
+                            }}
+                          ></Stack>
+                          <Stack
+                            sx={{
+                              height: "1em",
+                              width: "1em",
+                              bgcolor: major_pass,
+                              borderRadius: "100%",
+                              mr: "0.3em",
+                            }}
+                          ></Stack>
+                        </Stack>
 
-                          {/* <Stack
+                        {/* <Stack
                               sx={{
                                 height: "1em",
                                 width: "1em",
